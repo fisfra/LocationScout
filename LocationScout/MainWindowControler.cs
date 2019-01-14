@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LocationScout.Model;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,10 @@ namespace LocationScout
     {
         #region attributes
         private MainWindow _window;
+
+        private List<Country> _allCountries;
+        private List<Area> _allAreas;
+        private List<SubArea> _allSubareas;
         #endregion
 
 
@@ -24,6 +29,11 @@ namespace LocationScout
         internal void HandleClose()
         {
             _window.Close();
+        }
+
+        internal void HandleAdd()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

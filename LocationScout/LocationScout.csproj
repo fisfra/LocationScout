@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoCompleteTextBox">
+      <HintPath>..\..\fisfra\Movie20\AutoCompleteTextBox\bin\Release\AutoCompleteTextBox.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -70,6 +73,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowControler.cs" />
+    <Compile Include="Model\Area.cs" />
+    <Compile Include="Model\Country.cs" />
+    <Compile Include="Model\GPSCoordinates.cs" />
+    <Compile Include="Model\LocationBase.cs" />
+    <Compile Include="Model\ParkingLocation.cs" />
+    <Compile Include="Model\PhotoPlace.cs" />
+    <Compile Include="Model\ShootingLocation.cs" />
+    <Compile Include="Model\SubArea.cs" />
+    <Compile Include="Model\SubjectLocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

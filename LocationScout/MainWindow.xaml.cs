@@ -35,7 +35,13 @@ namespace LocationScout
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleClose();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleAdd();
         }  
+        
         #endregion
     }
 }
