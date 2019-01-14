@@ -9,16 +9,18 @@ namespace LocationScout.Model
     internal class Area
     {
         #region
-        private List<Country> _allCountries;
         private string _name;
+        private List<SubArea> _allSubareas;
         #endregion
 
         #region contructor
-        public Area(List<Country> allCountries, string areaName)
+        public Area(string areaName, List<SubArea> allSubareas)
         {
-            _allCountries = allCountries;
-            _name = areaName;
+            Name = areaName;
+            _allSubareas = allSubareas;
         }
+
+        public string Name { get => _name; private set => _name = value; }
         #endregion
     }
 }

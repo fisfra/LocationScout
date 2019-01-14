@@ -9,14 +9,23 @@ namespace LocationScout.Model
     internal class Country
     {
         #region attributes
-        private string _name;
+        private List<Area> _allAreas;
+
+        public Country(string name)
+        {
+            Name = name;
+        }
         #endregion
 
         #region contructors
-        public Country(string name)
+        public Country(string name, List<Area> allAreas)
         {
-            _name = name;
+            Name = name;
+            _allAreas = allAreas;
         }
+
+        public string Name { get; set; }
+        internal List<Area> AllAreas { get => _allAreas; private set => _allAreas = value; }
         #endregion
 
     }

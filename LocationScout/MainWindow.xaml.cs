@@ -27,9 +27,10 @@ namespace LocationScout
         #region contructors
         public MainWindow()
         {
-            _controler = new MainWindowControler(this);
-
             InitializeComponent();
+
+            // call after initilaze component
+            _controler = new MainWindowControler(this);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

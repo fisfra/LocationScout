@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    internal class SubArea
+    internal class Country_Area
     {
         #region attributes
-        private string _subareaName;
+        internal string CountryName { get; set; }
+        internal string AreaName { get; set; }
         #endregion
 
         #region constructors
-        public SubArea(string subareaName)
+        public Country_Area(string countryName, string areaName)
         {
-            _subareaName = subareaName;
+            CountryName = countryName;
+            AreaName = areaName;
         }
         #endregion
     }

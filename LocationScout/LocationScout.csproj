@@ -74,7 +74,9 @@
   <ItemGroup>
     <Compile Include="MainWindowControler.cs" />
     <Compile Include="Model\Area.cs" />
+    <Compile Include="Model\Area_Subarea.cs" />
     <Compile Include="Model\Country.cs" />
+    <Compile Include="Model\Country_Area.cs" />
     <Compile Include="Model\GPSCoordinates.cs" />
     <Compile Include="Model\LocationBase.cs" />
     <Compile Include="Model\ParkingLocation.cs" />
