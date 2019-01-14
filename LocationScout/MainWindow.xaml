@@ -5,8 +5,126 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationScout"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Location Scout" Height="510" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <TabControl HorizontalAlignment="Left" Height="459" Margin="10,10,0,0" VerticalAlignment="Top" Width="772">
+            <TabItem Header="Location">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Name="LocationContentGrid" Margin="0,0,0,5" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="200"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Header="Subject Location" Margin="10,10,5,5" Grid.Row="0">
+                            <Grid Margin="5,5,5,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="180"/>
+                                    <ColumnDefinition Width="210"/>
+                                    <ColumnDefinition Width="210"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Country" Height="25" Grid.Column="0" Grid.Row="0"/>
+                                <TextBox Name="CountryTextBox" Height="25" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"/>
+
+                                <Label Content="Area" Height="25" Grid.Column="0" Grid.Row="1"/>
+                                <TextBox Name="AreaTextBox" Height="25" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
+
+                                <Label Content="Sub-Area" Height="25" Grid.Column="0" Grid.Row="2"/>
+                                <TextBox Name="SubAreaTextBox" Height="25" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"/>
+
+                                <Label Content="Location Name" Height="25" Grid.Column="0" Grid.Row="3"/>
+                                <TextBox Name="LocationNameTextBox" Height="25" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"/>
+
+                                <Label Content="GPS [Lat / Long]" Height="25" Grid.Column="0" Grid.Row="4"/>
+                                <TextBox Name="SubjectGPSLat" Height="25" Margin="0,0,5,0" Grid.Column="1" Grid.Row="4"/>
+                                <TextBox Name="SubjectGPSLong" Height="25" Margin="5,0,0,0" Grid.Column="2" Grid.Row="4"/>
+
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="Shooting Locations" Margin="10,5,5,0" Grid.Row="1">
+                            <Grid Margin="5,5,5,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="180"/>
+                                    <ColumnDefinition Width="170"/>
+                                    <ColumnDefinition Width="170"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="100*"/>
+                                    <RowDefinition Height="100*"/>
+                                    <RowDefinition Height="10*"/>
+                                    <RowDefinition Height="100*"/>
+                                    <RowDefinition Height="100*"/>
+                                    <RowDefinition Height="10*"/>
+                                    <RowDefinition Height="100*"/>
+                                    <RowDefinition Height="100*"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Content="GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="0"/>
+                                <TextBox Name="ShootingLocationLat1Textbox" Height="25" Margin="0,0,5,0" Grid.Column="1" Grid.Row="0"/>
+                                <TextBox Name="ShottingLocationLong1Textbox" Height="25" Margin="5,0,0,0" Grid.Column="2" Grid.Row="0"/>
+                                <Label Content="Parking GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="1"/>
+                                <TextBox Name="ParkingLocationLat1Textbox" Height="25" Margin="0,0,5,0" Grid.Column="1" Grid.Row="1"/>
+                                <TextBox Name="ParkingLocationLong1Textbox" Height="25" Margin="5,0,0,0" Grid.Column="2" Grid.Row="1"/>
+                                <Label Name="PhotoCount1Label" HorizontalAlignment="Center" Content="0" Grid.Column="3" Grid.Row="0"/>
+                                <Button Name="PhotoUpoad1Button" Content="IMG" Margin="6,4,4,4" HorizontalAlignment="Stretch" Grid.Column="4" Grid.Row="0"/>
+
+                                <Label Content="GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="3"/>
+                                <TextBox Name="ShootingLocationLat2Textbox" Height="25" Margin="0,0,5,0" Grid.Column="1" Grid.Row="3"/>
+                                <TextBox Name="ShottingLocationLong2Textbox" Height="25" Margin="5,0,0,0" Grid.Column="2" Grid.Row="3"/>
+                                <Label Content="Parking GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="4"/>
+                                <TextBox Name="ParkingLocationLat2Textbox" Height="25" Margin="0,0,5,0" Grid.Column="1" Grid.Row="4"/>
+                                <TextBox Name="ParkingLocationLong2Textbox" Height="25" Margin="5,0,0,0" Grid.Column="2" Grid.Row="4"/>
+                                <Label Name="PhotoCount2Label" HorizontalAlignment="Center" Content="0" Grid.Column="3" Grid.Row="3"/>
+                                <Button Name="PhotoUpoad2Button" Content="IMG" Margin="6,4,4,4" HorizontalAlignment="Stretch" Grid.Column="4" Grid.Row="3"/>
+
+                                <Label Content="GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="6"/>
+                                <TextBox Name="ShootingLocationLat3Textbox" Height="25" Margin="0,0,5,0" Grid.Column="1" Grid.Row="6"/>
+                                <TextBox Name="ShottingLocationLong3Textbox" Height="25" Margin="5,0,0,0" Grid.Column="2" Grid.Row="6"/>
+                                <Label Content="Parking GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="7"/>
+                                <TextBox Name="ParkingLocationLat3Textbox" Height="25" Margin="0,0,5,0" Grid.Column="1" Grid.Row="7"/>
+                                <TextBox Name="ParkingLocationLong3Textbox" Height="25" Margin="5,0,0,0" Grid.Column="2" Grid.Row="7"/>
+                                <Label Name="PhotoCount3Label" HorizontalAlignment="Center" Content="0" Grid.Column="3" Grid.Row="6"/>
+                                <Button Name="PhotoUpoad3Button" Content="IMG" Margin="6,4,4,4" HorizontalAlignment="Stretch" Grid.Column="4" Grid.Row="6"/>
+
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+
+                    <Grid Name="LocationButtonGrid" Margin="5,5,5,10" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <Button Name="CloseButton" HorizontalAlignment="Stretch" Content="Close" Grid.Row="3" Click="CloseButton_Click"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Settings">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>

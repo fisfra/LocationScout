@@ -20,9 +20,22 @@ namespace LocationScout
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region attributes
+        private MainWindowControler _controler;
+        #endregion
+
+        #region contructors
         public MainWindow()
         {
+            _controler = new MainWindowControler(this);
+
             InitializeComponent();
         }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleClose();
+        }  
+        #endregion
     }
 }
