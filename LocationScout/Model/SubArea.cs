@@ -9,14 +9,16 @@ namespace LocationScout.Model
     internal class SubArea
     {
         #region attributes
-        private string _subareaName;
+        private string _name;
         #endregion
 
         #region constructors
-        public SubArea(string subareaName)
+        public SubArea(string name)
         {
-            _subareaName = subareaName;
+            Name = name;
         }
+
+        public string Name { get => _name; private set => _name = value; }
         #endregion
     }
 }

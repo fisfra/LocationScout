@@ -17,10 +17,11 @@ namespace LocationScout.Model
         public Area(string areaName, List<SubArea> allSubareas)
         {
             Name = areaName;
-            _allSubareas = allSubareas;
+            AllSubareas = allSubareas;
         }
 
         public string Name { get => _name; private set => _name = value; }
+        internal List<SubArea> AllSubareas { get => _allSubareas; private set => _allSubareas = value; }
         #endregion
     }
 }
