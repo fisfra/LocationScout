@@ -24,7 +24,7 @@ namespace LocationScout
 
             try
             {
-                _allCountries = PersistenceManager.ReadCountries();                
+                _allCountries = PersistenceManager.ReadAllCountries();                
             }
             catch (Exception e)
             {
@@ -44,9 +44,43 @@ namespace LocationScout
         #region methods
         internal void Add()
         {
-            string countryName = _window.CountriesACTB.GetCurrentText();
-            string areaName = _window.AreasACTB.GetCurrentText();
-            string subareaName = _window.SubAreasACTB.GetCurrentText();
+            bool newCountryEntered = (_window.CountriesACTB.GetCurrentObject() == null);
+            bool newAreaEntered = (_window.AreasACTB.GetCurrentObject() == null);
+            bool newSubareaEntered = (_window.SubAreasACTB.GetCurrentObject() == null);
+
+            if (newCountryEntered)
+            {
+                string countryName = _window.CountriesACTB.GetCurrentText();
+                string areaName = _window.AreasACTB.GetCurrentText();
+                string subareaName = _window.SubAreasACTB.GetCurrentText();
+
+                // to do
+            }
+
+            else if (newAreaEntered)
+            {
+                string areaName = _window.AreasACTB.GetCurrentText();
+                string subareaName = _window.SubAreasACTB.GetCurrentText();
+
+                // to do
+            }
+
+            else if (newSubareaEntered)
+            {
+                string subareaName = _window.SubAreasACTB.GetCurrentText();
+
+                // to do
+            }
+        }
+
+        private bool AreaExists(string areaName)
+        {
+            return (PersistenceManager.ReadAllAreas().Find(o => o.Name == areaName) != null);
+        }
+
+        private bool SubareaExists(string subareaName)
+        {
+            return (PersistenceManager.ReadAllSubareas().Find(o => o.Name == subareaName) != null);
         }
 
         private void FillCountryACTB()

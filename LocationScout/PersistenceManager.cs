@@ -9,6 +9,26 @@ namespace LocationScout
 {
     internal class PersistenceManager
     {
+        #region constants
+        // *** begin testing -------------------------------------------------------
+        // countries
+        const string c_countryItaly = "Italy";
+        const string c_countryGermany = "Germany";
+
+        // areas
+        const string c_areaAlps = "Alps";
+        const string c_areaTuscany = "Tuscany";
+        const string c_areaNorthernSea = "Northern Sea";
+
+        // subareas
+        const string c_subareaDolomites = "Dolomites";
+        const string c_subareaSouthTyrol = "South Tyrol";
+        const string c_subareaValDOrcia = "Val d'Orcia";
+        const string c_subareaAllgaeuerAlps = "Allgäuer Alpen";
+        const string c_subareaBerechtesgadenerLand = "Berchtesgadener Land";
+        // *** end testing ---------------------------------------------------------
+        #endregion
+
         #region attributes
         #endregion
 
@@ -19,10 +39,27 @@ namespace LocationScout
         #endregion
 
         #region methods
-        public static List<Country> ReadCountries()
+        public static List<Country> ReadAllCountries()
         {
             // to be replace with database reading
-            return ForTesting_FillData();
+            return ForTesting_ReadAllCountries();
+        }
+
+        public static void AddCountry(Country newCountry)
+        {
+            // to do
+        }
+
+        public static List<Area> ReadAllAreas()
+        {
+            // to be replace with database reading
+            return ForTesting_ReadAllAreas();
+        }
+
+        public static List<SubArea> ReadAllSubareas()
+        {
+            // to be replace with database reading
+            return ForTesting_ReadAllSubareas();
         }
 
         private static List<Area> GetAreaNamesByCountryName(string countryName, List<Country_Area> allCountryAreas, List<Area_Subarea> allAreaSubareas)
@@ -57,24 +94,41 @@ namespace LocationScout
         #endregion
 
         // *** Testing only ***
-        private static List<Country> ForTesting_FillData()
+        private static List<SubArea> ForTesting_ReadAllSubareas()
         {
-            // countries
-            const string c_countryItaly = "Italy";
-            const string c_countryGermany = "Germany";
+            return new List<SubArea>()
+            {
+                new SubArea(c_subareaDolomites),
+                new SubArea(c_subareaSouthTyrol),
+                new SubArea(c_subareaValDOrcia),
+                new SubArea(c_subareaAllgaeuerAlps),
+                new SubArea(c_subareaBerechtesgadenerLand)
+            };
+        }
 
-            // areas
-            const string c_areaAlps = "Alps";
-            const string c_areaTuscany = "Tuscany";
-            const string c_areaNorthernSea = "Northern Sea";
+        private static List<Area> ForTesting_ReadAllAreas()
+        {
+            return new List<Area>()
+            {
+                new Area(c_areaAlps, new List<SubArea>()
+                                     {
+                                        new SubArea(c_subareaDolomites),
+                                        new SubArea(c_subareaSouthTyrol),
+                                        new SubArea(c_subareaAllgaeuerAlps),
+                                        new SubArea(c_subareaBerechtesgadenerLand)
+                                     }
+                ),
+                new Area(c_areaTuscany, new List<SubArea>()
+                                     {
+                                        new SubArea(c_subareaValDOrcia)
+                                     }
+                ),
+                new Area(c_areaNorthernSea, null)
+            };
+        }
 
-            // subareas
-            const string c_subareaDolomites = "Dolomites";
-            const string c_subareaSouthTyrol = "South Tyrol";
-            const string c_subareaValDOrcia = "Val d'Orcia";
-            const string c_subareaAllgaeuerAlps = "Allgäuer Alpen";
-            const string c_subareaBerechtesgadenerLand = "Berchtesgadener Land";
-
+        private static List<Country> ForTesting_ReadAllCountries()
+        {
             var allAreaSubareas = new List<Area_Subarea>()
             {
                 new Area_Subarea(c_areaAlps, c_subareaDolomites),
@@ -83,7 +137,6 @@ namespace LocationScout
                 new Area_Subarea(c_areaAlps, c_subareaBerechtesgadenerLand),
                 new Area_Subarea(c_areaTuscany, c_subareaValDOrcia)
             };
-
 
             var allCountryAreas = new List<Country_Area>()
             {
