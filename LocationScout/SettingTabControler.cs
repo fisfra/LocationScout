@@ -17,6 +17,8 @@ namespace LocationScout
 
         private List<Country> _allCountries;
         private ViewModel.MaintainCountries _maintainCountries;
+
+        private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
         #endregion
 
         #region constructors
@@ -63,6 +65,10 @@ namespace LocationScout
                 {
                     MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                else
+                {
+                    SetMessage("Sucessfully added");
+                }
                 Mouse.OverrideCursor = null;
             }
 
@@ -77,6 +83,10 @@ namespace LocationScout
                 {
                     MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                else
+                {
+                    SetMessage("Sucessfully added");
+                }
                 Mouse.OverrideCursor = null;
             }
 
@@ -90,8 +100,36 @@ namespace LocationScout
                 {
                     MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                else
+                {
+                    SetMessage("Sucessfully added");
+                }
                 Mouse.OverrideCursor = null;
             }
+
+            // clear the controls and reset focus
+            _window.CountriesACTB.ClearText();
+            _window.AreasACTB.ClearText();
+            _window.SubAreasACTB.ClearText();
+            _window.CountriesACTB.SetFocus();
+        }
+
+
+        private void SetMessage(string text)
+        {
+            _window.StatusLabel.Content = text;
+
+            _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            _dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 15);
+            _dispatcherTimer.Start();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            _dispatcherTimer.Stop();
+
+            _window.StatusLabel.Content = string.Empty;
         }
 
         private void FillCountryACTB()
