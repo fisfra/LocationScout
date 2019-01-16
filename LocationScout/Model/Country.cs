@@ -1,32 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    internal class Country
+    public class Country
     {
         #region attributes
-        private List<Area> _allAreas;
-
-        public Country(string name)
-        {
-            Name = name;
-        }
-        #endregion
-
-        #region contructors
-        public Country(string name, List<Area> allAreas)
-        {
-            Name = name;
-            _allAreas = allAreas;
-        }
-
+        [Key]
         public string Name { get; set; }
-        internal List<Area> AllAreas { get => _allAreas; private set => _allAreas = value; }
+        public List<Area> Areas { get; set; } // virtual enabled lazy loading
         #endregion
-
     }
 }
