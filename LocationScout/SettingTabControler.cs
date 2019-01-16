@@ -70,11 +70,10 @@ namespace LocationScout
             {
                 Country existingCountry = _window.CountriesACTB.GetCurrentObject() as Country;
                 SubArea newSubarea = new SubArea() { Name = subAreaName };
-                Area newArea = new Area() { Name = areaName, Subareas = new List<SubArea>() { newSubarea } };
-                newArea.Countries = new List<Country>() { existingCountry };
+                Area newArea = new Area() { Name = areaName };
                 
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                if (!DataAccessAdapter.AddAreaToCountry(existingCountry, newArea, out string errorMessage))
+                if (!DataAccessAdapter.AddAreaToCountry(existingCountry, newArea, newSubarea, out string errorMessage))
                 {
                     MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -85,7 +84,6 @@ namespace LocationScout
             {
                 Area existingArea = _window.AreasACTB.GetCurrentObject() as Area;
                 SubArea newSubArea = new SubArea() { Name = subAreaName };
-                newSubArea.Areas = new List<Area>() { existingArea };
 
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
                 if (!DataAccessAdapter.AddSubAreaToArea(existingArea, newSubArea, out string errorMessage))
@@ -94,18 +92,6 @@ namespace LocationScout
                 }
                 Mouse.OverrideCursor = null;
             }
-        }
-
-        private bool AreaExists(string areaName)
-        {
-            return false;
-            //return (PersistenceManager.ReadAllAreas().Find(o => o.Name == areaName) != null);
-        }
-
-        private bool SubareaExists(string subareaName)
-        {
-            return false;
-            //return (PersistenceManager.ReadAllSubareas().Find(o => o.Name == subareaName) != null);
         }
 
         private void FillCountryACTB()

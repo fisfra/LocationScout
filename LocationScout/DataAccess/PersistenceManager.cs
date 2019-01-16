@@ -107,15 +107,24 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static bool AddSubArea(SubArea newSubArea, out string errorMessage)
+        internal static bool AddSubAreaToArea(Area updatedArea, SubArea newSubArea, out string errorMessage)
         {
             bool success = true;
             errorMessage = string.Empty;
 
             try
             {
+                // ensure to all resources of the datacontext are disposed correctly
                 using (var db = new LocationScoutContext())
                 {
+                    // get existing area from database
+                    Area existingArea = db.Areas.FirstOrDefault(o => o.Name == updatedArea.Name);
+
+                    // 
+                    if (newSubArea.Areas == null) newSubArea.Areas = new List<Area>();
+                    newSubArea.Areas.Add(existingArea);
+
+                    //                 
                     db.SubAreas.Add(newSubArea);
                     db.SaveChanges();
                 }
@@ -129,46 +138,37 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-
-        internal static bool UpdateCountry(Country updatedCountry, out string errorMessage)
+        internal static bool AddAreaToCountry(Country updatedCountry, Area newArea, SubArea newSubArea, out string errorMessage)
         {
             bool success = true;
             errorMessage = string.Empty;
 
             try
             {
+                // ensure to all resources of the datacontext are disposed correctly
                 using (var db = new LocationScoutContext())
                 {
-                    var country = db.Countries.SingleOrDefault(o => o.Name == updatedCountry.Name);
-                    country.Areas = updatedCountry.Areas;
-                    db.Entry(country).State = EntityState.Modified;
+                    // get the existing country from database
+                    Country existingCountry = db.Countries.FirstOrDefault(o => o.Name == updatedCountry.Name);
 
-                    var result = db.SaveChanges();
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = BuildDBErrorMessages(e);
-                success = false;
-            }
+                    // add the existing country to the new area
+                    if (newArea.Countries == null) newArea.Countries = new List<Country>();
+                    newArea.Countries.Add(existingCountry);
 
-            return success;
-        }
+                    // add the new subarea to the new area
+                    if (newArea.Subareas == null) newArea.Subareas = new List<SubArea>();
+                    newArea.Subareas.Add(newSubArea);
 
-        internal static bool AddAreaCountry(Country updatedCountry, Area newArea, out string errorMessage)
-        {
-            bool success = true;
-            errorMessage = string.Empty;
+                    // add the new area to the new subarea
+                    if (newSubArea.Areas == null) newSubArea.Areas = new List<Area>();
+                    newSubArea.Areas.Add(newArea);
 
-            try
-            {
-                using (var db = new LocationScoutContext())
-                {
-                    var country = db.Countries.SingleOrDefault(o => o.Name == updatedCountry.Name);
-                    country.Areas.Add(newArea);
-                    db.Entry(country).State = EntityState.Modified;
+                    // now add the new area and subarea to the database
+                    db.SubAreas.Add(newSubArea);
+                    db.Areas.Add(newArea);
 
-                    var result = db.SaveChanges();
+                    // save the changes to the database
+                    db.SaveChanges();
                 }
             }
             catch (Exception e)
