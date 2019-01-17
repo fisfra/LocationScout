@@ -36,102 +36,40 @@ namespace LocationScout
             _window.CountriesACTB.Leaving += CountriesACTB_Leaving;
             _window.AreasACTB.Leaving += AreasACTB_Leaving;
             _window.AreasACTB.LeavingViaShift += AreasACTB_LeavingViaShift;
+            _window.SubAreasACTB.Leaving += SubAreasACTB_Leaving;
+            _window.SubAreasACTB.LeavingViaShift += SubAreasACTB_LeavingViaShift;
 
             _maintainCountries = new ViewModel.MaintainCountries();
         }
+
+
         #endregion
 
         #region methods
         internal void Add()
         {
-            bool newCountryEntered = (_window.CountriesACTB.GetCurrentObject() == null);
-            bool newAreaEntered = (_window.AreasACTB.GetCurrentObject() == null);
-            bool newSubareaEntered = (_window.SubAreasACTB.GetCurrentObject() == null);
-
+            // get values form UI
             string countryName = _window.CountriesACTB.GetCurrentText();
             string areaName = _window.AreasACTB.GetCurrentText();
             string subAreaName = _window.SubAreasACTB.GetCurrentText();
 
-            if (newCountryEntered)
-            {
-                AddCountry();
-            }
+            // db operations might take a while
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
-            else if (newAreaEntered)
-            {
-                AddArea();
-            }
+            // add country to database
+            var success = DataAccessAdapter.SmartAddCountry(countryName, areaName, subAreaName, out string errorMessage);
 
-            else if (newSubareaEntered)
-            {
-                AddSubArea();
-            }
+            // refresh or error handling
+            AfterDBWriteSteps(success, errorMessage);
+
+            // reset cursor
+            Mouse.OverrideCursor = null;
 
             // clear the controls and reset focus
             _window.CountriesACTB.ClearText();
             _window.AreasACTB.ClearText();
             _window.SubAreasACTB.ClearText();
             _window.CountriesACTB.SetFocus();
-        }
-
-        private void AddCountry()
-        {
-            // get values form UI
-            string countryName = _window.CountriesACTB.GetCurrentText();
-            string areaName = _window.AreasACTB.GetCurrentText();
-            string subAreaName = _window.SubAreasACTB.GetCurrentText();
-
-            // db operations might take a while
-            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-
-            // add country to database
-            var success = DataAccessAdapter.AddCountry(countryName, areaName, subAreaName, out string errorMessage);
-
-            // refresh or error handling
-            AfterDBWriteSteps(success, errorMessage);
-
-            // reset cursor
-            Mouse.OverrideCursor = null;
-        }
-
-        private void AddArea()
-        {
-            // get values form UI
-            string countryName = _window.CountriesACTB.GetCurrentText();
-            string areaName = _window.AreasACTB.GetCurrentText();
-            string subAreaName = _window.SubAreasACTB.GetCurrentText();
-
-            // db operations might take a while
-            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-
-            // add country to database
-            var success = DataAccessAdapter.AddAreaToCountry(countryName, areaName, subAreaName, out string errorMessage);
-
-            // refresh or error handling
-            AfterDBWriteSteps(success, errorMessage);
-
-            // reset cursor
-            Mouse.OverrideCursor = null;
-        }
-
-        private void AddSubArea()
-        {
-            // get values form UI
-            string countryName = _window.CountriesACTB.GetCurrentText();
-            string areaName = _window.AreasACTB.GetCurrentText();
-            string subAreaName = _window.SubAreasACTB.GetCurrentText();
-
-            // db operations might take a while
-            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-
-            // add country to database
-            var success = DataAccessAdapter.AddSubAreaToArea(areaName, subAreaName, out string errorMessage);
-
-            // refresh or error handling
-            AfterDBWriteSteps(success, errorMessage);
-
-            // reset cursor
-            Mouse.OverrideCursor = null;
         }
 
         private void AfterDBWriteSteps(bool success, string errorMessage)
@@ -238,6 +176,16 @@ namespace LocationScout
         {
             _window.CountriesACTB.SetFocus();
         }
+
+        private void SubAreasACTB_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
+        {
+            _window.AreasACTB.SetFocus();
+        }
+
+        private void SubAreasACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
+        {
+            _window.AddButton.Focus();
+        }        
         #endregion
     }
 }

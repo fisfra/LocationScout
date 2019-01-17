@@ -63,44 +63,54 @@ namespace LocationScout.DataAccess
             TestDataGenerator.ReadAll_Country_Areas(out countryNames_areaNames);
         }
 
-        internal static bool AddCountry(Country newCountry, out string errorMessage)
+        internal static bool SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMesssage)
         {
             bool success = true;
-            errorMessage = string.Empty;
+            errorMesssage = string.Empty;
 
             try
             {
                 using (var db = new LocationScoutContext())
                 {
-                    db.Countries.Add(newCountry);
+                    // first check if country / area / subarea already exist in the DB
+                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Name == countryName);
+                    var areaFromDB = db.Areas.FirstOrDefault(o => o.Name == areaName);
+                    var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Name == subAreaName);
+
+                    // create new objects or take the once from DB
+                    var country = (countryFromDB == null) ? new Country() { Name = countryName, Areas = new List<Area>() } : countryFromDB;
+                    var area = (areaFromDB == null) ? new Area() { Name = areaName, Countries = new List<Country>(), Subareas = new List<SubArea>() } : areaFromDB;
+                    var subArea = (subAreaFromDB == null) ? new SubArea() { Name = subAreaName, Areas = new List<Area>() } : subAreaFromDB;
+
+                    // add relations, if new country
+                    if (countryFromDB == null)
+                    {
+                        country.Areas.Add(area);
+                        db.Countries.Add(country);
+                    }
+
+                    // add relations, if new area
+                    if (areaFromDB == null)
+                    {
+                        area.Countries.Add(country);
+                        area.Subareas.Add(subArea);
+                        db.Areas.Add(area);
+                    }
+
+                    // add relations, if new subarea
+                    if (subAreaFromDB == null)
+                    {
+                        subArea.Areas.Add(area);
+                        db.SubAreas.Add(subArea);
+                    }
+
+                    // save the changes to the DB
                     db.SaveChanges();
                 }
             }
             catch (Exception e)
             {
-                errorMessage = BuildDBErrorMessages(e);
-                success = false;
-            }
-
-            return success;
-        }
-
-        internal static bool AddArea(Area newArea, out string errorMessage)
-        {
-            bool success = true;
-            errorMessage = string.Empty;
-
-            try
-            {
-                using (var db = new LocationScoutContext())
-                {
-                    db.Areas.Add(newArea);
-                    db.SaveChanges();
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = BuildDBErrorMessages(e);
+                errorMesssage = BuildDBErrorMessages(e);
                 success = false;
             }
 
@@ -120,87 +130,6 @@ namespace LocationScout.DataAccess
                 {
                     // get the existing area from database
                     areaFromDB = db.Areas.FirstOrDefault(o => o.Name == areaName);
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = BuildDBErrorMessages(e);
-                success = false;
-            }
-
-            return success;
-        }
-
-        internal static bool GetCountry(string countryName, out Country countryFromDB, out string errorMessage)
-        {
-            bool success = true;
-            errorMessage = string.Empty;
-            countryFromDB = null;
-
-            try
-            {
-                // ensure to all resources of the datacontext are disposed correctly
-                using (var db = new LocationScoutContext())
-                {
-                    // get the existing country from database
-                    countryFromDB = db.Countries.FirstOrDefault(o => o.Name == countryName);
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = BuildDBErrorMessages(e);
-                success = false;
-            }
-
-            return success;
-        }
-
-        internal static bool AddSubAreaToArea(Area updatedArea, SubArea newSubArea, out string errorMessage)
-        {
-            bool success = true;
-            errorMessage = string.Empty;
-
-            try
-            {
-                // ensure to all resources of the datacontext are disposed correctly
-                using (var db = new LocationScoutContext())
-                {
-                    // add new subarea to database         
-                    db.SubAreas.Add(newSubArea);
-
-                    // save the changes to the database
-                    db.SaveChanges();
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = BuildDBErrorMessages(e);
-                success = false;
-            }
-
-            return success;
-        }
-
-        internal static bool AddAreaToCountry(string countryName, Area newArea, SubArea newSubArea, out string errorMessage)
-        {
-            bool success = true;
-            errorMessage = string.Empty;
-
-            try
-            {
-                // ensure to all resources of the datacontext are disposed correctly
-                using (var db = new LocationScoutContext())
-                {
-                    // get the existing country from database and add to area
-                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Name == countryName);
-                    newArea.Countries.Add(countryFromDB);
-
-                    // add the new area and subarea to the database
-                    db.SubAreas.Add(newSubArea);
-                    db.Areas.Add(newArea);
-
-                    // save the changes to the database
-                    db.SaveChanges();
                 }
             }
             catch (Exception e)
