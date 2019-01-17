@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    internal class PhotoPlace
+    public class PhotoPlace
     {
         #region attributes
-        private SubjectLocation _subjectLocation;
-        private List<ParkingLocation> _allParkingLocations;
+        [Key]
+        public long Id { get; set; }
+        public List<ParkingLocation> ParkingLocations { get; set; }
         #endregion
 
         #region constructors   
-        public PhotoPlace(SubjectLocation subjectLocation, List<ParkingLocation> allParkingLocations)
-        {
-            _subjectLocation = subjectLocation;
-            _allParkingLocations = allParkingLocations;
+        public PhotoPlace()
+        { 
         }
         #endregion
     }

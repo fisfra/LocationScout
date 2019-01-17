@@ -38,11 +38,15 @@ namespace LocationScout
             _controler.HandleClose();
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
+        private void SettingAddButton_Click(object sender, RoutedEventArgs e)
         {
-            _controler.HandleAdd();
-        }  
-        
+            _controler.HandleSettingAdd();
+        }
+
+        private void LocationButtonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleLocationAdd();
+        }
         #endregion
     }
 }

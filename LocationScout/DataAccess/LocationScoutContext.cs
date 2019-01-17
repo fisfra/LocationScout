@@ -26,6 +26,11 @@ namespace LocationScout.DataAccess
         public DbSet<Country> Countries { get; set; }
         public DbSet<Area> Areas { get; set; }
         public DbSet<SubArea> SubAreas { get; set; }
+
+        public DbSet<PhotoPlace> PhotoPlaces {get; set;}
+        public DbSet<SubjectLocation> SubjectLocations { get; set; }
+        public DbSet<ParkingLocation> ParkingLocations { get; set; }
+        public DbSet<ShootingLocation> ShootingLocations { get; set; }  
     }
 }
 

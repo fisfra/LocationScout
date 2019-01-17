@@ -14,44 +14,35 @@ namespace LocationScout
     {
         #region attributes
         private MainWindow _window;
+        private MainWindowControler _mainControler;
 
-        private List<Country> _allCountries;
         private ViewModel.MaintainCountries _maintainCountries;
-
         private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
         #endregion
 
         #region constructors
-        public SettingTabControler(MainWindow window)
+        public SettingTabControler(MainWindow window, MainWindowControler mainControler)
         {
             _window = window;
+            _mainControler = mainControler;
 
-            if (!DataAccessAdapter.ReadAllCountries(out _allCountries, out string errorMessage))
-            {
-                MessageBox.Show("Error reading saved data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            FillCountryACTB();
-
-            _window.CountriesACTB.Leaving += CountriesACTB_Leaving;
-            _window.AreasACTB.Leaving += AreasACTB_Leaving;
-            _window.AreasACTB.LeavingViaShift += AreasACTB_LeavingViaShift;
-            _window.SubAreasACTB.Leaving += SubAreasACTB_Leaving;
-            _window.SubAreasACTB.LeavingViaShift += SubAreasACTB_LeavingViaShift;
+            _window.SE_CountriesACTB.Leaving += CountriesACTB_Leaving;
+            _window.SE_AreasACTB.Leaving += AreasACTB_Leaving;
+            _window.SE_AreasACTB.LeavingViaShift += AreasACTB_LeavingViaShift;
+            _window.SE_SubAreasACTB.Leaving += SubAreasACTB_Leaving;
+            _window.SE_SubAreasACTB.LeavingViaShift += SubAreasACTB_LeavingViaShift;
 
             _maintainCountries = new ViewModel.MaintainCountries();
         }
-
-
         #endregion
 
         #region methods
         internal void Add()
         {
             // get values form UI
-            string countryName = _window.CountriesACTB.GetCurrentText();
-            string areaName = _window.AreasACTB.GetCurrentText();
-            string subAreaName = _window.SubAreasACTB.GetCurrentText();
+            string countryName = _window.SE_CountriesACTB.GetCurrentText();
+            string areaName = _window.SE_AreasACTB.GetCurrentText();
+            string subAreaName = _window.SE_SubAreasACTB.GetCurrentText();
 
             // db operations might take a while
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
@@ -66,10 +57,10 @@ namespace LocationScout
             Mouse.OverrideCursor = null;
 
             // clear the controls and reset focus
-            _window.CountriesACTB.ClearText();
-            _window.AreasACTB.ClearText();
-            _window.SubAreasACTB.ClearText();
-            _window.CountriesACTB.SetFocus();
+            _window.SE_CountriesACTB.ClearText();
+            _window.SE_AreasACTB.ClearText();
+            _window.SE_SubAreasACTB.ClearText();
+            _window.SE_CountriesACTB.SetFocus();
         }
 
         private void AfterDBWriteSteps(bool success, string errorMessage)
@@ -78,12 +69,12 @@ namespace LocationScout
             if (success)
             {
                 // read the countries again from database and update _allCountries
-                success = DataAccessAdapter.ReadAllCountries(out _allCountries, out errorMessage);
+                success = _mainControler.RefreshAllCountries(out errorMessage);
 
                 // set (error) message
                 if (success)
                 {
-                    FillCountryACTB();
+                    _mainControler.RefreshCountryControls();
                     SetMessage("Sucessfully added");
                 }
                 else
@@ -121,19 +112,6 @@ namespace LocationScout
             _window.StatusLabel.Content = string.Empty;
         }
 
-        private void FillCountryACTB()
-        {
-            if (_allCountries != null)
-            {
-                _window.CountriesACTB.ClearSearchPool();
-
-                foreach (var country in _allCountries)
-                {
-                    _window.CountriesACTB.AddObject(country.Name, country);
-                }
-            }
-        }
-
         private void AreasACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             var areaName = e.Text;
@@ -142,15 +120,15 @@ namespace LocationScout
             // known area (== null is a new area)
             if (area != null)
             {
-                _window.SubAreasACTB.ClearSearchPool();
+                _window.SE_SubAreasACTB.ClearSearchPool();
 
                 foreach (var sa in area.Subareas)
                 {
-                    _window.SubAreasACTB.AddObject(sa.Name, sa);
+                    _window.SE_SubAreasACTB.AddObject(sa.Name, sa);
                 }
             }
 
-            _window.SubAreasACTB.SetFocus(); 
+            _window.SE_SubAreasACTB.SetFocus(); 
         }
 
         private void CountriesACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
@@ -160,31 +138,31 @@ namespace LocationScout
             // known country (== null is a new country)
             if (country != null)
             {
-                _window.AreasACTB.ClearSearchPool();
+                _window.SE_AreasACTB.ClearSearchPool();
 
                 _maintainCountries.SelectedCountry = country;
                 foreach (var a in _maintainCountries.SelectedCountry.Areas)
                 {
-                    _window.AreasACTB.AddObject(a.Name, a);
+                    _window.SE_AreasACTB.AddObject(a.Name, a);
                 }
             }
 
-            _window.AreasACTB.SetFocus(); 
+            _window.SE_AreasACTB.SetFocus(); 
         }
 
         private void AreasACTB_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
-            _window.CountriesACTB.SetFocus();
+            _window.SE_CountriesACTB.SetFocus();
         }
 
         private void SubAreasACTB_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
-            _window.AreasACTB.SetFocus();
+            _window.SE_AreasACTB.SetFocus();
         }
 
         private void SubAreasACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
-            _window.AddButton.Focus();
+            _window.SettingsAddButton.Focus();
         }        
         #endregion
     }

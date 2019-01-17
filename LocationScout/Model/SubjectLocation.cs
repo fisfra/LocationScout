@@ -6,22 +6,19 @@ using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    internal class SubjectLocation : LocationBase
+    public class SubjectLocation : LocationBase
     {
         #region attributes
-        private string _country;
-        private string _area;
-        private string _subArea;
-        private string _locationName;
+        public Country SubjectCountry {get; set;}
+        public Area SubjectArea {get; set;}
+        public SubArea SubjectSubArea { get; set; }
+        public string LocationName { get; set; }
+        public List<ParkingLocation> ParkingLocations { get; set; }
         #endregion
 
         #region constructors
-        public SubjectLocation(GPSCoordinates coordinates, string country, string area, string subArea, string locationName) : base(coordinates)
+        public SubjectLocation()
         {
-            _country = country;
-            _area = area;
-            _subArea = subArea;
-            _locationName = locationName;
         }
         #endregion
     }

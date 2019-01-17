@@ -47,6 +47,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
@@ -71,12 +72,22 @@
     <Compile Include="DataAccess\LocationScoutContext.cs" />
     <Compile Include="DataAccess\PersistenceManager.cs" />
     <Compile Include="DataAccess\TestDataGenerator.cs" />
+    <Compile Include="LocationTabControler.cs" />
     <Compile Include="Migrations\201901161228178_InitialCreate.cs" />
     <Compile Include="Migrations\201901161228178_InitialCreate.Designer.cs">
       <DependentUpon>201901161228178_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901171541329_Location.cs" />
+    <Compile Include="Migrations\201901171541329_Location.Designer.cs">
+      <DependentUpon>201901171541329_Location.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901171548337_Location-Fix.cs" />
+    <Compile Include="Migrations\201901171548337_Location-Fix.Designer.cs">
+      <DependentUpon>201901171548337_Location-Fix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SettingTabControler.cs" />
+    <Compile Include="ViewModel\Location.cs" />
     <Compile Include="ViewModel\MaintainCountries.cs" />
     <Compile Include="ViewModel\SettingDisplayItem.cs" />
     <Page Include="MainWindow.xaml">
@@ -120,6 +131,12 @@
     </Compile>
     <EmbeddedResource Include="Migrations\201901161228178_InitialCreate.resx">
       <DependentUpon>201901161228178_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901171541329_Location.resx">
+      <DependentUpon>201901171541329_Location.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901171548337_Location-Fix.resx">
+      <DependentUpon>201901171548337_Location-Fix.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -7,16 +7,17 @@ using System.Windows.Media.Imaging;
 
 namespace LocationScout.Model
 {
-    internal class ShootingLocation : LocationBase
+    public class ShootingLocation : LocationBase
     {
         #region attributes
-        private List<BitmapImage> _locationPhotos;
+        public ParkingLocation ParkingLocation { get; set; }
+
+        public List<byte[]> LocationPhotos { get; set; }
         #endregion
 
         #region constructors
-        public ShootingLocation(GPSCoordinates coordinates, List<BitmapImage> locationPhotos) : base(coordinates)
-        {
-            _locationPhotos = locationPhotos;
+        public ShootingLocation()
+        { 
         }
         #endregion
     }

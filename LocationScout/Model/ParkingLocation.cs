@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    internal class ParkingLocation : LocationBase
+    public class ParkingLocation : LocationBase
     {
         #region attributes
-        private List<ShootingLocation> _allShootingLocations;
+        public PhotoPlace PhotoPlace { get; set; }
+        public List<ShootingLocation> ShootingLocations { get; set; }
         #endregion
 
-        public ParkingLocation(GPSCoordinates coordinates, List<ShootingLocation> allShootingLocations) : base(coordinates)
+        public ParkingLocation()
         {
-            _allShootingLocations = allShootingLocations;
         }
     }
 }

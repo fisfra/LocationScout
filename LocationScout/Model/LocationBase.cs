@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace LocationScout.Model
 {
-    internal class LocationBase
+    public class LocationBase
     {
         #region attributes
-        private GPSCoordinates _coordinates;
+        [Key]
+        public long Id { get; set; }
+        public GPSCoordinates Coordinates { get; set; }
         #endregion
 
         #region constructors
-        public LocationBase(GPSCoordinates coordinates)
+        public LocationBase()
         {
-            _coordinates = coordinates;
         }
         #endregion
 
