@@ -54,57 +54,17 @@ namespace LocationScout
 
             if (newCountryEntered)
             {
-                SubArea newSubarea = new SubArea() { Name = subAreaName };
-                Area newArea = new Area() { Name = areaName, Subareas = new List<SubArea>() { newSubarea } };
-                Country newCountry = new Country() { Name = countryName, Areas = new List<Area>() { newArea } };
-                newArea.Countries = new List<Country>() { newCountry };
-                newSubarea.Areas = new List<Area>() { newArea };
-
-                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                if (!DataAccessAdapter.AddCountry(newCountry, out string errorMessage))
-                {
-                    MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else
-                {
-                    SetMessage("Sucessfully added");
-                }
-                Mouse.OverrideCursor = null;
+                AddCountry();
             }
 
             else if (newAreaEntered)
             {
-                Country existingCountry = _window.CountriesACTB.GetCurrentObject() as Country;
-                SubArea newSubarea = new SubArea() { Name = subAreaName };
-                Area newArea = new Area() { Name = areaName };
-                
-                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                if (!DataAccessAdapter.AddAreaToCountry(existingCountry, newArea, newSubarea, out string errorMessage))
-                {
-                    MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else
-                {
-                    SetMessage("Sucessfully added");
-                }
-                Mouse.OverrideCursor = null;
+                AddArea();
             }
 
             else if (newSubareaEntered)
             {
-                Area existingArea = _window.AreasACTB.GetCurrentObject() as Area;
-                SubArea newSubArea = new SubArea() { Name = subAreaName };
-
-                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                if (!DataAccessAdapter.AddSubAreaToArea(existingArea, newSubArea, out string errorMessage))
-                {
-                    MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else
-                {
-                    SetMessage("Sucessfully added");
-                }
-                Mouse.OverrideCursor = null;
+                AddSubArea();
             }
 
             // clear the controls and reset focus
@@ -114,6 +74,97 @@ namespace LocationScout
             _window.CountriesACTB.SetFocus();
         }
 
+        private void AddCountry()
+        {
+            // get values form UI
+            string countryName = _window.CountriesACTB.GetCurrentText();
+            string areaName = _window.AreasACTB.GetCurrentText();
+            string subAreaName = _window.SubAreasACTB.GetCurrentText();
+
+            // db operations might take a while
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+
+            // add country to database
+            var success = DataAccessAdapter.AddCountry(countryName, areaName, subAreaName, out string errorMessage);
+
+            // refresh or error handling
+            AfterDBWriteSteps(success, errorMessage);
+
+            // reset cursor
+            Mouse.OverrideCursor = null;
+        }
+
+        private void AddArea()
+        {
+            // get values form UI
+            string countryName = _window.CountriesACTB.GetCurrentText();
+            string areaName = _window.AreasACTB.GetCurrentText();
+            string subAreaName = _window.SubAreasACTB.GetCurrentText();
+
+            // db operations might take a while
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+
+            // add country to database
+            var success = DataAccessAdapter.AddAreaToCountry(countryName, areaName, subAreaName, out string errorMessage);
+
+            // refresh or error handling
+            AfterDBWriteSteps(success, errorMessage);
+
+            // reset cursor
+            Mouse.OverrideCursor = null;
+        }
+
+        private void AddSubArea()
+        {
+            // get values form UI
+            string countryName = _window.CountriesACTB.GetCurrentText();
+            string areaName = _window.AreasACTB.GetCurrentText();
+            string subAreaName = _window.SubAreasACTB.GetCurrentText();
+
+            // db operations might take a while
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+
+            // add country to database
+            var success = DataAccessAdapter.AddSubAreaToArea(areaName, subAreaName, out string errorMessage);
+
+            // refresh or error handling
+            AfterDBWriteSteps(success, errorMessage);
+
+            // reset cursor
+            Mouse.OverrideCursor = null;
+        }
+
+        private void AfterDBWriteSteps(bool success, string errorMessage)
+        {
+            // no error
+            if (success)
+            {
+                // read the countries again from database and update _allCountries
+                success = DataAccessAdapter.ReadAllCountries(out _allCountries, out errorMessage);
+
+                // set (error) message
+                if (success)
+                {
+                    FillCountryACTB();
+                    SetMessage("Sucessfully added");
+                }
+                else
+                {
+                    ErrorMessage("Error re-reading data.\n" + errorMessage);
+                }
+            }
+
+            // error
+            else
+            {
+                MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ErrorMessage(string text)
+        {
+            MessageBox.Show(text, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
 
         private void SetMessage(string text)
         {
@@ -136,6 +187,8 @@ namespace LocationScout
         {
             if (_allCountries != null)
             {
+                _window.CountriesACTB.ClearSearchPool();
+
                 foreach (var country in _allCountries)
                 {
                     _window.CountriesACTB.AddObject(country.Name, country);
@@ -151,6 +204,8 @@ namespace LocationScout
             // known area (== null is a new area)
             if (area != null)
             {
+                _window.SubAreasACTB.ClearSearchPool();
+
                 foreach (var sa in area.Subareas)
                 {
                     _window.SubAreasACTB.AddObject(sa.Name, sa);
@@ -167,6 +222,8 @@ namespace LocationScout
             // known country (== null is a new country)
             if (country != null)
             {
+                _window.AreasACTB.ClearSearchPool();
+
                 _maintainCountries.SelectedCountry = country;
                 foreach (var a in _maintainCountries.SelectedCountry.Areas)
                 {

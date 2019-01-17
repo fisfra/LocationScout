@@ -38,7 +38,7 @@ namespace LocationScout
             _controler.HandleClose();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleAdd();
         }  

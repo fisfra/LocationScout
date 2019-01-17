@@ -213,7 +213,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <Button Content="Add" Grid.Row="0" Width="100" Height="25" Margin="5,20,5,5" Click="Button_Click"/>
+                                <Button Content="Add" Grid.Row="0" Width="100" Height="25" Margin="5,20,5,5" Click="AddButton_Click"/>
                             </Grid>
 
                         </Grid>
