@@ -11,8 +11,10 @@ namespace LocationScout.Model
     {
         #region attributes
         [Key]
+        public long Id { get; set; }
         public string Name { get; set; }
-        public virtual List<Area> Areas { get; set; }
+        public List<Area> Areas { get; set; }
+        public List<Country> Countries { get; set; }
         #endregion
     }
 }

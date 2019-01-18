@@ -120,11 +120,21 @@ namespace LocationScout
             // known area (== null is a new area)
             if (area != null)
             {
+                // remove the odl results
                 _window.SE_SubAreasACTB.ClearSearchPool();
 
-                foreach (var sa in area.Subareas)
+                // remember the selected area
+                _maintainCountries.SelectedArea = area;
+
+                // only take the subareas which are also assigned to the current country
+                // an area can contain subareas outside an assigned country (e.g. Germany - Alps - Berner Alps --> not in Germany)
+                var relevantSubAreas = (_maintainCountries.SelectedCountry != null) ? _mainControler.GetAllSubAreas(_maintainCountries.SelectedCountry.Id, area.Id) : null;
+                if (relevantSubAreas != null)
                 {
-                    _window.SE_SubAreasACTB.AddObject(sa.Name, sa);
+                    foreach (var sa in relevantSubAreas)
+                    {
+                        _window.SE_SubAreasACTB.AddObject(sa.Name, sa);
+                    }
                 }
             }
 
@@ -134,6 +144,9 @@ namespace LocationScout
         private void CountriesACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             var country = e.Object as Country;
+
+            // remember the currently selected country (null for new countries)
+            _maintainCountries.SelectedCountry = country;
 
             // known country (== null is a new country)
             if (country != null)
@@ -151,7 +164,7 @@ namespace LocationScout
         }
 
         private void AreasACTB_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
-        {
+        {            
             _window.SE_CountriesACTB.SetFocus();
         }
 
@@ -162,6 +175,8 @@ namespace LocationScout
 
         private void SubAreasACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
+
+
             _window.SettingsAddButton.Focus();
         }        
         #endregion

@@ -11,6 +11,7 @@ namespace LocationScout.ViewModel
     {
         #region attributes
         internal Country SelectedCountry { get; set; }
+        internal Area SelectedArea { get; set; }
         #endregion
 
         #region constructors

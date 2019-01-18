@@ -35,8 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoCompleteTextBox">
-      <HintPath>..\..\fisfra\Movie20\AutoCompleteTextBox\bin\Release\AutoCompleteTextBox.dll</HintPath>
+    <Reference Include="AutoCompleteTextBox, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\fisfra\Movie20\AutoCompleteTextBox\bin\Debug\AutoCompleteTextBox.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -84,6 +85,22 @@
     <Compile Include="Migrations\201901171548337_Location-Fix.cs" />
     <Compile Include="Migrations\201901171548337_Location-Fix.Designer.cs">
       <DependentUpon>201901171548337_Location-Fix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901171616403_Ids-Added.cs" />
+    <Compile Include="Migrations\201901171616403_Ids-Added.Designer.cs">
+      <DependentUpon>201901171616403_Ids-Added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901171619458_Adjust-Country-Relation.cs" />
+    <Compile Include="Migrations\201901171619458_Adjust-Country-Relation.Designer.cs">
+      <DependentUpon>201901171619458_Adjust-Country-Relation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901171621351_Adjust-Country-Relation-2.cs" />
+    <Compile Include="Migrations\201901171621351_Adjust-Country-Relation-2.Designer.cs">
+      <DependentUpon>201901171621351_Adjust-Country-Relation-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901171641236_Adjust-Country-Relation-3.cs" />
+    <Compile Include="Migrations\201901171641236_Adjust-Country-Relation-3.Designer.cs">
+      <DependentUpon>201901171641236_Adjust-Country-Relation-3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SettingTabControler.cs" />
@@ -137,6 +154,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901171548337_Location-Fix.resx">
       <DependentUpon>201901171548337_Location-Fix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901171616403_Ids-Added.resx">
+      <DependentUpon>201901171616403_Ids-Added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901171619458_Adjust-Country-Relation.resx">
+      <DependentUpon>201901171619458_Adjust-Country-Relation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901171621351_Adjust-Country-Relation-2.resx">
+      <DependentUpon>201901171621351_Adjust-Country-Relation-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901171641236_Adjust-Country-Relation-3.resx">
+      <DependentUpon>201901171641236_Adjust-Country-Relation-3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

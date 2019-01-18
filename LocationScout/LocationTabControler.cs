@@ -44,8 +44,7 @@ namespace LocationScout
             Area area = e.Object as Area;
 
             RefreshSubAreaACTB(area.Subareas);
-
-            _window.SL_AreaACTB.ClearText();
+           
             _window.SL_SubAreaACTB.ClearText();
 
             _window.SL_SubAreaACTB.SetFocus();            

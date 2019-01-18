@@ -53,17 +53,17 @@
 
                                     <Label Content="Country" Height="Auto" Grid.Column="0" Grid.Row="0"/>
                                     <control:AutoCompleteTextBox x:Name="SL_CountriesACTB" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
-                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="1000"/>
+                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="1000" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Area" Height="Auto" Grid.Column="0" Grid.Row="1"/>
                                     <control:AutoCompleteTextBox x:Name="SL_AreaACTB" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="1" 
-                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="900"/>
+                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="900" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Sub-Area" Height="Auto" Grid.Column="0" Grid.Row="2"/>
                                     <control:AutoCompleteTextBox x:Name="SL_SubAreaACTB" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="2" 
-                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="800"/>
+                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="800" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Location Name" Height="Auto" Grid.Column="0" Grid.Row="3"/>

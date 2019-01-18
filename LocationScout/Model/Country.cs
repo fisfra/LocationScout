@@ -11,8 +11,10 @@ namespace LocationScout.Model
     {
         #region attributes
         [Key]
+        public long Id { get; set; }
         public string Name { get; set; }
-        public List<Area> Areas { get; set; } // virtual enabled lazy loading
+        public List<Area> Areas { get; set; } 
+        public List<SubArea>SubAreas { get; set; }
         #endregion
     }
 }

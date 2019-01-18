@@ -41,7 +41,7 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.Subareas)).ToList();
+                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.Subareas)).Include(c => c.SubAreas).ToList();
                 }
             }
             catch (Exception e)
@@ -78,14 +78,15 @@ namespace LocationScout.DataAccess
                     var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Name == subAreaName);
 
                     // create new objects or take the once from DB
-                    var country = (countryFromDB == null) ? new Country() { Name = countryName, Areas = new List<Area>() } : countryFromDB;
+                    var country = (countryFromDB == null) ? new Country() { Name = countryName, Areas = new List<Area>(), SubAreas = new List<SubArea>() } : countryFromDB;
                     var area = (areaFromDB == null) ? new Area() { Name = areaName, Countries = new List<Country>(), Subareas = new List<SubArea>() } : areaFromDB;
-                    var subArea = (subAreaFromDB == null) ? new SubArea() { Name = subAreaName, Areas = new List<Area>() } : subAreaFromDB;
+                    var subArea = (subAreaFromDB == null) ? new SubArea() { Name = subAreaName, Countries = new List<Country>(), Areas = new List<Area>() } : subAreaFromDB;
 
                     // add relations, if new country
                     if (countryFromDB == null)
                     {
                         country.Areas.Add(area);
+                        country.SubAreas.Add(subArea);
                         db.Countries.Add(country);
                     }
 
@@ -101,6 +102,7 @@ namespace LocationScout.DataAccess
                     if (subAreaFromDB == null)
                     {
                         subArea.Areas.Add(area);
+                        subArea.Countries.Add(country);
                         db.SubAreas.Add(subArea);
                     }
 

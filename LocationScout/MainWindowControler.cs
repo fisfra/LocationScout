@@ -74,6 +74,23 @@ namespace LocationScout
                 }
             }
         }
+
+        internal List<SubArea> GetAllSubAreas(long countryId, long areaId)
+        {
+            // result list
+            List<SubArea> foundSubAreas = new List<SubArea>();
+
+            // search for country in list of all countries
+            var foundCountry = _allCountries.FirstOrDefault(o => o.Id == countryId);
+
+            // found
+            if (foundCountry != null)
+            {
+                // get subareas
+                foundSubAreas = foundCountry.SubAreas;
+            }
+            return foundSubAreas;
+        }
         #endregion
     }
 }
