@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using LocationScout.DataAccess;
+using static LocationScout.DataAccess.PersistenceManager;
 
 namespace LocationScout
 {
@@ -28,7 +29,7 @@ namespace LocationScout
             _settingControler = new SettingTabControler(window, this);
             _locationControler = new LocationTabControler(window);
 
-            if (!RefreshAllCountries(out string errorMessage))
+            if (RefreshAllCountries(out string errorMessage) == E_DBReturnCode.error)
             {
                 MessageBox.Show("Error reading saved data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -55,7 +56,7 @@ namespace LocationScout
             _locationControler.Add();
         }
 
-        internal bool RefreshAllCountries(out string errorMessage)
+        internal E_DBReturnCode RefreshAllCountries(out string errorMessage)
         {
             return DataAccessAdapter.ReadAllCountries(out _allCountries, out errorMessage);
         }

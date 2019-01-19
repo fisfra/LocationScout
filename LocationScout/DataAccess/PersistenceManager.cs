@@ -11,6 +11,10 @@ namespace LocationScout.DataAccess
 {
     internal class PersistenceManager
     {
+        #region enums
+        public enum E_DBReturnCode { no_error, error, already_existing};
+        #endregion
+
         #region attributes
         #endregion
 
@@ -31,9 +35,9 @@ namespace LocationScout.DataAccess
             TestDataGenerator.ReadAllAreas(out areaNames);
         }
 
-        internal static bool ReadAllCountries(out List<Country> allCountries, out string errorMessage)
+        internal static E_DBReturnCode ReadAllCountries(out List<Country> allCountries, out string errorMessage)
         {
-            bool success = true;
+            E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
             allCountries = new List<Country>();
 
@@ -47,7 +51,7 @@ namespace LocationScout.DataAccess
             catch (Exception e)
             {
                 errorMessage = BuildDBErrorMessages(e);
-                success = false;
+                success = E_DBReturnCode.error;
             }
 
             return success;
@@ -63,9 +67,9 @@ namespace LocationScout.DataAccess
             TestDataGenerator.ReadAll_Country_Areas(out countryNames_areaNames);
         }
 
-        internal static bool SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMesssage)
+        internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMesssage)
         {
-            bool success = true;
+            E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMesssage = string.Empty;
 
             try
@@ -106,41 +110,38 @@ namespace LocationScout.DataAccess
                         db.SubAreas.Add(subArea);
                     }
 
-                    // save the changes to the DB
-                    db.SaveChanges();
+
+                    // if at least one is new...
+                    if ( (countryFromDB == null) || (areaFromDB == null) || (subAreaFromDB == null) )
+                    {
+                        // ... save the changes to the DB
+                        db.SaveChanges();
+                    }
+                    // all existing
+                    else
+                    {
+                        success = E_DBReturnCode.already_existing;
+                    }
                 }
             }
             catch (Exception e)
             {
                 errorMesssage = BuildDBErrorMessages(e);
-                success = false;
+                success = E_DBReturnCode.error;
             }
 
             return success;
         }
 
-        internal static bool GetArea(string areaName, out Area areaFromDB, out string errorMessage)
+        private static bool SubAreaExists(string countryName, string areaName, string subAreaName)
         {
-            bool success = true;
-            errorMessage = string.Empty;
-            areaFromDB = null;
+            // to do
+            using (var db = new LocationScoutContext())
+            {
 
-            try
-            {
-                // ensure to all resources of the datacontext are disposed correctly
-                using (var db = new LocationScoutContext())
-                {
-                    // get the existing area from database
-                    areaFromDB = db.Areas.FirstOrDefault(o => o.Name == areaName);
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = BuildDBErrorMessages(e);
-                success = false;
             }
 
-            return success;
+            return false;
         }
 
         internal static string BuildDBErrorMessages(Exception e)

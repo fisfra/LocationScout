@@ -7,11 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using static LocationScout.DataAccess.PersistenceManager;
 
 namespace LocationScout
 {
     internal class SettingTabControler
     {
+        #region enum
+        enum E_MessageType { success, info, error };
+        #endregion
+
         #region attributes
         private MainWindow _window;
         private MainWindowControler _mainControler;
@@ -48,7 +53,7 @@ namespace LocationScout
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
             // add country to database
-            var success = DataAccessAdapter.SmartAddCountry(countryName, areaName, subAreaName, out string errorMessage);
+            E_DBReturnCode success = DataAccessAdapter.SmartAddCountry(countryName, areaName, subAreaName, out string errorMessage);
 
             // refresh or error handling
             AfterDBWriteSteps(success, errorMessage);
@@ -63,36 +68,58 @@ namespace LocationScout
             _window.SE_CountriesACTB.SetFocus();
         }
 
-        private void AfterDBWriteSteps(bool success, string errorMessage)
+        private void AfterDBWriteSteps(E_DBReturnCode success, string errorMessage)
         {
-            // no error
-            if (success)
+            switch (success)
             {
-                // read the countries again from database and update _allCountries
-                success = _mainControler.RefreshAllCountries(out errorMessage);
-
-                // set (error) message
-                if (success)
+                case E_DBReturnCode.no_error:
                 {
-                    _mainControler.RefreshCountryControls();
-                    SetMessage("Sucessfully added");
-                }
-                else
-                {
-                    ErrorMessage("Error re-reading data.\n" + errorMessage);
-                }
-            }
+                    // read the countries again from database and update _allCountries
+                    if (_mainControler.RefreshAllCountries(out errorMessage) == E_DBReturnCode.error)
+                    {
+                        ShowMessage("Error re-reading data.\n" + errorMessage, E_MessageType.error);
+                    }
+                    else
+                    {
+                        _mainControler.RefreshCountryControls();
+                        ShowMessage("Added to database.", E_MessageType.success);
+                    }
 
-            // error
-            else
-            {
-                MessageBox.Show("Error writing data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                }
+
+                case E_DBReturnCode.error:
+                    ShowMessage("Error writing data.\n" + errorMessage, E_MessageType.error);
+                    break;
+
+                case E_DBReturnCode.already_existing:
+                    ShowMessage("Already existing in database.\n" + errorMessage, E_MessageType.info);
+                    break;
+
+                default:
+                    // unknown enum
+                    System.Diagnostics.Debug.Assert(false);
+                    break;
             }
         }
 
-        private void ErrorMessage(string text)
+        private void ShowMessage(string text, E_MessageType type)
         {
-            MessageBox.Show(text, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            switch (type)
+            {
+                case E_MessageType.success:
+                    SetMessage(text);
+                    break;
+                case E_MessageType.info:
+                    SetMessage(text);
+                    break;
+                case E_MessageType.error:
+                    MessageBox.Show(text, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                default:
+                    System.Diagnostics.Debug.Assert(false);
+                    break;
+            }
         }
 
         private void SetMessage(string text)
@@ -178,7 +205,7 @@ namespace LocationScout
 
 
             _window.SettingsAddButton.Focus();
-        }        
+        }
         #endregion
     }
 }
