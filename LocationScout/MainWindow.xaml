@@ -52,17 +52,17 @@
                                     </Grid.RowDefinitions>
 
                                     <Label Content="Country" Height="Auto" Grid.Column="0" Grid.Row="0"/>
-                                    <control:AutoCompleteTextBox x:Name="SL_CountriesACTB" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
+                                    <control:AutoCompleteTextBox x:Name="LocationCountryControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
                                                                  HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="1000" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Area" Height="Auto" Grid.Column="0" Grid.Row="1"/>
-                                    <control:AutoCompleteTextBox x:Name="SL_AreaACTB" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="1" 
+                                    <control:AutoCompleteTextBox x:Name="LocationAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="1" 
                                                                  HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="900" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Sub-Area" Height="Auto" Grid.Column="0" Grid.Row="2"/>
-                                    <control:AutoCompleteTextBox x:Name="SL_SubAreaACTB" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="2" 
+                                    <control:AutoCompleteTextBox x:Name="LocationSubAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="2" 
                                                                  HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="800" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
@@ -192,17 +192,17 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label Content="Countries" Grid.Column="0" Grid.Row="0"/>
-                                    <control:AutoCompleteTextBox x:Name="SE_CountriesACTB"  AutoCompleteWidth="410" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
+                                    <control:AutoCompleteTextBox x:Name="SettingsCountryControl"  AutoCompleteWidth="410" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
                                                                  HorizontalAlignment="Left" Margin="5,5,5,0" Grid.RowSpan="3" Panel.ZIndex="1000"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Areas" Grid.Column="0" Grid.Row="1"/>
-                                    <control:AutoCompleteTextBox x:Name="SE_AreasACTB"  AutoCompleteWidth="410" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" 
+                                    <control:AutoCompleteTextBox x:Name="SettingsAreaControl"  AutoCompleteWidth="410" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" 
                                                                  HorizontalAlignment="Left" Margin="5,5,5,5" Grid.RowSpan="3" Panel.ZIndex="900"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Sub-Areas" Grid.Column="0" Grid.Row="2"/>
-                                    <control:AutoCompleteTextBox x:Name="SE_SubAreasACTB"  AutoCompleteWidth="410" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="2" Grid.Column="2" Grid.Row="2" 
+                                    <control:AutoCompleteTextBox x:Name="SettingsSubAreaControl"  AutoCompleteWidth="410" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="2" Grid.Column="2" Grid.Row="2" 
                                                                  HorizontalAlignment="Left" Margin="5,5,5,5" Grid.RowSpan="3" Panel.ZIndex="800"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
                                 </Grid>

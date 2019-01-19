@@ -4,81 +4,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFUserControl;
 
 namespace LocationScout
 {
-    public class LocationTabControler
+    internal class LocationTabControler : TabControlerBase
     {
         #region attributes
         private MainWindow _window;
+        private MainWindowControler _mainControler;
 
-        private ViewModel.Location _locationViewModel;
+        public override AutoCompleteTextBox CountryControl { get { return _window.LocationCountryControl; } }
+        public override AutoCompleteTextBox AreaControl { get { return _window.LocationAreaControl; } }
+        public override AutoCompleteTextBox SubAreaControl { get { return _window.LocationSubAreaControl; } }
         #endregion
 
         #region contructors
-        public LocationTabControler(MainWindow window)
+        public LocationTabControler(MainWindowControler mainControler) : base (mainControler.Window)
         {
-            _window = window;
-            _locationViewModel = new ViewModel.Location();
+            _mainControler = mainControler;
 
-            _window.SL_CountriesACTB.Leaving += SL_CountriesACTB_Leaving;
-            _window.SL_AreaACTB.Leaving += SL_AreaACTB_Leaving;
-            _window.SL_AreaACTB.LeavingViaShift += SL_AreaACTB_LeavingViaShift;
-            _window.SL_SubAreaACTB.Leaving += SL_SubAreaACTB_Leaving;
+            _window = _mainControler.Window;
+
+            _window.LocationCountryControl.Leaving += CountryControl_Leaving;
+            _window.LocationAreaControl.Leaving += AreaControl_Leaving;
+            _window.LocationAreaControl.LeavingViaShift += AreaControl_LeavingViaShift;
+            _window.LocationSubAreaControl.Leaving += SubAreaControl_Leaving;
         }
         #endregion
 
         #region methods
-        private void SL_SubAreaACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
+        private void SubAreaControl_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             _window.LocationNameTextBox.Focus();
         }
 
-        private void SL_AreaACTB_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
+        private void AreaControl_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
-            _window.SL_CountriesACTB.SetFocus();
+            _window.LocationCountryControl.SetFocus();
         }
-
-        private void SL_AreaACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
-        {
-            Area area = e.Object as Area;
-
-            RefreshSubAreaACTB(area.Subareas);
-           
-            _window.SL_SubAreaACTB.ClearText();
-
-            _window.SL_SubAreaACTB.SetFocus();            
-        }
-
-        private void SL_CountriesACTB_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
-        {
-            Country country = e.Object as Country;
-
-            RefreshAreaACTB(country.Areas);
-
-            _window.SL_AreaACTB.SetFocus();
-        }
-
-        private void RefreshSubAreaACTB(List<SubArea> subAreas)
-        {
-                _window.SL_SubAreaACTB.ClearSearchPool();
-
-                foreach (var subArea in subAreas)
-                {
-                    _window.SL_SubAreaACTB.AddObject(subArea.Name, subArea);
-                }
-        }
-        
-        private void RefreshAreaACTB(List<Area> areas)
-        {
-                _window.SL_AreaACTB.ClearSearchPool();
-
-                foreach (var area in areas)
-                {
-                    _window.SL_AreaACTB.AddObject(area.Name, area);
-                }
-        }
-
+     
         internal void Add()
         {
             throw new NotImplementedException();

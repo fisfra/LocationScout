@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using LocationScout.DataAccess;
 using static LocationScout.DataAccess.PersistenceManager;
+using WPFUserControl;
 
 namespace LocationScout
 {
-    class MainWindowControler
+    public class MainWindowControler
     {
         #region attributes
         private MainWindow _window;
@@ -20,14 +21,15 @@ namespace LocationScout
         private List<Country> _allCountries;
 
         public List<Country> AllCountries { get => _allCountries; set => _allCountries = value; }
+        public MainWindow Window { get => _window; private set => _window = value; }
         #endregion
 
         #region contructors
         public MainWindowControler(MainWindow window)
         {
-            _window = window;
-            _settingControler = new SettingTabControler(window, this);
-            _locationControler = new LocationTabControler(window);
+            Window = window;
+            _settingControler = new SettingTabControler(this);
+            _locationControler = new LocationTabControler(this);
 
             if (RefreshAllCountries(out string errorMessage) == E_DBReturnCode.error)
             {
@@ -43,7 +45,7 @@ namespace LocationScout
         #region methods
         internal void HandleClose()
         {
-            _window.Close();
+            Window.Close();
         }
 
         internal void HandleSettingAdd()
@@ -65,13 +67,13 @@ namespace LocationScout
         {
             if (_allCountries != null)
             {
-                _window.SE_CountriesACTB.ClearSearchPool();
-                _window.SL_CountriesACTB.ClearSearchPool();
+                Window.SettingsCountryControl.ClearSearchPool();
+                Window.LocationCountryControl.ClearSearchPool();
 
                 foreach (var country in _allCountries)
                 {
-                    _window.SE_CountriesACTB.AddObject(country.Name, country);
-                    _window.SL_CountriesACTB.AddObject(country.Name, country);
+                    Window.SettingsCountryControl.AddObject(country.Name, country);
+                    Window.LocationCountryControl.AddObject(country.Name, country);
                 }
             }
         }

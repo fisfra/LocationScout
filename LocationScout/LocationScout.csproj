@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SettingTabControler.cs" />
+    <Compile Include="TabControlerBase.cs" />
     <Compile Include="ViewModel\Location.cs" />
     <Compile Include="ViewModel\MaintainCountries.cs" />
     <Compile Include="ViewModel\SettingDisplayItem.cs" />
