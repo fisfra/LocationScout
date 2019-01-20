@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace LocationScout
 {
-    internal class ControlerBase
+    public class ControlerBase
     {
         #region enum
         protected enum E_MessageType { success, info, error };

@@ -11,12 +11,12 @@ namespace LocationScout.Model
     public class GPSCoordinates
     {
         #region attributes
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
         #endregion
 
         #region contructors
-        public GPSCoordinates(double latitude, double longitude)
+        public GPSCoordinates(double? latitude, double? longitude)
         {
             Latitude = latitude;
             Longitude = longitude;

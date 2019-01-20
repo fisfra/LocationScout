@@ -112,6 +112,10 @@
     <Compile Include="Migrations\201901201015148_PhotoPlace-Update.Designer.cs">
       <DependentUpon>201901201015148_PhotoPlace-Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901201557126_PhotoPlace-Update2.cs" />
+    <Compile Include="Migrations\201901201557126_PhotoPlace-Update2.Designer.cs">
+      <DependentUpon>201901201557126_PhotoPlace-Update2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SettingTabControler.cs" />
     <Compile Include="TabControlerBase.cs" />
@@ -186,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901201015148_PhotoPlace-Update.resx">
       <DependentUpon>201901201015148_PhotoPlace-Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201557126_PhotoPlace-Update2.resx">
+      <DependentUpon>201901201557126_PhotoPlace-Update2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

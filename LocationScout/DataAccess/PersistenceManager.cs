@@ -45,7 +45,7 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.Subareas)).Include(c => c.SubAreas).ToList();
+                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).ToList();
                 }
             }
             catch (Exception e)
@@ -139,11 +139,12 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    photoPlacesFound = db.PhotoPlaces.Include(p => p.PlaceSubjectLocation)
-                                                              .Include(p => p.ParkingLocations)
-                                                              .Include(p => p.PlaceSubjectLocation.SubjectCountry)
-                                                              .Include(p => p.PlaceSubjectLocation.SubjectArea)
-                                                              .Include(p => p.PlaceSubjectLocation.SubjectSubArea).ToList();
+                    // get the table data including all joint tables
+                    photoPlacesFound = db.PhotoPlaces.Include(pp => pp.PlaceSubjectLocation)
+                                                     .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations))
+                                                     .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
+                                                     .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
+                                                     .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();
                 }
             }
             catch (Exception e)
@@ -172,7 +173,7 @@ namespace LocationScout.DataAccess
 
                     // create new objects or take the once from DB
                     var country = (countryFromDB == null) ? new Country() { Name = countryName, Areas = new List<Area>(), SubAreas = new List<SubArea>() } : countryFromDB;
-                    var area = (areaFromDB == null) ? new Area() { Name = areaName, Countries = new List<Country>(), Subareas = new List<SubArea>() } : areaFromDB;
+                    var area = (areaFromDB == null) ? new Area() { Name = areaName, Countries = new List<Country>(), SubAreas = new List<SubArea>() } : areaFromDB;
                     var subArea = (subAreaFromDB == null) ? new SubArea() { Name = subAreaName, Countries = new List<Country>(), Areas = new List<Area>() } : subAreaFromDB;
 
                     // add relations, if new country
@@ -187,7 +188,7 @@ namespace LocationScout.DataAccess
                     if (areaFromDB == null)
                     {
                         area.Countries.Add(country);
-                        area.Subareas.Add(subArea);
+                        area.SubAreas.Add(subArea);
                         db.Areas.Add(area);
                     }
 

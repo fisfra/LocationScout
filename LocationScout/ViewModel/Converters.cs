@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LocationScout.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -19,22 +20,36 @@ namespace LocationScout.ViewModel
             var coordinateType = (E_CoordinateType)parameter;
 
             // determinate coordinate type (E, W, S, N)
-            CoordinatesPosition cp;
-            switch (coordinateType)
-            {
-                case E_CoordinateType.Longitude:
-                    cp = (doubleValue > 0) ? CoordinatesPosition.E : CoordinatesPosition.W;
-                    break;
-                case E_CoordinateType.Latitude:
-                    cp = (doubleValue < 0) ? CoordinatesPosition.N : CoordinatesPosition.S;
-                    break;
-                default:
-                    Debug.Assert(false);
-                    throw (new Exception("Unknown enum value in GPSConverter::Convert"));
-            }
+            var cp = GPSCoordinatesHelper.GetPosition(doubleValue, coordinateType);
 
             // return the converted string value
             return new GPSCoordinatesHelper(doubleValue, cp).ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class GPSConverterComplex : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string result = "<not set>";
+
+            if (value is GPSCoordinates gpsCoordinates)
+            {
+                var cpLat = GPSCoordinatesHelper.GetPosition(gpsCoordinates.Latitude, E_CoordinateType.Latitude);
+                var cpLatString = new GPSCoordinatesHelper(gpsCoordinates.Latitude, cpLat).ToString();
+
+                var cpLong = GPSCoordinatesHelper.GetPosition(gpsCoordinates.Longitude, E_CoordinateType.Longitude);
+                var cpLongString = new GPSCoordinatesHelper(gpsCoordinates.Longitude, cpLong).ToString();
+
+                result = cpLatString + " " + cpLongString;                     
+            }
+
+            return result;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

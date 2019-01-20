@@ -13,7 +13,7 @@ namespace LocationScout.Model
         [Key]
         public long Id { get; set; }
         public string Name { get; set; }
-        public List<SubArea> Subareas { get; set; }
+        public List<SubArea> SubAreas { get; set; }
         public List<Country> Countries { get; set; }
         #endregion
     }

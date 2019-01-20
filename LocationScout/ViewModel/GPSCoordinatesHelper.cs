@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,26 @@ namespace LocationScout.ViewModel
 
         public GPSCoordinatesHelper() { }
 
-        public GPSCoordinatesHelper(double value, CoordinatesPosition position)
+        public static CoordinatesPosition GetPosition(double? value, E_CoordinateType type)
+        {
+            CoordinatesPosition cp;
+            switch (type)
+            {
+                case E_CoordinateType.Longitude:
+                    cp = (value > 0) ? CoordinatesPosition.E : CoordinatesPosition.W;
+                    break;
+                case E_CoordinateType.Latitude:
+                    cp = (value < 0) ? CoordinatesPosition.N : CoordinatesPosition.S;
+                    break;
+                default:
+                    Debug.Assert(false);
+                    throw (new Exception("Unknown enum value in GPSConverter::Convert"));
+            }
+
+            return cp;
+        }
+
+        public GPSCoordinatesHelper(double? value, CoordinatesPosition position)
         {
             //sanity
             if (value < 0 && position == CoordinatesPosition.N)
@@ -67,7 +87,21 @@ namespace LocationScout.ViewModel
 
         public override string ToString()
         {
-            return Degrees + "º " + Minutes + "' " + Seconds + "'' " + Position;
+            return Degrees + "º " + Minutes + "' " + Seconds + "''" + Position;
+        }
+
+        public string ToGoogleMapsString()
+        {
+            // get the initial string
+            var value = ToString();
+
+            // replace the "," by "."
+            value = value.Replace(',', '.');
+
+            // converts for an url string (e.g. replace spaces by %20)
+            value = System.Uri.EscapeDataString(value);
+
+            return value;
         }
     }
 }

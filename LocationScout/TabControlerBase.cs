@@ -32,7 +32,7 @@ namespace LocationScout
         {
             // get the subareas and let the base class do the work
             var countrySubAreas = (CountryControl.GetCurrentObject() as Country)?.SubAreas;
-            var areaSubAreas = (e.Object as Area)?.Subareas;
+            var areaSubAreas = (e.Object as Area)?.SubAreas;
 
             // valid subareas
             if ( (areaSubAreas != null) && (countrySubAreas != null) )
