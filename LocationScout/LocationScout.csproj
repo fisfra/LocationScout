@@ -69,6 +69,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseObservableObject.cs" />
+    <Compile Include="ControlerBase.cs" />
     <Compile Include="DataAccess\DataAccessAdapter.cs" />
     <Compile Include="DataAccess\LocationScoutContext.cs" />
     <Compile Include="DataAccess\PersistenceManager.cs" />
@@ -105,8 +107,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SettingTabControler.cs" />
     <Compile Include="TabControlerBase.cs" />
-    <Compile Include="ViewModel\Location.cs" />
-    <Compile Include="ViewModel\MaintainCountries.cs" />
+    <Compile Include="ViewModel\LocationDisplayItem.cs" />
     <Compile Include="ViewModel\SettingDisplayItem.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

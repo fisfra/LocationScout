@@ -15,35 +15,33 @@ namespace LocationScout
     internal class SettingTabControler : TabControlerBase
     {
         #region attributes
-        private MainWindow _window;
         private MainWindowControler _mainControler;
 
-        public override AutoCompleteTextBox CountryControl { get { return _window.SettingsCountryControl; } }
-        public override AutoCompleteTextBox AreaControl { get { return _window.SettingsAreaControl; } }
-        public override AutoCompleteTextBox SubAreaControl { get { return _window.SettingsSubAreaControl; } }
+        public override AutoCompleteTextBox CountryControl { get { return Window.SettingsCountryControl; } }
+        public override AutoCompleteTextBox AreaControl { get { return Window.SettingsAreaControl; } }
+        public override AutoCompleteTextBox SubAreaControl { get { return Window.SettingsSubAreaControl; } }
         #endregion
 
         #region constructors
-        public SettingTabControler(MainWindowControler mainControler) : base(mainControler.Window)
+        public SettingTabControler(MainWindowControler mainControler, MainWindow window) : base(window)
         {            
             _mainControler = mainControler;
-            _window = _mainControler.Window;
 
-            _window.SettingsCountryControl.Leaving += CountryControl_Leaving;
-            _window.SettingsAreaControl.Leaving += AreaControl_Leaving;
-            _window.SettingsAreaControl.LeavingViaShift += AreaControl_Leaving_LeavingViaShift;
-            _window.SettingsSubAreaControl.Leaving += SubAreaControl_Leaving;
-            _window.SettingsSubAreaControl.LeavingViaShift += SubAreaControl_LeavingViaShift;
+            Window.SettingsCountryControl.Leaving += CountryControl_Leaving;
+            Window.SettingsAreaControl.Leaving += AreaControl_Leaving;
+            Window.SettingsAreaControl.LeavingViaShift += AreaControl_Leaving_LeavingViaShift;
+            Window.SettingsSubAreaControl.Leaving += SubAreaControl_Leaving;
+            Window.SettingsSubAreaControl.LeavingViaShift += SubAreaControl_LeavingViaShift;
         }
         #endregion
 
         #region methods
         internal void Add()
         {
-            // get values form UI
-            string countryName = _window.SettingsCountryControl.GetCurrentText();
-            string areaName = _window.SettingsAreaControl.GetCurrentText();
-            string subAreaName = _window.SettingsSubAreaControl.GetCurrentText();
+            // get values from UI
+            string countryName = Window.SettingsCountryControl.GetCurrentText();
+            string areaName = Window.SettingsAreaControl.GetCurrentText();
+            string subAreaName = Window.SettingsSubAreaControl.GetCurrentText();
 
             // db operations might take a while
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
@@ -58,10 +56,10 @@ namespace LocationScout
             Mouse.OverrideCursor = null;
 
             // clear the controls and reset focus
-            _window.SettingsCountryControl.ClearText();
-            _window.SettingsAreaControl.ClearText();
-            _window.SettingsSubAreaControl.ClearText();
-            _window.SettingsCountryControl.SetFocus();
+            Window.SettingsCountryControl.ClearText();
+            Window.SettingsAreaControl.ClearText();
+            Window.SettingsSubAreaControl.ClearText();
+            Window.SettingsCountryControl.SetFocus();
         }
 
         private void AfterDBWriteSteps(E_DBReturnCode success, string errorMessage)
@@ -101,7 +99,7 @@ namespace LocationScout
 
         private void SubAreaControl_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
-            _window.SettingsAddButton.Focus();
+            Window.SettingsAddButton.Focus();
         }
         #endregion
     }

@@ -10,25 +10,20 @@ using WPFUserControl;
 
 namespace LocationScout
 {
-    internal abstract class TabControlerBase
+    internal abstract class TabControlerBase : ControlerBase
     {
         #region enum
-        protected enum E_MessageType { success, info, error };
-        private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
         #endregion
 
         #region attributes
-        private MainWindow _window;
-
         public abstract AutoCompleteTextBox CountryControl { get; }
         public abstract AutoCompleteTextBox AreaControl { get; }
         public abstract AutoCompleteTextBox SubAreaControl { get; }
         #endregion
 
         #region constructors
-        public TabControlerBase(MainWindow window)
+        public TabControlerBase(MainWindow window) : base (window)
         {
-            _window = window;
         }
         #endregion
 
@@ -109,49 +104,6 @@ namespace LocationScout
                     textBox.AddObject(a.Name, a);
                 }
             }
-        }
-
-        protected void ShowMessage(string text, E_MessageType type)
-        {
-            switch (type)
-            {
-                case E_MessageType.success:
-                    SetMessage(text);
-                    break;
-                case E_MessageType.info:
-                    SetMessage(text);
-                    break;
-                case E_MessageType.error:
-                    MessageBox.Show(text, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    break;
-                default:
-                    System.Diagnostics.Debug.Assert(false);
-                    break;
-            }
-        }
-
-        private void SetMessage(string text)
-        {
-            _window.StatusLabel.Content = text;
-
-            if (_dispatcherTimer == null)
-            {
-                _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            }
-            else
-            {
-                _dispatcherTimer.Start();
-            }
-            _dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            _dispatcherTimer.Interval = new TimeSpan(0, 0, 15);
-            _dispatcherTimer.Start();
-        }
-
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            _dispatcherTimer.Stop();
-
-            _window.StatusLabel.Content = string.Empty;
         }
 
         private List<SubArea> GetCountrySubAreas(List<SubArea> subAreas1, List<SubArea> subAreas2)

@@ -8,32 +8,30 @@ using System.Windows;
 using LocationScout.DataAccess;
 using static LocationScout.DataAccess.PersistenceManager;
 using WPFUserControl;
+using LocationScout.ViewModel;
 
 namespace LocationScout
 {
-    public class MainWindowControler
+    internal class MainWindowControler : ControlerBase
     {
         #region attributes
-        private MainWindow _window;
         private SettingTabControler _settingControler;
         private LocationTabControler _locationControler;
 
         private List<Country> _allCountries;
 
         public List<Country> AllCountries { get => _allCountries; set => _allCountries = value; }
-        public MainWindow Window { get => _window; private set => _window = value; }
         #endregion
 
         #region contructors
-        public MainWindowControler(MainWindow window)
+        public MainWindowControler(MainWindow window) : base (window)
         {
-            Window = window;
-            _settingControler = new SettingTabControler(this);
-            _locationControler = new LocationTabControler(this);
+            _settingControler = new SettingTabControler(this, window);
+            _locationControler = new LocationTabControler(this, window);
 
             if (RefreshAllCountries(out string errorMessage) == E_DBReturnCode.error)
             {
-                MessageBox.Show("Error reading saved data.\n" + errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowMessage("Error reading saved data.\n" + errorMessage, E_MessageType.error);
             }
             else
             {
@@ -76,23 +74,6 @@ namespace LocationScout
                     Window.LocationCountryControl.AddObject(country.Name, country);
                 }
             }
-        }
-
-        internal List<SubArea> GetAllSubAreas(long countryId, long areaId)
-        {
-            // result list
-            List<SubArea> foundSubAreas = new List<SubArea>();
-
-            // search for country in list of all countries
-            var foundCountry = _allCountries.FirstOrDefault(o => o.Id == countryId);
-
-            // found
-            if (foundCountry != null)
-            {
-                // get subareas
-                foundSubAreas = foundCountry.SubAreas;
-            }
-            return foundSubAreas;
         }
         #endregion
     }

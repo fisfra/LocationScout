@@ -16,8 +16,10 @@ namespace LocationScout.Model
         #endregion
 
         #region contructors
-        public GPSCoordinates()
+        public GPSCoordinates(double latitude, double longitude)
         {
+            Latitude = latitude;
+            Longitude = longitude;
         }
         #endregion
     }

@@ -57,6 +57,79 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        internal static E_DBReturnCode SmartAddPhotoPlace(long countryId, long areaId, long subAreaId, string locationName, GPSCoordinates subjectGPS,
+                                                          GPSCoordinates shooting1ParkingGPS, GPSCoordinates shooting1_1GPS, GPSCoordinates shooting1_2GPS,
+                                                          GPSCoordinates shooting2ParkingGPS, GPSCoordinates shooting2_1GPS, GPSCoordinates shooting2_2GPS,
+                                                          out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Id == countryId);
+                    if (countryFromDB == null) throw new Exception("Inconsistent database values - Id of Country.");
+
+                    var areaFromDB = db.Areas.FirstOrDefault(o => o.Id == areaId);
+                    if (areaFromDB == null) throw new Exception("Inconsistent database values - Id of Area.");
+
+                    var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Id == subAreaId);
+                    if (subAreaFromDB == null) throw new Exception("Inconsistent database values - Id of SubArea.");
+
+                    // set parking locations later
+                    var subjectLocation = new SubjectLocation() { SubjectCountry = countryFromDB,
+                                                                  SubjectArea = areaFromDB,
+                                                                  SubjectSubArea = subAreaFromDB,
+                                                                  Coordinates = subjectGPS,
+                                                                  LocationName = locationName };
+
+                    // set photoplace and shootlinglocation later
+                    var parkingLocation1 = new ParkingLocation() { Coordinates = shooting1ParkingGPS };
+                    var parkingLocation2 = new ParkingLocation() { Coordinates = shooting2ParkingGPS };
+
+                    // set photoplace and locationphotos later
+                    var shootingLocation1_1 = new ShootingLocation() { Coordinates = shooting1_1GPS };
+                    var shootingLocation1_2 = new ShootingLocation() { Coordinates = shooting1_2GPS };
+                    var shootingLocation2_1 = new ShootingLocation() { Coordinates = shooting2_1GPS };
+                    var shootingLocation2_2 = new ShootingLocation() { Coordinates = shooting2_2GPS };
+
+                    // set dependant attributes
+                    subjectLocation.ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 };
+                    parkingLocation1.ShootingLocations = new List<ShootingLocation>() { shootingLocation1_1, shootingLocation1_2 };
+                    parkingLocation2.ShootingLocations = new List<ShootingLocation>() { shootingLocation2_1, shootingLocation2_2 };
+
+                    // photoplace
+                    var photoplace = new PhotoPlace() { ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 } };
+
+                    // set depedant attributes
+                    parkingLocation1.PhotoPlace = photoplace;
+                    parkingLocation2.PhotoPlace = photoplace;
+
+                    // set the database attributes
+                    db.PhotoPlaces.Add(photoplace);
+                    db.ParkingLocations.Add(parkingLocation1);
+                    db.ParkingLocations.Add(parkingLocation2);
+                    db.ShootingLocations.Add(shootingLocation1_1);
+                    db.ShootingLocations.Add(shootingLocation1_2);
+                    db.ShootingLocations.Add(shootingLocation2_1);
+                    db.ShootingLocations.Add(shootingLocation2_2);
+                    db.SubjectLocations.Add(subjectLocation);
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+    
+
         internal static void ReadAllArea_Subareas(out List<Tuple<string, string>> areaNames_subareaNames)
         {
             TestDataGenerator.ReadAllArea_Subareas(out areaNames_subareaNames);

@@ -1,4 +1,5 @@
 ﻿using LocationScout.Model;
+using LocationScout.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,22 @@ namespace LocationScout.DataAccess
             return PersistenceManager.SmartAddCountry(countryName, areaName, subAreaName, out errorMessage);
         }
 
-        private static List<Area> GetAreasByCountryName(string countryName, List<Area> allAreas, List<SubArea> subAreas)
+        internal static E_DBReturnCode SmartAddPhotoPlace(long countryId, long areaId, long subAreaId, LocationDisplayItem ldi, out string errorMessage)
         {
-            return null;
+            var locationName = ldi.LocationName;
+            var subjectGPS = new GPSCoordinates(ldi.SubjectLatitude, ldi.SubjectLongitude);
+
+            var shooting1ParkingGPS = new GPSCoordinates(ldi.ShootingLocation1_Parking_Latitude, ldi.ShootingLocation1_Parking_Longitude);
+            var shooting1_1GPS = new GPSCoordinates(ldi.ShootingLocation1_1_Latitude, ldi.ShootingLocation1_1_Longitude);
+            var shooting1_2GPS = new GPSCoordinates(ldi.ShootingLocation1_2_Latitude, ldi.ShootingLocation1_2_Longitude);
+
+            var shooting2ParkingGPS = new GPSCoordinates(ldi.ShootingLocation2_Parking_Latitude, ldi.ShootingLocation2_Parking_Longitude);
+            var shooting2_1GPS = new GPSCoordinates(ldi.ShootingLocation2_1_Latitude, ldi.ShootingLocation2_1_Longitude);
+            var shooting2_2GPS = new GPSCoordinates(ldi.ShootingLocation2_2_Latitude, ldi.ShootingLocation2_2_Longitude);
+
+            return PersistenceManager.SmartAddPhotoPlace(countryId, areaId, subAreaId, locationName, subjectGPS,
+                                                        shooting1ParkingGPS, shooting1_1GPS, shooting1_2GPS,
+                                                        shooting2ParkingGPS, shooting2_1GPS, shooting2_2GPS, out errorMessage);
         }
     }
 }

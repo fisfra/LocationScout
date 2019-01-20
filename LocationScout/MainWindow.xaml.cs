@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LocationScout.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,12 +23,18 @@ namespace LocationScout
     {
         #region attributes
         private MainWindowControler _controler;
+
+        public LocationDisplayItem LocationViewModel { get; set; }
         #endregion
 
         #region contructors
         public MainWindow()
         {
             InitializeComponent();
+
+            LocationViewModel = new LocationDisplayItem();
+
+            SetDataContext();
 
             // call after initilaze component
             _controler = new MainWindowControler(this);
@@ -46,6 +53,11 @@ namespace LocationScout
         private void LocationButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleLocationAdd();
+        }
+
+        private void SetDataContext()
+        {
+            DataContext = LocationViewModel;
         }
         #endregion
     }
