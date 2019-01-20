@@ -9,6 +9,9 @@ using LocationScout.DataAccess;
 using static LocationScout.DataAccess.PersistenceManager;
 using WPFUserControl;
 using LocationScout.ViewModel;
+using Microsoft.Win32;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace LocationScout
 {
@@ -61,6 +64,11 @@ namespace LocationScout
         internal E_DBReturnCode RefreshAllCountries(out string errorMessage)
         {
             return DataAccessAdapter.ReadAllCountries(out _allCountries, out errorMessage);
+        }
+
+        internal void LoadPhoto()
+        {
+            _locationControler.LoadPhoto();
         }
 
         internal void HandleLocationShow()

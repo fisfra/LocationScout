@@ -66,6 +66,27 @@ namespace LocationScout
         {
             _controler.HandleLocationShow();
         }
+
+
+        private void PhotoUpoad1_1Button_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.LoadPhoto();
+        }
+
+        private void PhotoUpoad1_2Button_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void PhotoUpoad2_1Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PhotoUpoad2_2Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
         #endregion
     }
 }

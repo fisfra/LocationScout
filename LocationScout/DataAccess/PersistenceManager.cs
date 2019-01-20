@@ -58,9 +58,10 @@ namespace LocationScout.DataAccess
         }
 
         internal static E_DBReturnCode SmartAddPhotoPlace(long countryId, long areaId, long subAreaId, string locationName, GPSCoordinates subjectGPS,
-                                                          GPSCoordinates shooting1ParkingGPS, GPSCoordinates shooting1_1GPS, GPSCoordinates shooting1_2GPS,
-                                                          GPSCoordinates shooting2ParkingGPS, GPSCoordinates shooting2_1GPS, GPSCoordinates shooting2_2GPS,
-                                                          out string errorMessage)
+                                                          GPSCoordinates shooting1ParkingGPS, GPSCoordinates shooting1_1GPS, List<byte[]> shooting1_1Photos,
+                                                          GPSCoordinates shooting1_2GPS, List<byte[]> shooting1_2Photos, GPSCoordinates shooting2ParkingGPS, 
+                                                          GPSCoordinates shooting2_1GPS, List<byte[]> shooting2_1Photos, GPSCoordinates shooting2_2GPS,
+                                                          List<byte[]> shooting2_2Photos, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -90,10 +91,10 @@ namespace LocationScout.DataAccess
                     var parkingLocation2 = new ParkingLocation() { Coordinates = shooting2ParkingGPS };
 
                     // set photoplace and locationphotos later
-                    var shootingLocation1_1 = new ShootingLocation() { Coordinates = shooting1_1GPS };
-                    var shootingLocation1_2 = new ShootingLocation() { Coordinates = shooting1_2GPS };
-                    var shootingLocation2_1 = new ShootingLocation() { Coordinates = shooting2_1GPS };
-                    var shootingLocation2_2 = new ShootingLocation() { Coordinates = shooting2_2GPS };
+                    var shootingLocation1_1 = new ShootingLocation() { Coordinates = shooting1_1GPS, LocationPhotos = shooting1_1Photos };
+                    var shootingLocation1_2 = new ShootingLocation() { Coordinates = shooting1_2GPS, LocationPhotos = shooting1_2Photos };
+                    var shootingLocation2_1 = new ShootingLocation() { Coordinates = shooting2_1GPS, LocationPhotos = shooting2_1Photos };
+                    var shootingLocation2_2 = new ShootingLocation() { Coordinates = shooting2_2GPS, LocationPhotos = shooting2_2Photos };
 
                     // set dependant attributes
                     subjectLocation.ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 };

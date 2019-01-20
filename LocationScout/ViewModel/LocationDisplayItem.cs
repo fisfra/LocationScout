@@ -28,6 +28,11 @@ namespace LocationScout.ViewModel
         private double _shootinglocation2_2_latitude;
         private double _shootinglocation2_2_longitude;
 
+        private List<byte[]> _shootinglocation1_1_photos;
+        private List<byte[]> _shootinglocation1_2_photos;
+        private List<byte[]> _shootinglocation2_1_photos;
+        private List<byte[]> _shootinglocation2_2_photos;
+
         public string LocationName
         {
             get { return _locationName; }
@@ -165,7 +170,54 @@ namespace LocationScout.ViewModel
                 _shootinglocation2_2_longitude = value;
                 OnPropertyChanged();
             }
-        }       
+        }
+
+        public List<byte[]> ShootingLocation1_1_Photos
+        {
+            get { return _shootinglocation1_1_photos; }
+            set
+            {
+                _shootinglocation1_1_photos = value;
+                OnPropertyChanged();
+            }
+        }
+        public List<byte[]> ShootingLocation1_2_Photos
+        {
+            get { return _shootinglocation1_2_photos; }
+            set
+            {
+                _shootinglocation1_2_photos = value;
+                OnPropertyChanged();
+            }
+        }
+        public List<byte[]> ShootingLocation2_1_Photos
+        {
+            get { return _shootinglocation2_1_photos; }
+            set
+            {
+                _shootinglocation2_1_photos = value;
+                OnPropertyChanged();
+            }
+        }
+        public List<byte[]> ShootingLocation2_2_Photos
+        {
+            get { return _shootinglocation2_2_photos; }
+            set
+            {
+                _shootinglocation2_2_photos = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region constructor
+        public LocationDisplayItem()
+        {
+            _shootinglocation1_1_photos = new List<byte[]>();
+            _shootinglocation1_2_photos = new List<byte[]>();
+            _shootinglocation2_1_photos = new List<byte[]>();
+            _shootinglocation2_2_photos = new List<byte[]>();
+        }
         #endregion
     }
 }

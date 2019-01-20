@@ -34,9 +34,16 @@ namespace LocationScout.DataAccess
             var shooting2_1GPS = new GPSCoordinates(ldi.ShootingLocation2_1_Latitude, ldi.ShootingLocation2_1_Longitude);
             var shooting2_2GPS = new GPSCoordinates(ldi.ShootingLocation2_2_Latitude, ldi.ShootingLocation2_2_Longitude);
 
+            // to do
+            var shooting1_1Photos = ldi.ShootingLocation1_1_Photos;
+            var shooting1_2Photos = ldi.ShootingLocation1_2_Photos;
+            var shooting2_1Photos = ldi.ShootingLocation1_1_Photos;
+            var shooting2_2Photos = ldi.ShootingLocation1_2_Photos;
+
+
             return PersistenceManager.SmartAddPhotoPlace(countryId, areaId, subAreaId, locationName, subjectGPS,
-                                                        shooting1ParkingGPS, shooting1_1GPS, shooting1_2GPS,
-                                                        shooting2ParkingGPS, shooting2_1GPS, shooting2_2GPS, out errorMessage);
+                                                        shooting1ParkingGPS, shooting1_1GPS, shooting1_1Photos, shooting1_2GPS, shooting1_2Photos,
+                                                        shooting2ParkingGPS, shooting2_1GPS, shooting2_1Photos, shooting2_2GPS, shooting2_2Photos, out errorMessage);
         }
 
         internal static E_DBReturnCode ReadPhotoPlace(long photoPlaceId, out List<PhotoPlace> photoPlaces, out string errorMessage)

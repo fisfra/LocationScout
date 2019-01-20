@@ -74,7 +74,7 @@ namespace LocationScout
                 CurrentDisplayItem.SubjectLatitude = photoPlace.PlaceSubjectLocation.Coordinates.Latitude;
                 CurrentDisplayItem.SubjectLongitude = photoPlace.PlaceSubjectLocation.Coordinates.Longitude;
 
-                // parking location 1 (and assoziated shooting locations)
+                // parking location 1 (and associated shooting locations)
                 if (photoPlace.ParkingLocations.Count > 0)
                 {
                     var pl = photoPlace.ParkingLocations[0];
@@ -92,7 +92,7 @@ namespace LocationScout
                     CurrentDisplayItem.ShootingLocation1_2_Longitude = (pl.ShootingLocations.Count > 1) ? pl.ShootingLocations[1].Coordinates.Longitude : null;
                 }
 
-                // parking location 2 (and assoziated shooting locations)
+                // parking location 2 (and associated shooting locations)
                 if (photoPlace.ParkingLocations.Count > 1)
                 {
                     var pl = photoPlace.ParkingLocations[1];
