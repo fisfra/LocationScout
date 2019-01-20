@@ -66,14 +66,29 @@ namespace LocationScout
             return DataAccessAdapter.ReadAllCountries(out _allCountries, out errorMessage);
         }
 
-        internal void LoadPhoto()
+        internal void LoadPhoto_1_1()
         {
-            _locationControler.LoadPhoto();
+            _locationControler.LoadPhoto_1_1();
+        }
+
+        internal void LoadPhoto_1_2()
+        {
+            _locationControler.LoadPhoto_1_2();
+        }
+
+        internal void LoadPhoto_2_1()
+        {
+            _locationControler.LoadPhoto_2_1();
         }
 
         internal void HandleLocationShow()
         {
             _listerControler.Show();
+        }
+
+        internal void LoadPhoto_2_2()
+        {
+            _locationControler.LoadPhoto_2_2();
         }
 
         internal void RefreshCountryControls()

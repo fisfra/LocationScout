@@ -31,6 +31,7 @@ namespace LocationScout.DataAccess
         public DbSet<SubjectLocation> SubjectLocations { get; set; }
         public DbSet<ParkingLocation> ParkingLocations { get; set; }
         public DbSet<ShootingLocation> ShootingLocations { get; set; }  
+        public DbSet<Photo> Photos { get; set; }
     }
 }
 

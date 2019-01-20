@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+//using System.Data.Entity.Include; // for .ThenInclude (NuGet Package)
 
 
 namespace LocationScout.DataAccess
@@ -46,6 +47,7 @@ namespace LocationScout.DataAccess
                 using (var db = new LocationScoutContext())
                 {
                     allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).ToList();
+                    //allCountries = db.Countries.Including(c => c.Areas).ThenIncluding(c => c.SubAreas).ToList();
                 }
             }
             catch (Exception e)
@@ -91,12 +93,38 @@ namespace LocationScout.DataAccess
                     var parkingLocation2 = new ParkingLocation() { Coordinates = shooting2ParkingGPS };
 
                     // set photoplace and locationphotos later
-                    var shootingLocation1_1 = new ShootingLocation() { Coordinates = shooting1_1GPS, LocationPhotos = shooting1_1Photos };
-                    var shootingLocation1_2 = new ShootingLocation() { Coordinates = shooting1_2GPS, LocationPhotos = shooting1_2Photos };
-                    var shootingLocation2_1 = new ShootingLocation() { Coordinates = shooting2_1GPS, LocationPhotos = shooting2_1Photos };
-                    var shootingLocation2_2 = new ShootingLocation() { Coordinates = shooting2_2GPS, LocationPhotos = shooting2_2Photos };
+                    var shootingLocation1_1 = new ShootingLocation() { Coordinates = shooting1_1GPS };
+                    var shootingLocation1_2 = new ShootingLocation() { Coordinates = shooting1_2GPS };
+                    var shootingLocation2_1 = new ShootingLocation() { Coordinates = shooting2_1GPS };
+                    var shootingLocation2_2 = new ShootingLocation() { Coordinates = shooting2_2GPS };
+
+                    // photos
+                    var shootingLocation1_1_Photos = new List<Photo>();
+                    foreach (var ba in shooting1_1Photos)
+                    {
+                        shootingLocation1_1_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation1_1 });
+                    }
+                    var shootingLocation1_2_Photos = new List<Photo>();
+                    foreach (var ba in shooting1_2Photos)
+                    {
+                        shootingLocation1_2_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation1_2 });
+                    }
+                    var shootingLocation2_1_Photos = new List<Photo>();
+                    foreach (var ba in shooting2_1Photos)
+                    {
+                        shootingLocation2_1_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation2_1 });
+                    }
+                    var shootingLocation2_2_Photos = new List<Photo>();
+                    foreach (var ba in shooting2_2Photos)
+                    {
+                        shootingLocation2_2_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation2_2 });
+                    }
 
                     // set dependant attributes
+                    shootingLocation1_1.Photos = shootingLocation1_1_Photos;
+                    shootingLocation1_2.Photos = shootingLocation1_2_Photos;
+                    shootingLocation2_1.Photos = shootingLocation2_1_Photos;
+                    shootingLocation2_2.Photos = shootingLocation2_2_Photos;
                     subjectLocation.ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 };
                     parkingLocation1.ShootingLocations = new List<ShootingLocation>() { shootingLocation1_1, shootingLocation1_2 };
                     parkingLocation2.ShootingLocations = new List<ShootingLocation>() { shootingLocation2_1, shootingLocation2_2 };
@@ -108,7 +136,23 @@ namespace LocationScout.DataAccess
                     parkingLocation1.PhotoPlace = photoplace;
                     parkingLocation2.PhotoPlace = photoplace;
 
-                    // set the database attributes
+                    // set the database attributes     
+                    foreach (var photo in shootingLocation1_1_Photos)
+                    {
+                        db.Photos.Add(photo);
+                    }
+                    foreach (var photo in shootingLocation1_2_Photos)
+                    {
+                        db.Photos.Add(photo);
+                    }
+                    foreach (var photo in shootingLocation2_1_Photos)
+                    {
+                        db.Photos.Add(photo);
+                    }
+                    foreach (var photo in shootingLocation2_2_Photos)
+                    {
+                        db.Photos.Add(photo);
+                    }
                     db.PhotoPlaces.Add(photoplace);
                     db.ParkingLocations.Add(parkingLocation1);
                     db.ParkingLocations.Add(parkingLocation2);
@@ -117,7 +161,7 @@ namespace LocationScout.DataAccess
                     db.ShootingLocations.Add(shootingLocation2_1);
                     db.ShootingLocations.Add(shootingLocation2_2);
                     db.SubjectLocations.Add(subjectLocation);
-
+                    
                     db.SaveChanges();
                 }
             }
@@ -142,10 +186,21 @@ namespace LocationScout.DataAccess
                 {
                     // get the table data including all joint tables
                     photoPlacesFound = db.PhotoPlaces.Include(pp => pp.PlaceSubjectLocation)
-                                                     .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations))
-                                                     .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
-                                                     .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
-                                                     .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();
+                                                        .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations))
+                                                        .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
+                                                        .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
+                                                        .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();
+
+                    /*
+                    // get the table data including all joint tables
+                    photoPlacesFound = db.PhotoPlaces.Including(pp => pp.PlaceSubjectLocation)
+                                                     .Including(pp => pp.ParkingLocations).ThenInclude(pl => pl.ShootingLocations).ThenInclude(po => po.Photos)
+                                                     .Including(pp => pp.PlaceSubjectLocation.SubjectCountry)
+                                                     .Including(pp => pp.PlaceSubjectLocation.SubjectArea)
+                                                     .Including(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();*/
+
+                    // get the table data including all joint tables
+                    //photoPlacesFound = db.PhotoPlaces.Include(pp => pp.ParkingLocations).ThenInclude(pl => pl.ShootingLocations).ThenInclude(po => po.Photos).ToList();
                 }
             }
             catch (Exception e)

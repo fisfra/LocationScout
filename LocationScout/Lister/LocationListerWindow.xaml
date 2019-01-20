@@ -156,7 +156,7 @@
                     <TextBox Name="ParkingShootingLocation2_2_TextBox" Text="{Binding ShootingLocation2_2_GPS, Converter={StaticResource GPSConverterComplexKey}}" Margin="0,0,5,0" Height="18" Grid.Row="3" Grid.Column="3"/>
                     <Button Name="ParkingShootingLocation2_2_Button" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="4" Click="ParkingShootingLocation2_2_Button_Click"/>
 
-                    <Image Grid.RowSpan="4" Grid.Column="5">
+                    <Image Name="PreviewImage" Grid.RowSpan="4" Grid.Column="5">
                         
                     </Image>
                 </Grid>

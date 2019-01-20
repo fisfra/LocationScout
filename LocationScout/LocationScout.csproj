@@ -60,6 +60,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="ThenInclude.EF6, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ThenInclude.EF6.1.0.0.8\lib\net452\ThenInclude.EF6.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -116,11 +119,37 @@
     <Compile Include="Migrations\201901201557126_PhotoPlace-Update2.Designer.cs">
       <DependentUpon>201901201557126_PhotoPlace-Update2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901201844409_BinaryArray.cs" />
+    <Compile Include="Migrations\201901201844409_BinaryArray.Designer.cs">
+      <DependentUpon>201901201844409_BinaryArray.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901201847508_BinaryArray-2.cs" />
+    <Compile Include="Migrations\201901201847508_BinaryArray-2.Designer.cs">
+      <DependentUpon>201901201847508_BinaryArray-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901201935210_Photo.cs" />
+    <Compile Include="Migrations\201901201935210_Photo.Designer.cs">
+      <DependentUpon>201901201935210_Photo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901201942095_Photo2.cs" />
+    <Compile Include="Migrations\201901201942095_Photo2.Designer.cs">
+      <DependentUpon>201901201942095_Photo2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901201943104_Photo3.cs" />
+    <Compile Include="Migrations\201901201943104_Photo3.Designer.cs">
+      <DependentUpon>201901201943104_Photo3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901201952224_Photo4.cs" />
+    <Compile Include="Migrations\201901201952224_Photo4.Designer.cs">
+      <DependentUpon>201901201952224_Photo4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Photo.cs" />
     <Compile Include="SettingTabControler.cs" />
     <Compile Include="TabControlerBase.cs" />
     <Compile Include="ViewModel\Converters.cs" />
     <Compile Include="ViewModel\GPSCoordinatesHelper.cs" />
+    <Compile Include="ViewModel\ImageTools.cs" />
     <Compile Include="ViewModel\LocationDisplayItem.cs" />
     <Compile Include="ViewModel\LocationListerDisplayItem.cs" />
     <Compile Include="ViewModel\SettingDisplayItem.cs" />
@@ -193,6 +222,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901201557126_PhotoPlace-Update2.resx">
       <DependentUpon>201901201557126_PhotoPlace-Update2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201844409_BinaryArray.resx">
+      <DependentUpon>201901201844409_BinaryArray.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201847508_BinaryArray-2.resx">
+      <DependentUpon>201901201847508_BinaryArray-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201935210_Photo.resx">
+      <DependentUpon>201901201935210_Photo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201942095_Photo2.resx">
+      <DependentUpon>201901201942095_Photo2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201943104_Photo3.resx">
+      <DependentUpon>201901201943104_Photo3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201952224_Photo4.resx">
+      <DependentUpon>201901201952224_Photo4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

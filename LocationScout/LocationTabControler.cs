@@ -1,7 +1,9 @@
 ﻿using LocationScout.DataAccess;
 using LocationScout.Model;
+using LocationScout.ViewModel;
 using Microsoft.Win32;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -69,7 +71,27 @@ namespace LocationScout
             // _window.SettingsCountryControl.SetFocus();
         }
 
-        internal void LoadPhoto()
+        internal void LoadPhoto_2_2()
+        {
+            LoadPhoto(Window.LocationViewModel.ShootingLocation2_2_Photos);
+        }
+
+        internal void LoadPhoto_2_1()
+        {
+            LoadPhoto(Window.LocationViewModel.ShootingLocation2_1_Photos);
+        }
+
+        internal void LoadPhoto_1_2()
+        {
+            LoadPhoto(Window.LocationViewModel.ShootingLocation1_2_Photos);
+        }
+
+        internal void LoadPhoto_1_1()
+        {
+            LoadPhoto(Window.LocationViewModel.ShootingLocation1_1_Photos);
+        }
+
+        private void LoadPhoto(ObservableCollection<byte[]> photos)
         {
             var openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
@@ -78,44 +100,14 @@ namespace LocationScout
 
                 try
                 {
-                    var byteArray = FileToByteArray(fileName);
-                    Window.LocationViewModel.ShootingLocation1_1_Photos.Add(byteArray);;
+                    var byteArray = ImageTools.FileToByteArray(fileName);
+                    photos.Add(byteArray); ;
                 }
                 catch (Exception e)
                 {
-                    // to do
+                    ShowMessage("Error loading file." + e.Message, E_MessageType.error);
                 }
             }
-        }
-
-        public static byte[] FileToByteArray(string fileName)
-        {
-            byte[] fileData = null;
-
-            using (FileStream fs = File.OpenRead(fileName))
-            {
-                var binaryReader = new BinaryReader(fs);
-                fileData = binaryReader.ReadBytes((int)fs.Length);
-            }
-            return fileData;
-        }
-
-        private static BitmapImage LoadImage(byte[] imageData)
-        {
-            if (imageData == null || imageData.Length == 0) return null;
-            var image = new BitmapImage();
-            using (var mem = new MemoryStream(imageData))
-            {
-                mem.Position = 0;
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = null;
-                image.StreamSource = mem;
-                image.EndInit();
-            }
-            image.Freeze();
-            return image;
         }
         #endregion
     }

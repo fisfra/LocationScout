@@ -1,6 +1,7 @@
 ﻿using LocationScout.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,11 @@ namespace LocationScout.ViewModel
         private double? _shootingLocation2_2_Latitude;
         private double? _shootingLocation2_2_Longitude;
         private GPSCoordinates _shootingLocation2_2_GPS;
+
+        private ObservableCollection<byte[]> _shootinglocation1_1_photos;
+        private ObservableCollection<byte[]> _shootinglocation1_2_photos;
+        private ObservableCollection<byte[]> _shootinglocation2_1_photos;
+        private ObservableCollection<byte[]> _shootinglocation2_2_photos;
 
         private object _tag;
 
@@ -259,6 +265,43 @@ namespace LocationScout.ViewModel
             }
         }
 
+        public ObservableCollection<byte[]> ShootingLocation1_1_Photos
+        {
+            get { return _shootinglocation1_1_photos; }
+            set
+            {
+                _shootinglocation1_1_photos = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<byte[]> ShootingLocation1_2_Photos
+        {
+            get { return _shootinglocation1_2_photos; }
+            set
+            {
+                _shootinglocation1_2_photos = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<byte[]> ShootingLocation2_1_Photos
+        {
+            get { return _shootinglocation2_1_photos; }
+            set
+            {
+                _shootinglocation2_1_photos = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<byte[]> ShootingLocation2_2_Photos
+        {
+            get { return _shootinglocation2_2_photos; }
+            set
+            {
+                _shootinglocation2_2_photos = value;
+                OnPropertyChanged();
+            }
+        }
+
         public object Tag
         {
             get { return _tag; }
@@ -269,6 +312,14 @@ namespace LocationScout.ViewModel
             }
         }
         #endregion
+
+       public LocationListerDisplayItem()
+        {
+            _shootinglocation1_1_photos = new ObservableCollection<byte[]>();
+            _shootinglocation1_2_photos = new ObservableCollection<byte[]>();
+            _shootinglocation2_1_photos = new ObservableCollection<byte[]>();
+            _shootinglocation2_2_photos = new ObservableCollection<byte[]>();
+        }
     }
 
     #region enums

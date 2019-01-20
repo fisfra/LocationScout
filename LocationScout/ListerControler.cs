@@ -112,6 +112,18 @@ namespace LocationScout
 
                 // tag
                 CurrentDisplayItem.Tag = photoPlace;
+
+                if (CurrentDisplayItem.ShootingLocation1_1_Photos.Count > 0)
+                {
+                    try
+                    {
+                        _listerWindow.PreviewImage.Source = ImageTools.LoadImage(CurrentDisplayItem.ShootingLocation1_1_Photos[0]);
+                    }
+                    catch (Exception e)
+                    {
+                        base.ShowMessage("Error showing preview image. " + e.Message, E_MessageType.error);
+                    }
+                }
             }
         }
 

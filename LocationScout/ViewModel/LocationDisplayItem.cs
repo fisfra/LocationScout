@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,10 +29,10 @@ namespace LocationScout.ViewModel
         private double _shootinglocation2_2_latitude;
         private double _shootinglocation2_2_longitude;
 
-        private List<byte[]> _shootinglocation1_1_photos;
-        private List<byte[]> _shootinglocation1_2_photos;
-        private List<byte[]> _shootinglocation2_1_photos;
-        private List<byte[]> _shootinglocation2_2_photos;
+        private ObservableCollection<byte[]> _shootinglocation1_1_photos;
+        private ObservableCollection<byte[]> _shootinglocation1_2_photos;
+        private ObservableCollection<byte[]> _shootinglocation2_1_photos;
+        private ObservableCollection<byte[]> _shootinglocation2_2_photos;
 
         public string LocationName
         {
@@ -172,7 +173,7 @@ namespace LocationScout.ViewModel
             }
         }
 
-        public List<byte[]> ShootingLocation1_1_Photos
+        public ObservableCollection<byte[]> ShootingLocation1_1_Photos
         {
             get { return _shootinglocation1_1_photos; }
             set
@@ -181,7 +182,7 @@ namespace LocationScout.ViewModel
                 OnPropertyChanged();
             }
         }
-        public List<byte[]> ShootingLocation1_2_Photos
+        public ObservableCollection<byte[]> ShootingLocation1_2_Photos
         {
             get { return _shootinglocation1_2_photos; }
             set
@@ -190,7 +191,7 @@ namespace LocationScout.ViewModel
                 OnPropertyChanged();
             }
         }
-        public List<byte[]> ShootingLocation2_1_Photos
+        public ObservableCollection<byte[]> ShootingLocation2_1_Photos
         {
             get { return _shootinglocation2_1_photos; }
             set
@@ -199,7 +200,7 @@ namespace LocationScout.ViewModel
                 OnPropertyChanged();
             }
         }
-        public List<byte[]> ShootingLocation2_2_Photos
+        public ObservableCollection<byte[]> ShootingLocation2_2_Photos
         {
             get { return _shootinglocation2_2_photos; }
             set
@@ -213,10 +214,10 @@ namespace LocationScout.ViewModel
         #region constructor
         public LocationDisplayItem()
         {
-            _shootinglocation1_1_photos = new List<byte[]>();
-            _shootinglocation1_2_photos = new List<byte[]>();
-            _shootinglocation2_1_photos = new List<byte[]>();
-            _shootinglocation2_2_photos = new List<byte[]>();
+            _shootinglocation1_1_photos = new ObservableCollection<byte[]>();
+            _shootinglocation1_2_photos = new ObservableCollection<byte[]>();
+            _shootinglocation2_1_photos = new ObservableCollection<byte[]>();
+            _shootinglocation2_2_photos = new ObservableCollection<byte[]>();
         }
         #endregion
     }
