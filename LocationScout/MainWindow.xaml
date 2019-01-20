@@ -150,12 +150,14 @@
                         <Grid Name="LocationButtonGrid" Margin="5,5,5,10" Grid.Column="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="30"/>
                                 <RowDefinition Height="30"/>
                             </Grid.RowDefinitions>
 
-                            <Button Name="LocationButtonAdd" Content="Add" Width="100" Margin="5,2,5,3" Click="LocationButtonAdd_Click"/>
+                            <Button Name="LocationButtonAdd" Content="Add" Width="100" Margin="5,2,5,3" Grid.Row="0" Click="LocationButtonAdd_Click"/>
+                            <Button Name="LocationButtonShow" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="1" Click="LocationButtonShow_Click"/>
 
                         </Grid>
                     </Grid>

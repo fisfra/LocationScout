@@ -75,6 +75,10 @@
     <Compile Include="DataAccess\LocationScoutContext.cs" />
     <Compile Include="DataAccess\PersistenceManager.cs" />
     <Compile Include="DataAccess\TestDataGenerator.cs" />
+    <Compile Include="ListerControler.cs" />
+    <Compile Include="Lister\LocationListerWindow.xaml.cs">
+      <DependentUpon>LocationListerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocationTabControler.cs" />
     <Compile Include="Migrations\201901161228178_InitialCreate.cs" />
     <Compile Include="Migrations\201901161228178_InitialCreate.Designer.cs">
@@ -104,11 +108,22 @@
     <Compile Include="Migrations\201901171641236_Adjust-Country-Relation-3.Designer.cs">
       <DependentUpon>201901171641236_Adjust-Country-Relation-3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901201015148_PhotoPlace-Update.cs" />
+    <Compile Include="Migrations\201901201015148_PhotoPlace-Update.Designer.cs">
+      <DependentUpon>201901201015148_PhotoPlace-Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SettingTabControler.cs" />
     <Compile Include="TabControlerBase.cs" />
+    <Compile Include="ViewModel\Converters.cs" />
+    <Compile Include="ViewModel\GPSCoordinatesHelper.cs" />
     <Compile Include="ViewModel\LocationDisplayItem.cs" />
+    <Compile Include="ViewModel\LocationListerDisplayItem.cs" />
     <Compile Include="ViewModel\SettingDisplayItem.cs" />
+    <Page Include="Lister\LocationListerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901171641236_Adjust-Country-Relation-3.resx">
       <DependentUpon>201901171641236_Adjust-Country-Relation-3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901201015148_PhotoPlace-Update.resx">
+      <DependentUpon>201901201015148_PhotoPlace-Update.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

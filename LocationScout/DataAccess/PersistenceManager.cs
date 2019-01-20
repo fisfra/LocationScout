@@ -101,7 +101,7 @@ namespace LocationScout.DataAccess
                     parkingLocation2.ShootingLocations = new List<ShootingLocation>() { shootingLocation2_1, shootingLocation2_2 };
 
                     // photoplace
-                    var photoplace = new PhotoPlace() { ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 } };
+                    var photoplace = new PhotoPlace() { PlaceSubjectLocation = subjectLocation, ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 } };
 
                     // set depedant attributes
                     parkingLocation1.PhotoPlace = photoplace;
@@ -129,16 +129,32 @@ namespace LocationScout.DataAccess
             return success;
         }
     
-
-        internal static void ReadAllArea_Subareas(out List<Tuple<string, string>> areaNames_subareaNames)
+        internal static E_DBReturnCode ReadAllPhotoPlaces(long photoPlaceId, out List<PhotoPlace> photoPlacesFound, out string errorMessage)
         {
-            TestDataGenerator.ReadAllArea_Subareas(out areaNames_subareaNames);
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            photoPlacesFound = null;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    photoPlacesFound = db.PhotoPlaces.Include(p => p.PlaceSubjectLocation)
+                                                              .Include(p => p.ParkingLocations)
+                                                              .Include(p => p.PlaceSubjectLocation.SubjectCountry)
+                                                              .Include(p => p.PlaceSubjectLocation.SubjectArea)
+                                                              .Include(p => p.PlaceSubjectLocation.SubjectSubArea).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
         }
 
-        internal static void ReadAll_Country_Areas(out List<Tuple<string, string>> countryNames_areaNames)
-        {
-            TestDataGenerator.ReadAll_Country_Areas(out countryNames_areaNames);
-        }
 
         internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMesssage)
         {
@@ -206,16 +222,6 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        private static bool SubAreaExists(string countryName, string areaName, string subAreaName)
-        {
-            // to do
-            using (var db = new LocationScoutContext())
-            {
-
-            }
-
-            return false;
-        }
 
         internal static string BuildDBErrorMessages(Exception e)
         {

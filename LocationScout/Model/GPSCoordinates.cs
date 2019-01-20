@@ -21,6 +21,10 @@ namespace LocationScout.Model
             Latitude = latitude;
             Longitude = longitude;
         }
+
+        public GPSCoordinates()
+        {
+        }
         #endregion
     }
 }

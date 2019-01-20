@@ -13,6 +13,7 @@ namespace LocationScout.Model
         [Key]
         public long Id { get; set; }
         public List<ParkingLocation> ParkingLocations { get; set; }
+        public SubjectLocation PlaceSubjectLocation { get; set; }
         #endregion
 
         #region constructors   

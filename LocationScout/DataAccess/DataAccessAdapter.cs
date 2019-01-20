@@ -38,5 +38,10 @@ namespace LocationScout.DataAccess
                                                         shooting1ParkingGPS, shooting1_1GPS, shooting1_2GPS,
                                                         shooting2ParkingGPS, shooting2_1GPS, shooting2_2GPS, out errorMessage);
         }
+
+        internal static E_DBReturnCode ReadPhotoPlace(long photoPlaceId, out List<PhotoPlace> photoPlaces, out string errorMessage)
+        {
+            return PersistenceManager.ReadAllPhotoPlaces(photoPlaceId, out photoPlaces, out errorMessage);
+        }
     }
 }

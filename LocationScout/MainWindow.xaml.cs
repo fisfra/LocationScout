@@ -39,7 +39,9 @@ namespace LocationScout
             // call after initilaze component
             _controler = new MainWindowControler(this);
         }
+        #endregion
 
+        #region methods
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleClose();
@@ -58,6 +60,11 @@ namespace LocationScout
         private void SetDataContext()
         {
             DataContext = LocationViewModel;
+        }
+
+        private void LocationButtonShow_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleLocationShow();
         }
         #endregion
     }

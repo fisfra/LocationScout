@@ -17,6 +17,7 @@ namespace LocationScout
         #region attributes
         private SettingTabControler _settingControler;
         private LocationTabControler _locationControler;
+        private ListerControler _listerControler;
 
         private List<Country> _allCountries;
 
@@ -28,6 +29,7 @@ namespace LocationScout
         {
             _settingControler = new SettingTabControler(this, window);
             _locationControler = new LocationTabControler(this, window);
+            _listerControler = new ListerControler(window);
 
             if (RefreshAllCountries(out string errorMessage) == E_DBReturnCode.error)
             {
@@ -59,6 +61,11 @@ namespace LocationScout
         internal E_DBReturnCode RefreshAllCountries(out string errorMessage)
         {
             return DataAccessAdapter.ReadAllCountries(out _allCountries, out errorMessage);
+        }
+
+        internal void HandleLocationShow()
+        {
+            _listerControler.Show();
         }
 
         internal void RefreshCountryControls()
