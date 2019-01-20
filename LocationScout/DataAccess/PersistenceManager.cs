@@ -186,7 +186,7 @@ namespace LocationScout.DataAccess
                 {
                     // get the table data including all joint tables
                     photoPlacesFound = db.PhotoPlaces.Include(pp => pp.PlaceSubjectLocation)
-                                                        .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations))
+                                                        .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations.Select(sl => sl.Photos)))
                                                         .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
                                                         .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
                                                         .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();
