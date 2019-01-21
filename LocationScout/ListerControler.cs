@@ -46,9 +46,9 @@ namespace LocationScout
         {
             var success = DataAccess.DataAccessAdapter.ReadPhotoPlace(4, out List<PhotoPlace> photoPlaces, out string errorMessage);
 
-            foreach (var photoPlace in photoPlaces)
+            foreach (PhotoPlace photoPlace in photoPlaces)
             {
-                AllDisplayItems.Add(new LocationListerDisplayItem()
+                var newDisplayItem = new LocationListerDisplayItem()
                 {
                     CountryName = photoPlace.PlaceSubjectLocation.SubjectCountry.Name,
                     LocationName = photoPlace.PlaceSubjectLocation.LocationName,
@@ -56,10 +56,129 @@ namespace LocationScout
                     SubAreaName = photoPlace.PlaceSubjectLocation.SubjectSubArea.Name,
                     SubjectLatitude = photoPlace.PlaceSubjectLocation.Coordinates.Latitude,
                     SubjectLongitude = photoPlace.PlaceSubjectLocation.Coordinates.Longitude,
+                    ShootingLocation1_1_Photos = new ObservableCollection<byte[]>(),
                     Tag = photoPlace
-                });
+                };
+
+
+                var photos = photoPlace.ParkingLocations.ElementAtOrDefault(0)?.ShootingLocations.ElementAtOrDefault(0).Photos;
+                if (photos != null)
+                {
+                    foreach (var photo in photos)
+                    {
+                        newDisplayItem.ShootingLocation1_1_Photos.Add(photo.ImageBytes);
+                    }
+                }
+
+                AllDisplayItems.Add(newDisplayItem);
+
             }
         }
+
+        private void SetSubjectLocation(SubjectLocation sl)
+        {
+            CurrentDisplayItem.CountryName = sl.SubjectCountry.Name;
+            CurrentDisplayItem.LocationName = sl.LocationName;
+            CurrentDisplayItem.AreaName = sl.SubjectArea.Name;
+            CurrentDisplayItem.SubAreaName = sl.SubjectSubArea.Name;
+            CurrentDisplayItem.SubjectLatitude = sl.Coordinates.Latitude;
+            CurrentDisplayItem.SubjectLongitude = sl.Coordinates.Longitude;
+        }
+
+        private void SetParkingLocation_1(ParkingLocation pl)
+        {
+
+            CurrentDisplayItem.ParkingLocation1_GPS = pl.Coordinates;
+            CurrentDisplayItem.ParkingLocation1_Latitude = pl.Coordinates.Latitude;
+            CurrentDisplayItem.ParkingLocation1_Longitude = pl.Coordinates.Longitude;
+        }
+
+        private void SetParkingLocation_2(ParkingLocation pl)
+        {
+
+            CurrentDisplayItem.ParkingLocation2_GPS = pl.Coordinates;
+            CurrentDisplayItem.ParkingLocation2_Latitude = pl.Coordinates.Latitude;
+            CurrentDisplayItem.ParkingLocation2_Longitude = pl.Coordinates.Longitude;
+        }
+
+        private void SetShootingLocations_1(List<ShootingLocation> sl)
+        {
+            CurrentDisplayItem.ShootingLocation1_1_GPS = (sl.Count > 0) ? sl[0].Coordinates : null;
+            CurrentDisplayItem.ShootingLocation1_1_Latitude = (sl.Count > 0) ? sl[0].Coordinates.Latitude : null;
+            CurrentDisplayItem.ShootingLocation1_1_Longitude = (sl.Count > 0) ? sl[0].Coordinates.Longitude : null;
+
+            CurrentDisplayItem.ShootingLocation1_2_GPS = (sl.Count > 1) ? sl[1].Coordinates : null;
+            CurrentDisplayItem.ShootingLocation1_2_Latitude = (sl.Count > 1) ? sl[1].Coordinates.Latitude : null;
+            CurrentDisplayItem.ShootingLocation1_2_Longitude = (sl.Count > 1) ? sl[1].Coordinates.Longitude : null;
+        }
+
+        private void SetShootingLocations_2(List<ShootingLocation> sl)
+        {
+            CurrentDisplayItem.ShootingLocation2_1_GPS = (sl.Count > 0) ? sl[0].Coordinates : null;
+            CurrentDisplayItem.ShootingLocation2_1_Latitude = (sl.Count > 0) ? sl[0].Coordinates.Latitude : null;
+            CurrentDisplayItem.ShootingLocation2_1_Longitude = (sl.Count > 0) ? sl[0].Coordinates.Longitude : null;
+
+            CurrentDisplayItem.ShootingLocation2_2_GPS = (sl.Count > 1) ? sl[1].Coordinates : null;
+            CurrentDisplayItem.ShootingLocation2_2_Latitude = (sl.Count > 1) ? sl[1].Coordinates.Latitude : null;
+            CurrentDisplayItem.ShootingLocation2_2_Longitude = (sl.Count > 1) ? sl[1].Coordinates.Longitude : null;
+        }
+
+        private void SetPhoto_1(List<ShootingLocation> sl)
+        {
+            if (sl.Count > 0)
+            {
+                var photos = sl[0].Photos;
+                if (photos != null)
+                {
+                    foreach (var photo in photos)
+                    {
+                        CurrentDisplayItem.ShootingLocation1_1_Photos.Add(photo.ImageBytes);
+                    }
+
+                    CurrentDisplayItem.CurrentPhoto = photos.Count > 0 ? ImageTools.LoadImage(photos[0].ImageBytes) : null;
+                }
+            }
+
+            if (sl.Count > 1)
+            {
+                var photos = sl[1].Photos;
+                if (photos != null)
+                {
+                    foreach (var photo in photos)
+                    {
+                        CurrentDisplayItem.ShootingLocation1_2_Photos.Add(photo.ImageBytes);
+                    }
+                }
+            }
+        }
+
+        private void SetPhoto_2(List<ShootingLocation> sl)
+        {
+            if (sl.Count > 0)
+            {
+                var photos = sl[0].Photos;
+                if (photos != null)
+                {
+                    foreach (var photo in photos)
+                    {
+                        CurrentDisplayItem.ShootingLocation2_1_Photos.Add(photo.ImageBytes);
+                    }
+                }
+            }
+
+            if (sl.Count > 1)
+            {
+                var photos = sl[1].Photos;
+                if (photos != null)
+                {
+                    foreach (var photo in photos)
+                    {
+                        CurrentDisplayItem.ShootingLocation2_2_Photos.Add(photo.ImageBytes);
+                    }
+                }
+            }
+        }
+
 
         internal void HandleSelectionChanged()
         {
@@ -67,29 +186,16 @@ namespace LocationScout
             if (selectedItem?.Tag is PhotoPlace photoPlace)
             {
                 // subject location
-                CurrentDisplayItem.CountryName = photoPlace.PlaceSubjectLocation.SubjectCountry.Name;
-                CurrentDisplayItem.LocationName = photoPlace.PlaceSubjectLocation.LocationName;
-                CurrentDisplayItem.AreaName = photoPlace.PlaceSubjectLocation.SubjectArea.Name;
-                CurrentDisplayItem.SubAreaName = photoPlace.PlaceSubjectLocation.SubjectSubArea.Name;
-                CurrentDisplayItem.SubjectLatitude = photoPlace.PlaceSubjectLocation.Coordinates.Latitude;
-                CurrentDisplayItem.SubjectLongitude = photoPlace.PlaceSubjectLocation.Coordinates.Longitude;
+                SetSubjectLocation(photoPlace.PlaceSubjectLocation);
 
                 // parking location 1 (and associated shooting locations)
                 if (photoPlace.ParkingLocations.Count > 0)
                 {
                     var pl = photoPlace.ParkingLocations[0];
 
-                    CurrentDisplayItem.ParkingLocation1_GPS = pl.Coordinates;
-                    CurrentDisplayItem.ParkingLocation1_Latitude = pl.Coordinates.Latitude;
-                    CurrentDisplayItem.ParkingLocation1_Longitude = pl.Coordinates.Longitude;
-
-                    CurrentDisplayItem.ShootingLocation1_1_GPS = (pl.ShootingLocations.Count > 0) ? pl.ShootingLocations[0].Coordinates : null;
-                    CurrentDisplayItem.ShootingLocation1_1_Latitude = (pl.ShootingLocations.Count > 0) ? pl.ShootingLocations[0].Coordinates.Latitude : null;
-                    CurrentDisplayItem.ShootingLocation1_1_Longitude = (pl.ShootingLocations.Count > 0) ? pl.ShootingLocations[0].Coordinates.Longitude : null;
-
-                    CurrentDisplayItem.ShootingLocation1_2_GPS = (pl.ShootingLocations.Count > 1) ? pl.ShootingLocations[1].Coordinates : null;
-                    CurrentDisplayItem.ShootingLocation1_2_Latitude = (pl.ShootingLocations.Count > 1) ? pl.ShootingLocations[1].Coordinates.Latitude : null;
-                    CurrentDisplayItem.ShootingLocation1_2_Longitude = (pl.ShootingLocations.Count > 1) ? pl.ShootingLocations[1].Coordinates.Longitude : null;
+                    SetParkingLocation_1(pl);
+                    SetShootingLocations_1(pl.ShootingLocations);
+                    SetPhoto_1(pl.ShootingLocations);
                 }
 
                 // parking location 2 (and associated shooting locations)
@@ -97,33 +203,13 @@ namespace LocationScout
                 {
                     var pl = photoPlace.ParkingLocations[1];
 
-                    CurrentDisplayItem.ParkingLocation2_GPS = pl.Coordinates;
-                    CurrentDisplayItem.ParkingLocation2_Latitude = pl.Coordinates.Latitude;
-                    CurrentDisplayItem.ParkingLocation2_Longitude = pl.Coordinates.Longitude;
-
-                    CurrentDisplayItem.ShootingLocation2_1_GPS = (pl.ShootingLocations.Count > 0) ? pl.ShootingLocations[0].Coordinates : null;
-                    CurrentDisplayItem.ShootingLocation2_1_Latitude = (pl.ShootingLocations.Count > 0) ? pl.ShootingLocations[0].Coordinates.Latitude : null;
-                    CurrentDisplayItem.ShootingLocation2_1_Longitude = (pl.ShootingLocations.Count > 0) ? pl.ShootingLocations[0].Coordinates.Longitude : null;
-
-                    CurrentDisplayItem.ShootingLocation2_2_GPS = (pl.ShootingLocations.Count > 1) ? pl.ShootingLocations[1].Coordinates : null;
-                    CurrentDisplayItem.ShootingLocation2_2_Latitude = (pl.ShootingLocations.Count > 1) ? pl.ShootingLocations[1].Coordinates.Latitude : null;
-                    CurrentDisplayItem.ShootingLocation2_2_Longitude = (pl.ShootingLocations.Count > 1) ? pl.ShootingLocations[1].Coordinates.Longitude : null;
+                    SetParkingLocation_2(pl);
+                    SetShootingLocations_2(pl.ShootingLocations);
+                    SetPhoto_2(pl.ShootingLocations);
                 }
 
                 // tag
                 CurrentDisplayItem.Tag = photoPlace;
-
-                if (CurrentDisplayItem.ShootingLocation1_1_Photos.Count > 0)
-                {
-                    try
-                    {
-                        _listerWindow.PreviewImage.Source = ImageTools.LoadImage(CurrentDisplayItem.ShootingLocation1_1_Photos[0]);
-                    }
-                    catch (Exception e)
-                    {
-                        base.ShowMessage("Error showing preview image. " + e.Message, E_MessageType.error);
-                    }
-                }
             }
         }
 

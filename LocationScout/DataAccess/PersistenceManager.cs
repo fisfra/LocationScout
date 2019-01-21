@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
-//using System.Data.Entity.Include; // for .ThenInclude (NuGet Package)
-
 
 namespace LocationScout.DataAccess
 {
@@ -190,17 +188,6 @@ namespace LocationScout.DataAccess
                                                         .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
                                                         .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
                                                         .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();
-
-                    /*
-                    // get the table data including all joint tables
-                    photoPlacesFound = db.PhotoPlaces.Including(pp => pp.PlaceSubjectLocation)
-                                                     .Including(pp => pp.ParkingLocations).ThenInclude(pl => pl.ShootingLocations).ThenInclude(po => po.Photos)
-                                                     .Including(pp => pp.PlaceSubjectLocation.SubjectCountry)
-                                                     .Including(pp => pp.PlaceSubjectLocation.SubjectArea)
-                                                     .Including(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();*/
-
-                    // get the table data including all joint tables
-                    //photoPlacesFound = db.PhotoPlaces.Include(pp => pp.ParkingLocations).ThenInclude(pl => pl.ShootingLocations).ThenInclude(po => po.Photos).ToList();
                 }
             }
             catch (Exception e)

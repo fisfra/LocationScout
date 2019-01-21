@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace LocationScout.ViewModel
 {
@@ -42,6 +43,8 @@ namespace LocationScout.ViewModel
         private ObservableCollection<byte[]> _shootinglocation1_2_photos;
         private ObservableCollection<byte[]> _shootinglocation2_1_photos;
         private ObservableCollection<byte[]> _shootinglocation2_2_photos;
+
+        private BitmapImage _currentPhoto;
 
         private object _tag;
 
@@ -298,6 +301,16 @@ namespace LocationScout.ViewModel
             set
             {
                 _shootinglocation2_2_photos = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public BitmapImage CurrentPhoto
+        {
+            get { return _currentPhoto; }
+            set
+            {
+                _currentPhoto = value;
                 OnPropertyChanged();
             }
         }
