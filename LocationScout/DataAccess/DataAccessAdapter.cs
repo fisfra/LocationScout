@@ -44,6 +44,11 @@ namespace LocationScout.DataAccess
                                                         shooting2ParkingGPS, shooting2_1GPS, shooting2_1Photos, shooting2_2GPS, shooting2_2Photos, out errorMessage);
         }
 
+        internal static E_DBReturnCode EditCountryName(long countryId, string newCountryName, out string errorMessage)
+        {
+            return PersistenceManager.EditCountryName(countryId, newCountryName, out errorMessage);
+        }
+
         internal static E_DBReturnCode ReadPhotoPlace(long photoPlaceId, out List<PhotoPlace> photoPlaces, out string errorMessage)
         {
             return PersistenceManager.ReadAllPhotoPlaces(photoPlaceId, out photoPlaces, out errorMessage);

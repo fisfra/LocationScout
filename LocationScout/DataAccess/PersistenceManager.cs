@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using LocationScout.ViewModel;
 
 namespace LocationScout.DataAccess
 {
@@ -171,7 +172,34 @@ namespace LocationScout.DataAccess
 
             return success;
         }
-    
+
+        internal static E_DBReturnCode EditCountryName(long countryId, string newCountryName, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Id == countryId);
+                    if (countryFromDB == null) throw new Exception("Inconsistent database values - Id of Country.");
+
+                    countryFromDB.Name = newCountryName;
+
+                    db.Entry(countryFromDB).State = EntityState.Modified;
+                    db.SaveChanges();
+                }            
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
         internal static E_DBReturnCode ReadAllPhotoPlaces(long photoPlaceId, out List<PhotoPlace> photoPlacesFound, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;

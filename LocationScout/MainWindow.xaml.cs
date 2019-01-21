@@ -86,6 +86,11 @@ namespace LocationScout
         {
             _controler.LoadPhoto_2_2();
         }
+
+        private void SettingsEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.Edit();
+        }
         #endregion
     }
 }

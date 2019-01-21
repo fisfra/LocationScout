@@ -179,7 +179,6 @@ namespace LocationScout
             }
         }
 
-
         internal void HandleSelectionChanged()
         {
             var selectedItem = _listerWindow.LocationListView.SelectedItem as LocationListerDisplayItem;

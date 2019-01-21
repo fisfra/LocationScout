@@ -91,6 +91,11 @@ namespace LocationScout
             _locationControler.LoadPhoto_2_2();
         }
 
+        internal void Edit()
+        {
+            _settingControler.Edit();
+        }
+
         internal void RefreshCountryControls()
         {
             if (_allCountries != null)
