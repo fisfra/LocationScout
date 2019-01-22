@@ -16,13 +16,21 @@ namespace LocationScout.DataAccess
             return PersistenceManager.ReadAllCountries(out allCountries, out errorMessage);
         }
 
+        internal static E_DBReturnCode ReadCountry(long id, out Country foundCountry, out string errorMessage)
+        {
+            return PersistenceManager.ReadCountry(id, out foundCountry, out errorMessage);
+        }
+
         internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMessage)
         {
             return PersistenceManager.SmartAddCountry(countryName, areaName, subAreaName, out errorMessage);
         }
 
-        internal static E_DBReturnCode SmartAddPhotoPlace(long countryId, long areaId, long subAreaId, LocationDisplayItem ldi, out string errorMessage)
+
+
+        internal static E_DBReturnCode AddShootingLocation(List<long> subjectLocationIds, List<long> parkingLocationIds, List<byte[]> photosAsByteArray, string shootingLocationName, out string errorMessage)
         {
+            /*
             var locationName = ldi.LocationName;
             var subjectGPS = new GPSCoordinates(ldi.SubjectLatitude, ldi.SubjectLongitude);
 
@@ -37,11 +45,9 @@ namespace LocationScout.DataAccess
             var shooting1_1Photos = ldi.ShootingLocation1_1_Photos.ToList();
             var shooting1_2Photos = ldi.ShootingLocation1_2_Photos.ToList();
             var shooting2_1Photos = ldi.ShootingLocation2_1_Photos.ToList();
-            var shooting2_2Photos = ldi.ShootingLocation1_2_Photos.ToList();
+            var shooting2_2Photos = ldi.ShootingLocation1_2_Photos.ToList();*/
 
-            return PersistenceManager.SmartAddPhotoPlace(countryId, areaId, subAreaId, locationName, subjectGPS,
-                                                        shooting1ParkingGPS, shooting1_1GPS, shooting1_1Photos, shooting1_2GPS, shooting1_2Photos,
-                                                        shooting2ParkingGPS, shooting2_1GPS, shooting2_1Photos, shooting2_2GPS, shooting2_2Photos, out errorMessage);
+            return PersistenceManager.AddPhotoPlace(subjectLocationIds, parkingLocationIds, photosAsByteArray, shootingLocationName, out errorMessage);
         }
 
         internal static E_DBReturnCode EditCountryName(long countryId, string newCountryName, out string errorMessage)
@@ -59,9 +65,9 @@ namespace LocationScout.DataAccess
             return PersistenceManager.EditSubAreaName(SubAreaId, newSubAreaName, out errorMessage);
         }
 
-        internal static E_DBReturnCode ReadPhotoPlace(long photoPlaceId, out List<PhotoPlace> photoPlaces, out string errorMessage)
+        internal static E_DBReturnCode ReadShootingLocation(long shootingLocationId, out List<ShootingLocation> shootingLocations, out string errorMessage)
         {
-            return PersistenceManager.ReadAllPhotoPlaces(photoPlaceId, out photoPlaces, out errorMessage);
+            return PersistenceManager.ReadAllShootingLocations(shootingLocationId, out shootingLocations, out errorMessage);
         }
     }
 }

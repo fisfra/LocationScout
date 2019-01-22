@@ -44,12 +44,15 @@ namespace LocationScout
 
         private void ReadData()
         {
-            var success = DataAccess.DataAccessAdapter.ReadPhotoPlace(4, out List<PhotoPlace> photoPlaces, out string errorMessage);
+            /*
+            var success = DataAccess.DataAccessAdapter.ReadShootingLocation(4, out List<PhotoPlace> photoPlaces, out string errorMessage);
 
             foreach (PhotoPlace photoPlace in photoPlaces)
-            {
+            {                 
+
                 var newDisplayItem = new LocationListerDisplayItem()
                 {
+                   
                     CountryName = photoPlace.PlaceSubjectLocation.SubjectCountry.Name,
                     LocationName = photoPlace.PlaceSubjectLocation.LocationName,
                     AreaName = photoPlace.PlaceSubjectLocation.SubjectArea.Name,
@@ -58,6 +61,7 @@ namespace LocationScout
                     SubjectLongitude = photoPlace.PlaceSubjectLocation.Coordinates.Longitude,
                     ShootingLocation1_1_Photos = new ObservableCollection<byte[]>(),
                     Tag = photoPlace
+                    
                 };
 
 
@@ -72,15 +76,15 @@ namespace LocationScout
 
                 AllDisplayItems.Add(newDisplayItem);
 
-            }
+            }*/
         }
 
         private void SetSubjectLocation(SubjectLocation sl)
         {
-            CurrentDisplayItem.CountryName = sl.SubjectCountry.Name;
-            CurrentDisplayItem.LocationName = sl.LocationName;
-            CurrentDisplayItem.AreaName = sl.SubjectArea.Name;
-            CurrentDisplayItem.SubAreaName = sl.SubjectSubArea.Name;
+            //CurrentDisplayItem.CountryName = sl.SubjectCountry.Name;
+            //CurrentDisplayItem.LocationName = sl.LocationName;
+            //CurrentDisplayItem.AreaName = sl.SubjectArea.Name;
+            //CurrentDisplayItem.SubAreaName = sl.SubjectSubArea.Name;
             CurrentDisplayItem.SubjectLatitude = sl.Coordinates.Latitude;
             CurrentDisplayItem.SubjectLongitude = sl.Coordinates.Longitude;
         }
@@ -181,6 +185,7 @@ namespace LocationScout
 
         internal void HandleSelectionChanged()
         {
+            /*
             var selectedItem = _listerWindow.LocationListView.SelectedItem as LocationListerDisplayItem;
             if (selectedItem?.Tag is PhotoPlace photoPlace)
             {
@@ -209,11 +214,12 @@ namespace LocationScout
 
                 // tag
                 CurrentDisplayItem.Tag = photoPlace;
-            }
+            }*/
         }
 
         internal void HandleGoogleMaps()
         {
+            /*
             var selectedItem = _listerWindow.LocationListView.SelectedItem as LocationListerDisplayItem;
             if (selectedItem?.Tag is PhotoPlace photoPlace)
             {
@@ -226,7 +232,7 @@ namespace LocationScout
                 var url = c_googleMapsUrl + new GPSCoordinatesHelper(latitude, cpLat).ToGoogleMapsString() + "+" + new GPSCoordinatesHelper(longitude, cpLong).ToGoogleMapsString();
 
                 Process.Start(c_chrome_exe, url);
-            }
+            }*/
         }
 
         internal void HandleClose()

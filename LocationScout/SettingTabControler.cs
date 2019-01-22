@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using WPFUserControl;
-using static LocationScout.DataAccess.PersistenceManager;
 
 namespace LocationScout
 {
@@ -57,7 +56,7 @@ namespace LocationScout
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
             // add country to database
-            E_DBReturnCode success = DataAccessAdapter.SmartAddCountry(countryName, areaName, subAreaName, out string errorMessage);
+            PersistenceManager.E_DBReturnCode success = DataAccessAdapter.SmartAddCountry(countryName, areaName, subAreaName, out string errorMessage);
 
             // refresh or error handling
             AfterDBWriteSteps(success, errorMessage);
@@ -74,17 +73,61 @@ namespace LocationScout
 
         internal void Delete()
         {
-            throw new NotImplementedException();
+            // check which controls have text
+            var hasCountryText = !string.IsNullOrEmpty(Window.SettingsCountryControl.GetCurrentText());
+            var hasAreaText = !string.IsNullOrEmpty(Window.SettingsAreaControl.GetCurrentText());
+            var hasSubAreaText = !string.IsNullOrEmpty(Window.SettingsSubAreaControl.GetCurrentText());
+
+            // only country control has text, so edit country
+            if (hasCountryText && !hasAreaText && !hasSubAreaText)
+            {
+                var countryFromUI = Window.SettingsCountryControl.GetCurrentObject() as Country;
+
+                if (PersistenceManager.ReadCountry(countryFromUI.Id, out Country countryFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
+                {
+                    ShowMessage("Error reading country information." + errorMessage, E_MessageType.error);
+                }
+
+                var countryAreaCount = countryFromDB.Areas.Count;
+                var countrySubAreaCount = countryFromDB.SubAreas.Count;
+                //var t = countryFromDB.SubjectLocations
+
+                var settingDisplayItem = new ViewModel.SettingDisplayItem()
+                {
+                    CountryAreaCountToDelete = countryAreaCount,
+                    CountrySubAreaCountToDelete = countrySubAreaCount,
+                    CountryPhotoPlaceCountToDelete = -1,
+                    AreaSubAreaCountToDelete = -1,
+                    AreaPhotoPlaceCountToDelete = -1,
+                    SubAreaPhotoPlaceCountToDelete = -1
+                };
+
+                SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow(settingDisplayItem);
+
+                deletingWindow.ShowDialog();
+            }
+
+            // country and area control have text, so edit area
+            else if (hasCountryText && hasAreaText && !hasSubAreaText)
+            {
+
+            }
+
+            // all controls have text, so edit subarea
+            else if (hasSubAreaText && hasAreaText && hasSubAreaText)
+            {
+
+            }
         }
 
-        private void AfterDBWriteSteps(E_DBReturnCode success, string errorMessage)
+        private void AfterDBWriteSteps(PersistenceManager.E_DBReturnCode success, string errorMessage)
         {
             switch (success)
             {
-                case E_DBReturnCode.no_error:
+                case PersistenceManager.E_DBReturnCode.no_error:
                 {
                     // read the countries again from database and update _allCountries
-                    if (_mainControler.RefreshAllCountries(out errorMessage) == E_DBReturnCode.error)
+                    if (_mainControler.RefreshAllCountries(out errorMessage) == PersistenceManager.E_DBReturnCode.error)
                     {
                         ShowMessage("Error re-reading data.\n" + errorMessage, E_MessageType.error);
                     }
@@ -97,11 +140,11 @@ namespace LocationScout
                     break;
                 }
 
-                case E_DBReturnCode.error:
+                case PersistenceManager.E_DBReturnCode.error:
                     ShowMessage("Error writing data.\n" + errorMessage, E_MessageType.error);
                     break;
 
-                case E_DBReturnCode.already_existing:
+                case PersistenceManager.E_DBReturnCode.already_existing:
                     ShowMessage("Already existing in database.\n" + errorMessage, E_MessageType.info);
                     break;
 
@@ -148,7 +191,7 @@ namespace LocationScout
                 SaveEditChanges();
 
                 // refresh the controls with the changed text
-                if (_mainControler.RefreshAllCountries(out string errorMessage) == E_DBReturnCode.error)
+                if (_mainControler.RefreshAllCountries(out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
                 {
                     ShowMessage("Error reading countries from database." + errorMessage, E_MessageType.error);
                 }
@@ -218,7 +261,7 @@ namespace LocationScout
             if (area.Name != newAreaName)
             {
 
-                if (DataAccessAdapter.EditAreaName(area.Id, newAreaName, out string errorMessage) == E_DBReturnCode.no_error)
+                if (DataAccessAdapter.EditAreaName(area.Id, newAreaName, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
                     ShowMessage("Area name successfully changed.", E_MessageType.info);
                 }
@@ -245,7 +288,7 @@ namespace LocationScout
             if (subArea.Name != newSubAreaName)
             {
 
-                if (DataAccessAdapter.EditSubAreaName(subArea.Id, newSubAreaName, out string errorMessage) == E_DBReturnCode.no_error)
+                if (DataAccessAdapter.EditSubAreaName(subArea.Id, newSubAreaName, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
                     ShowMessage("Subarea name successfully changed.", E_MessageType.info);
                 }
@@ -272,7 +315,7 @@ namespace LocationScout
             if (country.Name != newCountryName)
             {
 
-                if (DataAccessAdapter.EditCountryName(country.Id, newCountryName, out string errorMessage) == E_DBReturnCode.no_error)
+                if (DataAccessAdapter.EditCountryName(country.Id, newCountryName, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
                     ShowMessage("Country name successfully changed.", E_MessageType.info);
                 }

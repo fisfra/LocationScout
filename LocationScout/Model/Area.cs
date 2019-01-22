@@ -15,6 +15,7 @@ namespace LocationScout.Model
         public string Name { get; set; }
         public List<SubArea> SubAreas { get; set; }
         public List<Country> Countries { get; set; }
+        public List<SubjectLocation> SubjectLocations { get; set; }
         #endregion
     }
 }

@@ -27,11 +27,27 @@ namespace LocationScout.DataAccess
         public DbSet<Area> Areas { get; set; }
         public DbSet<SubArea> SubAreas { get; set; }
 
-        public DbSet<PhotoPlace> PhotoPlaces {get; set;}
         public DbSet<SubjectLocation> SubjectLocations { get; set; }
         public DbSet<ParkingLocation> ParkingLocations { get; set; }
         public DbSet<ShootingLocation> ShootingLocations { get; set; }  
         public DbSet<Photo> Photos { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SubjectLocation>()
+                        .HasRequired(s => s.Country);
+
+            modelBuilder.Entity<SubjectLocation>()
+                        .HasRequired(s => s.Area);
+
+            modelBuilder.Entity<SubjectLocation>()
+                        .HasRequired(s => s.SubArea);
+
+            modelBuilder.Entity<Photo>()
+                        .HasRequired(p => p.ShootingLocation);
+        }
+
+
     }
 }
 

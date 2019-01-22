@@ -9,7 +9,9 @@ namespace LocationScout.Model
         public class ParkingLocation : LocationBase
         {
             #region attributes
-            public PhotoPlace PhotoPlace { get; set; }
+            public string Name { get; set; }
+
+            // navigation properties
             public List<ShootingLocation> ShootingLocations { get; set; }
             #endregion
 

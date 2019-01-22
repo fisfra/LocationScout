@@ -15,6 +15,7 @@ namespace LocationScout.Model
         public string Name { get; set; }
         public List<Area> Areas { get; set; }
         public List<Country> Countries { get; set; }
+        public List<SubjectLocation> SubjectLocation { get; set; }
 
         public override bool Equals(object obj)
         {

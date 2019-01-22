@@ -1,0 +1,82 @@
+﻿<Window x:Class="LocationScout.SettingsDeleteWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LocationScout"
+        xmlns:ViewModel="clr-namespace:LocationScout.ViewModel"
+        mc:Ignorable="d"
+        Title="Delete" Height="315" Width="350" WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <ViewModel:SettingDisplayItem/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <ViewModel:DeleteCountConverter x:Key="DeleteCountConverterKey"/>
+        <ViewModel:GPSConverterComplex x:Key="GPSConverterComplexKey"/>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Name="ObjectSelectionGroupBox" Header="Select objects to delete" Margin="5,5,5,5" Grid.Row="0">
+            <Grid Margin="10,10,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="35*"/>
+                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="25*"/>
+                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="15*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <RadioButton GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2">Countries</RadioButton>
+                <TextBlock Name="CountriesTextBlock" Height="Auto" LineHeight="19" Grid.Row="1" Grid.Column="1">
+                    <Run Text="{Binding CountryAreaCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Areas will be deleted"/>
+                    <LineBreak/>
+                    <Run Text="{Binding CountrySubAreaCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Subareas will be deleted"/>
+                    <LineBreak/>
+                    <Run Text="{Binding CountryPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Photo Places will be deleted"/>
+                </TextBlock>
+
+                <RadioButton GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2">Areas</RadioButton>
+                <TextBlock Name="AreaTextBlock" Height="Auto" LineHeight="19" Grid.Row="3" Grid.Column="1">
+                    <Run Text="{Binding AreaSubAreaCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Subareas will be deleted"/>
+                    <LineBreak/>
+                    <Run Text="{Binding AreaPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Photo Places will be deleted"/>
+                </TextBlock>
+
+                <RadioButton GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="2">Subareas</RadioButton>
+                <TextBlock Name="SubAreaTextBlock" Height="Auto" LineHeight="19" Grid.Row="5" Grid.Column="1">
+                    <Run Text="{Binding SubAreaPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Photo Places will be deleted"/>
+                </TextBlock>
+                
+            </Grid>
+        </GroupBox>
+        
+        <Grid Grid.Row="1" Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Name="DeleteButton" Content="Delete" HorizontalAlignment="Stretch" Margin="5,0,5,0" Grid.Column="1" Click="DeleteButton_Click"/>
+            <Button Name="CancelButton" Content="Cancel" HorizontalAlignment="Stretch" Margin="5,0,5,0" Grid.Column="2" Click="CancelButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>

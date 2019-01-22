@@ -47,6 +47,7 @@ namespace LocationScout
      
         internal void Add()
         {
+            /*
             // get Ids from UI
             var countryId = (Window.LocationCountryControl.GetCurrentObject() as Country).Id;
             var areaId = (Window.LocationAreaControl.GetCurrentObject() as Area).Id;
@@ -56,7 +57,7 @@ namespace LocationScout
             Mouse.OverrideCursor = Cursors.Wait;
 
             // add country to database
-            E_DBReturnCode success = DataAccessAdapter.SmartAddPhotoPlace(countryId, areaId, subAreaId, Window.LocationViewModel, out string errorMessage);
+            E_DBReturnCode success = DataAccessAdapter.AddShootingLocation(countryId, areaId, subAreaId, Window.LocationViewModel, out string errorMessage);
 
             // refresh or error handling
             // AfterDBWriteSteps(success, errorMessage);
@@ -68,7 +69,7 @@ namespace LocationScout
             // _window.SettingsCountryControl.ClearText();
             // _window.SettingsAreaControl.ClearText();
             // _window.SettingsSubAreaControl.ClearText();
-            // _window.SettingsCountryControl.SetFocus();
+            // _window.SettingsCountryControl.SetFocus();*/
         }
 
         internal void LoadPhoto_2_2()

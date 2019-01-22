@@ -36,7 +36,6 @@ namespace LocationScout.DataAccess
                 using (var db = new LocationScoutContext())
                 {
                     allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).ToList();
-                    //allCountries = db.Countries.Including(c => c.Areas).ThenIncluding(c => c.SubAreas).ToList();
                 }
             }
             catch (Exception e)
@@ -48,109 +47,88 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode SmartAddPhotoPlace(long countryId, long areaId, long subAreaId, string locationName, GPSCoordinates subjectGPS,
-                                                          GPSCoordinates shooting1ParkingGPS, GPSCoordinates shooting1_1GPS, List<byte[]> shooting1_1Photos,
-                                                          GPSCoordinates shooting1_2GPS, List<byte[]> shooting1_2Photos, GPSCoordinates shooting2ParkingGPS, 
-                                                          GPSCoordinates shooting2_1GPS, List<byte[]> shooting2_1Photos, GPSCoordinates shooting2_2GPS,
-                                                          List<byte[]> shooting2_2Photos, out string errorMessage)
+        internal static E_DBReturnCode ReadCountry(long id, out Country foundCountry, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
+            foundCountry = new Country();
 
             try
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Id == countryId);
-                    if (countryFromDB == null) throw new Exception("Inconsistent database values - Id of Country.");
+                    var found = db.Countries.Where(c => c.Id == id).Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).ToList();
 
-                    var areaFromDB = db.Areas.FirstOrDefault(o => o.Id == areaId);
-                    if (areaFromDB == null) throw new Exception("Inconsistent database values - Id of Area.");
-
-                    var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Id == subAreaId);
-                    if (subAreaFromDB == null) throw new Exception("Inconsistent database values - Id of SubArea.");
-
-                    // set parking locations later
-                    var subjectLocation = new SubjectLocation() { SubjectCountry = countryFromDB,
-                                                                  SubjectArea = areaFromDB,
-                                                                  SubjectSubArea = subAreaFromDB,
-                                                                  Coordinates = subjectGPS,
-                                                                  LocationName = locationName };
-
-                    // set photoplace and shootlinglocation later
-                    var parkingLocation1 = new ParkingLocation() { Coordinates = shooting1ParkingGPS };
-                    var parkingLocation2 = new ParkingLocation() { Coordinates = shooting2ParkingGPS };
-
-                    // set photoplace and locationphotos later
-                    var shootingLocation1_1 = new ShootingLocation() { Coordinates = shooting1_1GPS };
-                    var shootingLocation1_2 = new ShootingLocation() { Coordinates = shooting1_2GPS };
-                    var shootingLocation2_1 = new ShootingLocation() { Coordinates = shooting2_1GPS };
-                    var shootingLocation2_2 = new ShootingLocation() { Coordinates = shooting2_2GPS };
-
-                    // photos
-                    var shootingLocation1_1_Photos = new List<Photo>();
-                    foreach (var ba in shooting1_1Photos)
+                    if (found.Count == 1)
                     {
-                        shootingLocation1_1_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation1_1 });
-                    }
-                    var shootingLocation1_2_Photos = new List<Photo>();
-                    foreach (var ba in shooting1_2Photos)
-                    {
-                        shootingLocation1_2_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation1_2 });
-                    }
-                    var shootingLocation2_1_Photos = new List<Photo>();
-                    foreach (var ba in shooting2_1Photos)
-                    {
-                        shootingLocation2_1_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation2_1 });
-                    }
-                    var shootingLocation2_2_Photos = new List<Photo>();
-                    foreach (var ba in shooting2_2Photos)
-                    {
-                        shootingLocation2_2_Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation2_2 });
+                        foundCountry = found[0];
                     }
 
-                    // set dependant attributes
-                    shootingLocation1_1.Photos = shootingLocation1_1_Photos;
-                    shootingLocation1_2.Photos = shootingLocation1_2_Photos;
-                    shootingLocation2_1.Photos = shootingLocation2_1_Photos;
-                    shootingLocation2_2.Photos = shootingLocation2_2_Photos;
-                    subjectLocation.ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 };
-                    parkingLocation1.ShootingLocations = new List<ShootingLocation>() { shootingLocation1_1, shootingLocation1_2 };
-                    parkingLocation2.ShootingLocations = new List<ShootingLocation>() { shootingLocation2_1, shootingLocation2_2 };
+                    else if (found.Count > 0)
+                    {
+                        // should not find more than one country for an Id
+                        throw new Exception("Inconsitent data in database in PersistenceManager:ReadCountry.");
+                    }
+                }
 
-                    // photoplace
-                    var photoplace = new PhotoPlace() { PlaceSubjectLocation = subjectLocation, ParkingLocations = new List<ParkingLocation>() { parkingLocation1, parkingLocation2 } };
 
-                    // set depedant attributes
-                    parkingLocation1.PhotoPlace = photoplace;
-                    parkingLocation2.PhotoPlace = photoplace;
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
 
-                    // set the database attributes     
-                    foreach (var photo in shootingLocation1_1_Photos)
+            return success;
+        }
+
+        internal static E_DBReturnCode AddPhotoPlace(List<long> subjectLocationIds, List<long> parkingLocationIds, List<byte[]> photosAsByteArray, string shootingLocationName, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    // get subject locations from database
+                    List<SubjectLocation> subjectLocationsFromDB = new List<SubjectLocation>();
+                    foreach (var id in subjectLocationIds)
                     {
-                        db.Photos.Add(photo);
-                    }
-                    foreach (var photo in shootingLocation1_2_Photos)
+                        subjectLocationsFromDB.Add(db.SubjectLocations.FirstOrDefault(o => o.Id == id));
+                     }
+
+                    // get parking locations from database
+                    List<ParkingLocation> parkingLocationsFromDB = new List<ParkingLocation>();
+                    foreach (var id in parkingLocationIds)
                     {
-                        db.Photos.Add(photo);
+                        parkingLocationsFromDB.Add(db.ParkingLocations.FirstOrDefault(o => o.Id == id));
                     }
-                    foreach (var photo in shootingLocation2_1_Photos)
+
+                    // create the new shooting location
+                    ShootingLocation newShootingLocation = new ShootingLocation()
                     {
-                        db.Photos.Add(photo);
-                    }
-                    foreach (var photo in shootingLocation2_2_Photos)
+                        Name = shootingLocationName
+                    };
+
+                    // add photos to shooting location and set navigation property in photos
+                    foreach (var ba in photosAsByteArray)
                     {
-                        db.Photos.Add(photo);
+                        newShootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = newShootingLocation });
                     }
-                    db.PhotoPlaces.Add(photoplace);
-                    db.ParkingLocations.Add(parkingLocation1);
-                    db.ParkingLocations.Add(parkingLocation2);
-                    db.ShootingLocations.Add(shootingLocation1_1);
-                    db.ShootingLocations.Add(shootingLocation1_2);
-                    db.ShootingLocations.Add(shootingLocation2_1);
-                    db.ShootingLocations.Add(shootingLocation2_2);
-                    db.SubjectLocations.Add(subjectLocation);
-                    
+
+                    // set navigation properties for subject location
+                    foreach (var subjectLocationFromDB in subjectLocationsFromDB)
+                    {
+                        subjectLocationFromDB.ShootLocations.Add(newShootingLocation);
+                    }
+
+                    // set navgation properties for parking location
+                    foreach (var parkingLocationFromDB in parkingLocationsFromDB)
+                    {
+                        parkingLocationFromDB.ShootingLocations.Add(newShootingLocation);
+                    }
+
                     db.SaveChanges();
                 }
             }
@@ -244,22 +222,28 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode ReadAllPhotoPlaces(long photoPlaceId, out List<PhotoPlace> photoPlacesFound, out string errorMessage)
+        internal static E_DBReturnCode ReadAllShootingLocations(long shootingLocationId, out List<ShootingLocation> shootingLocationsFound, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
-            photoPlacesFound = null;
+            shootingLocationsFound = null;
             errorMessage = string.Empty;
 
             try
             {
                 using (var db = new LocationScoutContext())
                 {
-                    // get the table data including all joint tables
+                    /*
                     photoPlacesFound = db.PhotoPlaces.Include(pp => pp.PlaceSubjectLocation)
-                                                        .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations.Select(sl => sl.Photos)))
-                                                        .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
-                                                        .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
-                                                        .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();
+                                    .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations.Select(sl => sl.Photos)))
+                                    .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
+                                    .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
+                                    .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();*/
+
+
+                    // get the table data including all joint tables
+                    shootingLocationsFound = db.ShootingLocations.Include(sl => sl.Photos)
+                                                                 .Include(sl => sl.SubjectLocations)
+                                                                 .Include(sl => sl.ParkingLocations).ToList();
                 }
             }
             catch (Exception e)

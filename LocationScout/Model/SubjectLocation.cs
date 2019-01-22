@@ -9,11 +9,13 @@ namespace LocationScout.Model
     public class SubjectLocation : LocationBase
     {
         #region attributes
-        public Country SubjectCountry {get; set;}
-        public Area SubjectArea {get; set;}
-        public SubArea SubjectSubArea { get; set; }
-        public string LocationName { get; set; }
-        public List<ParkingLocation> ParkingLocations { get; set; }
+        public string Name { get; set; }
+
+        // navigation properties
+        public Country Country {get; set;}
+        public Area Area {get; set;}
+        public SubArea SubArea { get; set; }
+        public List<ShootingLocation> ShootLocations { get; set; }
         #endregion
 
         #region constructors

@@ -14,7 +14,8 @@ namespace LocationScout.Model
         public long Id { get; set; }
         public string Name { get; set; }
         public List<Area> Areas { get; set; } 
-        public List<SubArea>SubAreas { get; set; }
+        public List<SubArea>SubAreas { get; set; }     
+        public List<SubjectLocation> SubjectLocations { get; set; }
         #endregion
     }
 }
