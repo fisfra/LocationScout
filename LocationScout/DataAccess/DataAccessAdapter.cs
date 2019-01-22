@@ -49,6 +49,16 @@ namespace LocationScout.DataAccess
             return PersistenceManager.EditCountryName(countryId, newCountryName, out errorMessage);
         }
 
+        internal static E_DBReturnCode EditAreaName(long AreaId, string newAreaName, out string errorMessage)
+        {
+            return PersistenceManager.EditAreaName(AreaId, newAreaName, out errorMessage);
+        }
+
+        internal static E_DBReturnCode EditSubAreaName(long SubAreaId, string newSubAreaName, out string errorMessage)
+        {
+            return PersistenceManager.EditSubAreaName(SubAreaId, newSubAreaName, out errorMessage);
+        }
+
         internal static E_DBReturnCode ReadPhotoPlace(long photoPlaceId, out List<PhotoPlace> photoPlaces, out string errorMessage)
         {
             return PersistenceManager.ReadAllPhotoPlaces(photoPlaceId, out photoPlaces, out errorMessage);

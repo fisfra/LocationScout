@@ -109,13 +109,19 @@ namespace LocationScout
 
         internal void Edit()
         {
+            // currently in "add" mode...
             if (_currentMode == E_Mode.add)
             {
+                // check if editing is possible and switch controls
                 _currentEditMode = DoEdit();
 
+                // edit is possible
                 if (_currentEditMode != E_EditMode.no_edit)
                 {
+                    // change button label
                     Window.SettingsEditButton.Content = "Save";
+
+                    // switch to edit mode
                     _currentMode = E_Mode.edit;
                 }
             }
@@ -143,11 +149,12 @@ namespace LocationScout
                 }
                 _mainControler.RefreshCountryControls();
 
+                // clear the controls
                 Window.SettingsCountryControl.ClearText();
                 Window.SettingsAreaControl.ClearText();
                 Window.SettingsSubAreaControl.ClearText();
 
-                // reset the mode
+                // reset the modes
                 _currentMode = E_Mode.add;
                 _currentEditMode = E_EditMode.no_edit;
             }
@@ -166,11 +173,11 @@ namespace LocationScout
                     break;
 
                 case E_EditMode.edit_area:
-                    // to do
+                    SaveEditedAreaName();
                     break;
 
                 case E_EditMode.edit_subarea:
-                    // to do
+                    SaveEditedSubAreaName();
                     break;
 
                 default:
@@ -195,6 +202,60 @@ namespace LocationScout
             Window.SettingsCountryControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
         }
 
+        private void SaveEditedAreaName()
+        {
+            // save the edits
+            var area = Window.SettingsAreaControl.GetCurrentObject() as Area;
+            var newAreaName = new TextRange(Window.SettingsAreaControlEdit.Document.ContentStart, Window.SettingsAreaControlEdit.Document.ContentEnd).Text;
+            newAreaName = newAreaName.TrimEnd('\r', '\n');
+
+            // write only to database if there was a change
+            if (area.Name != newAreaName)
+            {
+
+                if (DataAccessAdapter.EditAreaName(area.Id, newAreaName, out string errorMessage) == E_DBReturnCode.no_error)
+                {
+                    ShowMessage("Area name successfully changed.", E_MessageType.info);
+                }
+                else
+                {
+                    ShowMessage("Error editing area name." + errorMessage, E_MessageType.error);
+                }
+            }
+
+            else
+            {
+                ShowMessage("No change done.", E_MessageType.info);
+            }
+        }
+
+        private void SaveEditedSubAreaName()
+        {
+            // save the edits
+            var subArea = Window.SettingsSubAreaControl.GetCurrentObject() as SubArea;
+            var newSubAreaName = new TextRange(Window.SettingsSubAreaControlEdit.Document.ContentStart, Window.SettingsSubAreaControlEdit.Document.ContentEnd).Text;
+            newSubAreaName = newSubAreaName.TrimEnd('\r', '\n');
+
+            // write only to database if there was a change
+            if (subArea.Name != newSubAreaName)
+            {
+
+                if (DataAccessAdapter.EditSubAreaName(subArea.Id, newSubAreaName, out string errorMessage) == E_DBReturnCode.no_error)
+                {
+                    ShowMessage("Subarea name successfully changed.", E_MessageType.info);
+                }
+                else
+                {
+                    ShowMessage("Error editing Subarea name." + errorMessage, E_MessageType.error);
+                }
+            }
+
+            else
+            {
+                ShowMessage("No change done.", E_MessageType.info);
+            }
+        }
+
         private void SaveEditedCountryName()
         {
             // save the edits
@@ -202,13 +263,23 @@ namespace LocationScout
             var newCountryName = new TextRange(Window.SettingsCountryControlEdit.Document.ContentStart, Window.SettingsCountryControlEdit.Document.ContentEnd).Text;
             newCountryName = newCountryName.TrimEnd('\r', '\n');
 
-            if (DataAccessAdapter.EditCountryName(country.Id, newCountryName, out string errorMessage) == E_DBReturnCode.no_error)
+            // write only to database if there was a change
+            if (country.Name != newCountryName)
             {
-                ShowMessage("Country name successfully changed.", E_MessageType.info);
+
+                if (DataAccessAdapter.EditCountryName(country.Id, newCountryName, out string errorMessage) == E_DBReturnCode.no_error)
+                {
+                    ShowMessage("Country name successfully changed.", E_MessageType.info);
+                }
+                else
+                {
+                    ShowMessage("Error editing country name." + errorMessage, E_MessageType.error);
+                }
             }
+
             else
             {
-                ShowMessage("Error editing country name." + errorMessage, E_MessageType.error);
+                ShowMessage("No change done.", E_MessageType.info);
             }
         }
 

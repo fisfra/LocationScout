@@ -173,6 +173,60 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        internal static E_DBReturnCode EditSubAreaName(long subAreaId, string newSubAreaName, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Id == subAreaId);
+                    if (subAreaFromDB == null) throw new Exception("Inconsistent database values - Id of subAreaId.");
+
+                    subAreaFromDB.Name = newSubAreaName;
+
+                    db.Entry(subAreaFromDB).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode EditAreaName(long areaId, string newAreaName, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var AreaFromDB = db.Areas.FirstOrDefault(o => o.Id == areaId);
+                    if (AreaFromDB == null) throw new Exception("Inconsistent database values - Id of areaId.");
+
+                    AreaFromDB.Name = newAreaName;
+
+                    db.Entry(AreaFromDB).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
         internal static E_DBReturnCode EditCountryName(long countryId, string newCountryName, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
