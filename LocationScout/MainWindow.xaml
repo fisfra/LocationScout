@@ -57,21 +57,21 @@
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Area" Height="Auto" Grid.Column="0" Grid.Row="1"/>
-                                    <control:AutoCompleteTextBox x:Name="LocationAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="1" 
+                                    <control:AutoCompleteTextBox x:Name="LocationAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" 
                                                                  HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="900" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Sub-Area" Height="Auto" Grid.Column="0" Grid.Row="2"/>
-                                    <control:AutoCompleteTextBox x:Name="LocationSubAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="2" 
+                                    <control:AutoCompleteTextBox x:Name="LocationSubAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="2" Grid.Column="1" Grid.Row="2" 
                                                                  HorizontalAlignment="Left" Margin="0,5,0,0" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="800" ListBoxReadOnly="True"/>
                                     <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
 
                                     <Label Content="Location Name" Height="Auto" Grid.Column="0" Grid.Row="3"/>
-                                    <TextBox Name="LocationNameTextBox" Text="{Binding LocationName}" Height="18" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"/>
+                                    <TextBox Name="LocationNameTextBox" Text="{Binding LocationName}" Height="18" TabIndex="3"  Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"/>
 
                                     <Label Content="GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="4"/>
-                                    <TextBox Name="SubjectGPSLat" Text="{Binding SubjectLatitude}" Height="18" Margin="0,0,5,0" Grid.Column="1" Grid.Row="4"/>
-                                    <TextBox Name="SubjectGPSLong" Text="{Binding SubjectLongitude}" Height="18" Margin="5,0,0,0" Grid.Column="2" Grid.Row="4"/>
+                                    <TextBox Name="SubjectGPSLat" Text="{Binding SubjectLatitude}" TabIndex="4" Height="18" Margin="0,0,5,0" Grid.Column="1" Grid.Row="4"/>
+                                    <TextBox Name="SubjectGPSLong" Text="{Binding SubjectLongitude}" TabIndex="5" Height="18" Margin="5,0,0,0" Grid.Column="2" Grid.Row="4"/>
 
                                 </Grid>
                             </GroupBox>
@@ -229,6 +229,7 @@
 
                                 <Button Name="SettingsAddButton" Content="Add" Grid.Row="0" Width="100" Height="25" Margin="5,20,5,5" Click="SettingAddButton_Click"/>
                                 <Button Name="SettingsEditButton" Content="Edit" Grid.Row="1" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsEditButton_Click"/>
+                                <Button Name="SettingsDeleteButton" Content="Delete" Grid.Row="2" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsDeleteButton_Click"/>
                             </Grid>
 
                         </Grid>

@@ -96,6 +96,11 @@ namespace LocationScout
             _settingControler.Edit();
         }
 
+        internal void Delete()
+        {
+            _settingControler.Delete();
+        }
+
         internal void RefreshCountryControls()
         {
             if (_allCountries != null)

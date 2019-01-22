@@ -25,16 +25,6 @@ namespace LocationScout.DataAccess
         #endregion
 
         #region methods
-        internal static void ReadAllSubareas(out List<string> subareaNames)
-        {
-            TestDataGenerator.ReadAllSubareas(out subareaNames);
-        }
-
-        internal static void ReadAllAreas(out List<string> areaNames)
-        {
-            TestDataGenerator.ReadAllAreas(out areaNames);
-        }
-
         internal static E_DBReturnCode ReadAllCountries(out List<Country> allCountries, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
@@ -281,7 +271,6 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-
         internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMesssage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
@@ -347,7 +336,6 @@ namespace LocationScout.DataAccess
 
             return success;
         }
-
 
         internal static string BuildDBErrorMessages(Exception e)
         {

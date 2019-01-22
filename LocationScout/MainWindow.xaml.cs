@@ -91,6 +91,12 @@ namespace LocationScout
         {
             _controler.Edit();
         }
+
+
+        private void SettingsDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.Delete();
+        }
         #endregion
     }
 }

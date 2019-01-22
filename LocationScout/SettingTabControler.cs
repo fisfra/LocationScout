@@ -72,6 +72,11 @@ namespace LocationScout
             Window.SettingsCountryControl.SetFocus();
         }
 
+        internal void Delete()
+        {
+            throw new NotImplementedException();
+        }
+
         private void AfterDBWriteSteps(E_DBReturnCode success, string errorMessage)
         {
             switch (success)
