@@ -226,8 +226,8 @@
                                                  Margin="5,0,5,0" Visibility="Hidden"/>
 
                                     <Label Content="GPS Subject Location [Lat/Long]" Grid.Column="0" Grid.Row="4"/>
-                                    <TextBox Name="SettingsSubjectLocationLatitute" Text="{Binding SubjectLocationLatitude}" Height="18" Margin="5,0,5,2" KeyboardNavigation.TabIndex="4" Grid.Column="1" Grid.Row="4"/>
-                                    <TextBox Name="SettingsSubjectLocationLongitude" Text="{Binding SubjectLocationLongitude}" Height="18" Margin="5,0,5,2" KeyboardNavigation.TabIndex="5" Grid.Column="2" Grid.Row="4"/>
+                                    <TextBox Name="SettingsSubjectLocationLatitute" Text="{Binding SubjectLocationLatitude}" Height="18" Margin="5,0,5,2" KeyboardNavigation.TabIndex="4" Grid.Column="1" Grid.Row="4" GotFocus="SettingsSubjectLocationLatitute_GotFocus"/>
+                                    <TextBox Name="SettingsSubjectLocationLongitude" Text="{Binding SubjectLocationLongitude}" Height="18" Margin="5,0,5,2" KeyboardNavigation.TabIndex="5" Grid.Column="2" Grid.Row="4" GotFocus="SettingsSubjectLocationLongitude_GotFocus"/>
 
                                 </Grid>
                             </GroupBox>

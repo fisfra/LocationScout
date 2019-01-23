@@ -242,6 +242,9 @@ namespace LocationScout
             // disable textboxes not edited
             Window.SettingsAreaControl.IsEnabled = false;
             Window.SettingsSubAreaControl.IsEnabled = false;
+            Window.SettingsSubjectLocationControl.IsEnabled = false;
+            Window.SettingsSubjectLocationLatitute.IsEnabled = false;
+            Window.SettingsSubjectLocationLongitude.IsEnabled = false;
 
             // set text to edit control
             var editedText = Window.SettingsCountryControl.GetCurrentText();
@@ -339,9 +342,10 @@ namespace LocationScout
             var hasCountryText = !string.IsNullOrEmpty(Window.SettingsCountryControl.GetCurrentText());
             var hasAreaText = !string.IsNullOrEmpty(Window.SettingsAreaControl.GetCurrentText());
             var hasSubAreaText = !string.IsNullOrEmpty(Window.SettingsSubAreaControl.GetCurrentText());
+            var hasSubjectLocationText = !string.IsNullOrEmpty(Window.SettingsSubjectLocationControl.GetCurrentText());
 
             // only country control has text, so edit country
-            if (hasCountryText && !hasAreaText && !hasSubAreaText)
+            if (hasCountryText && !hasAreaText && !hasSubAreaText && !hasSubjectLocationText)
             {
                 SwitchEditModeCountry();
 
@@ -349,7 +353,7 @@ namespace LocationScout
             }
 
             // country and area control have text, so edit area
-            else if (hasCountryText && hasAreaText && !hasSubAreaText)
+            else if (hasCountryText && hasAreaText && !hasSubAreaText & !hasSubjectLocationText)
             {
                 // hide the autocomplete textbox and show the edit textbox
                 Window.SettingsAreaControlEdit.Visibility = Visibility.Visible;
@@ -367,8 +371,8 @@ namespace LocationScout
                 editmode = E_EditMode.edit_area;
             }
 
-            // all controls have text, so edit subarea
-            else if (hasSubAreaText && hasAreaText && hasSubAreaText)
+            // country, area and subarea control have text, so edit subarea
+            else if (hasSubAreaText && hasAreaText && hasSubAreaText && !hasSubjectLocationText)
             {
                 // hide the autocomplete textbox and show the edit textbox
                 Window.SettingsSubAreaControlEdit.Visibility = Visibility.Visible;
@@ -384,6 +388,13 @@ namespace LocationScout
                 Window.SettingsSubAreaControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
 
                 editmode = E_EditMode.edit_subarea;
+            }
+
+            // all controls have text, so edit subject location
+            else if (hasSubAreaText && hasAreaText && hasSubAreaText && !hasSubjectLocationText)
+            {
+                // to do
+                System.Diagnostics.Debug.Assert(false);
             }
 
             return editmode;

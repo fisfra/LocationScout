@@ -96,6 +96,16 @@ namespace LocationScout
         {
             _controler.Delete();
         }
+
+        private void SettingsSubjectLocationLatitute_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SettingsSubjectLocationLatitute.SelectAll();
+        }
+
+        private void SettingsSubjectLocationLongitude_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SettingsSubjectLocationLongitude.SelectAll();
+        } 
         #endregion
     }
 }
