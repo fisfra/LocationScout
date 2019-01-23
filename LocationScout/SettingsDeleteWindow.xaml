@@ -3,18 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LocationScout"
-        xmlns:ViewModel="clr-namespace:LocationScout.ViewModel"
+        xmlns:viewmodel="clr-namespace:LocationScout.ViewModel"
         mc:Ignorable="d"
         Title="Delete" Height="315" Width="350" WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
-        <ViewModel:SettingDisplayItem/>
+        <viewmodel:SettingsDeleteDisplayItem/>
     </Window.DataContext>
 
     <Window.Resources>
-        <ViewModel:DeleteCountConverter x:Key="DeleteCountConverterKey"/>
-        <ViewModel:GPSConverterComplex x:Key="GPSConverterComplexKey"/>
+        <viewmodel:DeleteCountConverter x:Key="DeleteCountConverterKey"/>
+        <viewmodel:GPSConverterComplex x:Key="GPSConverterComplexKey"/>
     </Window.Resources>
     
     <Grid>

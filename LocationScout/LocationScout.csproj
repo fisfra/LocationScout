@@ -160,7 +160,8 @@
     <Compile Include="ViewModel\ImageTools.cs" />
     <Compile Include="ViewModel\LocationDisplayItem.cs" />
     <Compile Include="ViewModel\LocationListerDisplayItem.cs" />
-    <Compile Include="ViewModel\SettingDisplayItem.cs" />
+    <Compile Include="ViewModel\SettingsDisplayItem.cs" />
+    <Compile Include="ViewModel\SettingsDeleteDisplayItem.cs" />
     <Page Include="Lister\LocationListerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

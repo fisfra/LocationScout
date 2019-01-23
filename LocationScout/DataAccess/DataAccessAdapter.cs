@@ -21,12 +21,18 @@ namespace LocationScout.DataAccess
             return PersistenceManager.ReadCountry(id, out foundCountry, out errorMessage);
         }
 
-        internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMessage)
+        internal static E_DBReturnCode SmartAddCountry(SettingsDisplayItem displayItem, out string errorMessage)
         {
-            return PersistenceManager.SmartAddCountry(countryName, areaName, subAreaName, out errorMessage);
+            var countryName = displayItem.CountryName;
+            var areaName = displayItem.AreaName;
+            var subAreaName = displayItem.SubareaName;
+            var subjectLocationName = displayItem.SubjectLocationName;
+            double? subjectLocationNameLatitude = displayItem.SubjectLocationLatitude;
+            double? subjectLocationNameLongitude = displayItem.SubjectLocationLongitude;
+            GPSCoordinates subjectLocationCoordinates = new GPSCoordinates(subjectLocationNameLatitude, subjectLocationNameLongitude);
+
+            return PersistenceManager.SmartAddCountry(countryName, areaName, subAreaName, subjectLocationName, subjectLocationCoordinates, out errorMessage);
         }
-
-
 
         internal static E_DBReturnCode AddShootingLocation(List<long> subjectLocationIds, List<long> parkingLocationIds, List<byte[]> photosAsByteArray, string shootingLocationName, out string errorMessage)
         {

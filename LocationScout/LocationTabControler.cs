@@ -20,17 +20,13 @@ namespace LocationScout
         public override AutoCompleteTextBox CountryControl { get { return Window.LocationCountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.LocationAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.LocationSubAreaControl; } }
+        public override AutoCompleteTextBox SubjectLocationControl { get {return new AutoCompleteTextBox(); } }
         #endregion
 
         #region contructors
         public LocationTabControler(MainWindowControler mainControler, MainWindow window) : base (window)
         {
             _mainControler = mainControler;
-
-            Window.LocationCountryControl.Leaving += CountryControl_Leaving;
-            Window.LocationAreaControl.Leaving += AreaControl_Leaving;
-            Window.LocationAreaControl.LeavingViaShift += AreaControl_LeavingViaShift;
-            Window.LocationSubAreaControl.Leaving += SubAreaControl_Leaving;
         }
         #endregion
 

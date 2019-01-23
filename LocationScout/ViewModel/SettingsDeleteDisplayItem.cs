@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace LocationScout.ViewModel
 {
-    public class SettingDisplayItem : BaseObservableObject
+    public class SettingsDeleteDisplayItem : BaseObservableObject
     {
         #region attributes
         private long _countryAreaCountToDelete;
         private long _countrySubAreaCountToDelete;
         private long _countryPhotoPlaceCountToDelete;
-
         private long _areaSubAreaCountToDelete;
         private long _areaPhotoPlaceCountToDelete;
-
         private long _subAreaPhotoPlaceCountToDelete;
 
         public long CountryAreaCountToDelete

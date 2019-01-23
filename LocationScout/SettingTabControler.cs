@@ -1,5 +1,6 @@
 ﻿using LocationScout.DataAccess;
 using LocationScout.Model;
+using LocationScout.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,10 +25,13 @@ namespace LocationScout
         private MainWindowControler _mainControler;
         private E_Mode _currentMode;
         private E_EditMode _currentEditMode;
-
+        
         public override AutoCompleteTextBox CountryControl { get { return Window.SettingsCountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.SettingsAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.SettingsSubAreaControl; } }
+        public override AutoCompleteTextBox SubjectLocationControl { get { return Window.SettingsSubjectLocationControl; } }
+
+        public SettingsDisplayItem DisplayItem { get; set; }
         #endregion
 
         #region constructors
@@ -35,12 +39,9 @@ namespace LocationScout
         {            
             _mainControler = mainControler;
             _currentMode = E_Mode.add;
+            DisplayItem = new SettingsDisplayItem();
 
-            Window.SettingsCountryControl.Leaving += CountryControl_Leaving;
-            Window.SettingsAreaControl.Leaving += AreaControl_Leaving;
-            Window.SettingsAreaControl.LeavingViaShift += AreaControl_Leaving_LeavingViaShift;
-            Window.SettingsSubAreaControl.Leaving += SubAreaControl_Leaving;
-            Window.SettingsSubAreaControl.LeavingViaShift += SubAreaControl_LeavingViaShift;
+            Window.MaintainLocationGrid.DataContext = DisplayItem;
         }
         #endregion
 
@@ -51,12 +52,13 @@ namespace LocationScout
             string countryName = Window.SettingsCountryControl.GetCurrentText();
             string areaName = Window.SettingsAreaControl.GetCurrentText();
             string subAreaName = Window.SettingsSubAreaControl.GetCurrentText();
+            string subjectLocationName = Window.SettingsSubjectLocationControl.GetCurrentText();
 
             // db operations might take a while
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
             // add country to database
-            PersistenceManager.E_DBReturnCode success = DataAccessAdapter.SmartAddCountry(countryName, areaName, subAreaName, out string errorMessage);
+            PersistenceManager.E_DBReturnCode success = DataAccessAdapter.SmartAddCountry(DisplayItem, out string errorMessage);
 
             // refresh or error handling
             AfterDBWriteSteps(success, errorMessage);
@@ -68,6 +70,8 @@ namespace LocationScout
             Window.SettingsCountryControl.ClearText();
             Window.SettingsAreaControl.ClearText();
             Window.SettingsSubAreaControl.ClearText();
+            Window.SettingsSubjectLocationControl.ClearText();
+
             Window.SettingsCountryControl.SetFocus();
         }
 
@@ -92,18 +96,13 @@ namespace LocationScout
                 var countrySubAreaCount = countryFromDB.SubAreas.Count;
                 //var t = countryFromDB.SubjectLocations
 
-                var settingDisplayItem = new ViewModel.SettingDisplayItem()
-                {
-                    CountryAreaCountToDelete = countryAreaCount,
-                    CountrySubAreaCountToDelete = countrySubAreaCount,
-                    CountryPhotoPlaceCountToDelete = -1,
-                    AreaSubAreaCountToDelete = -1,
-                    AreaPhotoPlaceCountToDelete = -1,
-                    SubAreaPhotoPlaceCountToDelete = -1
-                };
-
-                SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow(settingDisplayItem);
-
+                SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow();
+                deletingWindow.DisplayItem.CountryAreaCountToDelete = countryAreaCount;
+                deletingWindow.DisplayItem.CountrySubAreaCountToDelete = countrySubAreaCount;
+                deletingWindow.DisplayItem.CountryPhotoPlaceCountToDelete = -1;
+                deletingWindow.DisplayItem.AreaSubAreaCountToDelete = -1;
+                deletingWindow.DisplayItem.AreaPhotoPlaceCountToDelete = -1;
+                deletingWindow.DisplayItem.SubAreaPhotoPlaceCountToDelete = -1;                
                 deletingWindow.ShowDialog();
             }
 
@@ -390,9 +389,43 @@ namespace LocationScout
             return editmode;
         }
 
-        private void SubAreaControl_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
+        protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
-            Window.SettingsAddButton.Focus();
+            base.SubjectLocationControl_Leaving(sender, e);
+
+            DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
+            DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
+
+            Window.SettingsSubjectLocationLatitute.Focus();
+            Window.SettingsSubjectLocationLatitute.CaretIndex = Window.SettingsSubjectLocationLatitute.Text.Length;
+        }
+
+        protected override void SetCountryDisplayItem(string countryName)
+        {
+            DisplayItem.CountryName = countryName;
+        }
+
+        protected override void SetAreaDisplayItem(string areaName)
+        {
+            DisplayItem.AreaName = areaName;
+        }
+
+        protected override void SetSubAreaDisplayItem(string subAreaName)
+        {
+            DisplayItem.SubareaName = subAreaName;
+        }
+
+        protected override void SetSubjectLocationDisplayItem(string subjectLocationName)
+        {
+            DisplayItem.SubjectLocationName = subjectLocationName;
+        }
+
+        protected override void SubAreaControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
+        {
+            base.SubAreaControl_Leaving(sender, e);
+
+            DisplayItem.SubjectLocationLatitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Latitude;
+            DisplayItem.SubjectLocationLongitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Longitude;
         }
         #endregion        
     }

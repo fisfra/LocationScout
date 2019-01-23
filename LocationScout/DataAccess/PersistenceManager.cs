@@ -35,7 +35,7 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).ToList();
+                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).Include(c => c.SubjectLocations).ToList();
                 }
             }
             catch (Exception e)
@@ -57,7 +57,7 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var found = db.Countries.Where(c => c.Id == id).Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).ToList();
+                    var found = db.Countries.Where(c => c.Id == id).Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).Include(c=> c.SubjectLocations).ToList();
 
                     if (found.Count == 1)
                     {
@@ -70,8 +70,6 @@ namespace LocationScout.DataAccess
                         throw new Exception("Inconsitent data in database in PersistenceManager:ReadCountry.");
                     }
                 }
-
-
             }
             catch (Exception e)
             {
@@ -222,6 +220,33 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        internal static E_DBReturnCode EditSubjectLocationName(long subjectLocationId, string newSubjectLocationName, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var subjectLocationFromDB = db.Countries.FirstOrDefault(o => o.Id == subjectLocationId);
+                    if (subjectLocationFromDB == null) throw new Exception("Inconsistent database values - Id of SubjectLocation.");
+
+                    subjectLocationFromDB.Name = newSubjectLocationName;
+
+                    db.Entry(subjectLocationFromDB).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
         internal static E_DBReturnCode ReadAllShootingLocations(long shootingLocationId, out List<ShootingLocation> shootingLocationsFound, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
@@ -255,7 +280,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, out string errorMesssage)
+        internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, string subjectLocationName, GPSCoordinates subjectLocationCoordinates, out string errorMesssage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMesssage = string.Empty;
@@ -268,11 +293,14 @@ namespace LocationScout.DataAccess
                     var countryFromDB = db.Countries.FirstOrDefault(o => o.Name == countryName);
                     var areaFromDB = db.Areas.FirstOrDefault(o => o.Name == areaName);
                     var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Name == subAreaName);
+                    var subjectLocationFromDB = db.SubjectLocations.FirstOrDefault(o => o.Name == subjectLocationName);
 
                     // create new objects or take the once from DB
                     var country = (countryFromDB == null) ? new Country() { Name = countryName, Areas = new List<Area>(), SubAreas = new List<SubArea>() } : countryFromDB;
                     var area = (areaFromDB == null) ? new Area() { Name = areaName, Countries = new List<Country>(), SubAreas = new List<SubArea>() } : areaFromDB;
                     var subArea = (subAreaFromDB == null) ? new SubArea() { Name = subAreaName, Countries = new List<Country>(), Areas = new List<Area>() } : subAreaFromDB;
+                    var subjectLocation = (subjectLocationFromDB == null) ? new SubjectLocation() { Name = subjectLocationName, Country = country, Area = area, SubArea = subArea,
+                                                                                                    Coordinates = subjectLocationCoordinates} : subjectLocationFromDB;
 
                     // add relations, if new country
                     if (countryFromDB == null)
@@ -298,9 +326,14 @@ namespace LocationScout.DataAccess
                         db.SubAreas.Add(subArea);
                     }
 
+                    // add relation, if new subject location
+                    if (subjectLocationFromDB == null)
+                    {
+                        db.SubjectLocations.Add(subjectLocation);
+                    }
 
                     // if at least one is new...
-                    if ( (countryFromDB == null) || (areaFromDB == null) || (subAreaFromDB == null) )
+                    if ( (countryFromDB == null) || (areaFromDB == null) || (subAreaFromDB == null) || (subjectLocationFromDB == null) )
                     {
                         // ... save the changes to the DB
                         db.SaveChanges();
