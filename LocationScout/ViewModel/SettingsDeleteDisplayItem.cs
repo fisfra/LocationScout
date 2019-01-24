@@ -11,7 +11,8 @@ namespace LocationScout.ViewModel
         #region attributes
         private long _countryAreaCountToDelete;
         private long _countrySubAreaCountToDelete;
-        private long _countryPhotoPlaceCountToDelete;
+        private long _countrySubjectLocationCountToDelete;
+
         private long _areaSubAreaCountToDelete;
         private long _areaPhotoPlaceCountToDelete;
         private long _subAreaPhotoPlaceCountToDelete;
@@ -34,12 +35,12 @@ namespace LocationScout.ViewModel
                 OnPropertyChanged();
             }
         }
-        public long CountryPhotoPlaceCountToDelete
+        public long CountrySubjectLocationCountToDelete
         {
-            get => _countryPhotoPlaceCountToDelete;
+            get => _countrySubjectLocationCountToDelete;
             set
             {
-                _countryPhotoPlaceCountToDelete = value;
+                _countrySubjectLocationCountToDelete = value;
                 OnPropertyChanged();
             }
         }

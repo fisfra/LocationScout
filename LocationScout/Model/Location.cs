@@ -7,12 +7,18 @@ using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    public class Country : Location
+    public class Location
     {
         #region attributes
-        public List<Area> Areas { get; set; } 
-        public List<SubArea>SubAreas { get; set; }     
-        public List<SubjectLocation> SubjectLocations { get; set; }
+        [Key]
+        public long Id { get; set; }
+        public string Name { get; set; }
+        #endregion
+
+        #region constructors
+        public Location()
+        {
+        }
         #endregion
     }
 }

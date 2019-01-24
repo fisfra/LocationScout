@@ -8,19 +8,16 @@ using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    public class LocationBase
+    public class GPSLocationBase : Location
     {
         #region attributes
-        [Key]
-        public long Id { get; set; }
         public GPSCoordinates Coordinates { get; set; }
         #endregion
 
         #region constructors
-        public LocationBase()
+        public GPSLocationBase()
         {
         }
         #endregion
-
     }
 }

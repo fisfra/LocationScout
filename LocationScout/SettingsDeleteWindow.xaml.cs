@@ -21,14 +21,21 @@ namespace LocationScout
     public partial class SettingsDeleteWindow : Window
     {
         #region attributes
+        private SettingsDeleteWindowControler _controler;
+
         public SettingsDeleteDisplayItem DisplayItem { get; set; }
         #endregion
 
-        public SettingsDeleteWindow()
+        public SettingsDeleteWindow(MainWindow mainWindow)
         {
             InitializeComponent();
 
+            DisplayItem = new SettingsDeleteDisplayItem();
             this.DataContext = DisplayItem;
+
+            _controler = new SettingsDeleteWindowControler(this, mainWindow);
+
+            _controler.InitializeDialog();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

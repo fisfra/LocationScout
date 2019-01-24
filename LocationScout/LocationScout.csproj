@@ -148,11 +148,21 @@
     <Compile Include="Migrations\201901222313594_Refactoring2.Designer.cs">
       <DependentUpon>201901222313594_Refactoring2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901241947091_modelrefactoring.cs" />
+    <Compile Include="Migrations\201901241947091_modelrefactoring.Designer.cs">
+      <DependentUpon>201901241947091_modelrefactoring.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901241949158_modelrefactoring2.cs" />
+    <Compile Include="Migrations\201901241949158_modelrefactoring2.Designer.cs">
+      <DependentUpon>201901241949158_modelrefactoring2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Location.cs" />
     <Compile Include="Model\Photo.cs" />
     <Compile Include="SettingsDeleteWindow.xaml.cs">
       <DependentUpon>SettingsDeleteWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsDeleteWindowControler.cs" />
     <Compile Include="SettingTabControler.cs" />
     <Compile Include="TabControlerBase.cs" />
     <Compile Include="ViewModel\Converters.cs" />
@@ -188,7 +198,7 @@
     <Compile Include="Model\Area.cs" />
     <Compile Include="Model\Country.cs" />
     <Compile Include="Model\GPSCoordinates.cs" />
-    <Compile Include="Model\LocationBase.cs" />
+    <Compile Include="Model\GPSLocationBase.cs" />
     <Compile Include="Model\ParkingLocation.cs" />
     <Compile Include="Model\ShootingLocation.cs" />
     <Compile Include="Model\SubArea.cs" />
@@ -256,6 +266,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901222313594_Refactoring2.resx">
       <DependentUpon>201901222313594_Refactoring2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901241947091_modelrefactoring.resx">
+      <DependentUpon>201901241947091_modelrefactoring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901241949158_modelrefactoring2.resx">
+      <DependentUpon>201901241949158_modelrefactoring2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

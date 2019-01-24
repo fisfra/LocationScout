@@ -22,10 +22,9 @@ namespace LocationScout
         #endregion
 
         #region attributes
-        private MainWindowControler _mainControler;
         private E_Mode _currentMode;
         private E_EditMode _currentEditMode;
-        
+
         public override AutoCompleteTextBox CountryControl { get { return Window.SettingsCountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.SettingsAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.SettingsSubAreaControl; } }
@@ -35,9 +34,8 @@ namespace LocationScout
         #endregion
 
         #region constructors
-        public SettingTabControler(MainWindowControler mainControler, MainWindow window) : base(window)
+        public SettingTabControler(MainWindowControler mainControler, MainWindow window) : base(window, mainControler)
         {            
-            _mainControler = mainControler;
             _currentMode = E_Mode.add;
             DisplayItem = new SettingsDisplayItem();
 
@@ -60,84 +58,40 @@ namespace LocationScout
             // add country to database
             PersistenceManager.E_DBReturnCode success = DataAccessAdapter.SmartAddCountry(DisplayItem, out string errorMessage);
 
-            // refresh or error handling
-            AfterDBWriteSteps(success, errorMessage);
+            // show success or error message
+            EvaluateDatabaseMessages(success, errorMessage);
+
+            // reload data from database and refresh controls
+            MainControler.ReloadAndRefreshControls();
 
             // reset cursor
             Mouse.OverrideCursor = null;
 
-            // clear the controls and reset focus
+            Window.SettingsCountryControl.SetFocus();
+        }
+
+        public void ReloadAndRefreshControls()
+        {
             Window.SettingsCountryControl.ClearText();
             Window.SettingsAreaControl.ClearText();
             Window.SettingsSubAreaControl.ClearText();
             Window.SettingsSubjectLocationControl.ClearText();
-
-            Window.SettingsCountryControl.SetFocus();
+            Window.SettingsSubjectLocationLatitute.Text = string.Empty;
+            Window.SettingsSubjectLocationLongitude.Text = string.Empty;
         }
 
         internal void Delete()
         {
-            // check which controls have text
-            var hasCountryText = !string.IsNullOrEmpty(Window.SettingsCountryControl.GetCurrentText());
-            var hasAreaText = !string.IsNullOrEmpty(Window.SettingsAreaControl.GetCurrentText());
-            var hasSubAreaText = !string.IsNullOrEmpty(Window.SettingsSubAreaControl.GetCurrentText());
-
-            // only country control has text, so edit country
-            if (hasCountryText && !hasAreaText && !hasSubAreaText)
-            {
-                var countryFromUI = Window.SettingsCountryControl.GetCurrentObject() as Country;
-
-                if (PersistenceManager.ReadCountry(countryFromUI.Id, out Country countryFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
-                {
-                    ShowMessage("Error reading country information." + errorMessage, E_MessageType.error);
-                }
-
-                var countryAreaCount = countryFromDB.Areas.Count;
-                var countrySubAreaCount = countryFromDB.SubAreas.Count;
-                //var t = countryFromDB.SubjectLocations
-
-                SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow();
-                deletingWindow.DisplayItem.CountryAreaCountToDelete = countryAreaCount;
-                deletingWindow.DisplayItem.CountrySubAreaCountToDelete = countrySubAreaCount;
-                deletingWindow.DisplayItem.CountryPhotoPlaceCountToDelete = -1;
-                deletingWindow.DisplayItem.AreaSubAreaCountToDelete = -1;
-                deletingWindow.DisplayItem.AreaPhotoPlaceCountToDelete = -1;
-                deletingWindow.DisplayItem.SubAreaPhotoPlaceCountToDelete = -1;                
-                deletingWindow.ShowDialog();
-            }
-
-            // country and area control have text, so edit area
-            else if (hasCountryText && hasAreaText && !hasSubAreaText)
-            {
-
-            }
-
-            // all controls have text, so edit subarea
-            else if (hasSubAreaText && hasAreaText && hasSubAreaText)
-            {
-
-            }
+            SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow(Window);
+            deletingWindow.ShowDialog();
         }
 
-        private void AfterDBWriteSteps(PersistenceManager.E_DBReturnCode success, string errorMessage)
+        private void EvaluateDatabaseMessages(PersistenceManager.E_DBReturnCode success, string errorMessage)
         {
             switch (success)
             {
                 case PersistenceManager.E_DBReturnCode.no_error:
-                {
-                    // read the countries again from database and update _allCountries
-                    if (_mainControler.RefreshAllCountries(out errorMessage) == PersistenceManager.E_DBReturnCode.error)
-                    {
-                        ShowMessage("Error re-reading data.\n" + errorMessage, E_MessageType.error);
-                    }
-                    else
-                    {
-                        _mainControler.RefreshCountryControls();
-                        ShowMessage("Added to database.", E_MessageType.success);
-                    }
-
-                    break;
-                }
+                    break;                
 
                 case PersistenceManager.E_DBReturnCode.error:
                     ShowMessage("Error writing data.\n" + errorMessage, E_MessageType.error);
@@ -194,20 +148,8 @@ namespace LocationScout
                 // save the changes to the database
                 SaveEditChanges();
 
-                // refresh the controls with the changed text
-                if (_mainControler.RefreshAllCountries(out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
-                {
-                    ShowMessage("Error reading countries from database." + errorMessage, E_MessageType.error);
-                }
-                _mainControler.RefreshCountryControls();
-
-                // clear the controls
-                Window.SettingsCountryControl.ClearText();
-                Window.SettingsAreaControl.ClearText();
-                Window.SettingsSubAreaControl.ClearText();
-                Window.SettingsSubjectLocationControl.ClearText();
-                Window.SettingsSubjectLocationLatitute.Text = string.Empty;
-                Window.SettingsSubjectLocationLongitude.Text = string.Empty;
+                // reload data from database and refresh controls
+                ReloadAndRefreshControls();
 
                 // reset the modes
                 _currentMode = E_Mode.add;

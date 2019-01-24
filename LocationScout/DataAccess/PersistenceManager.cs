@@ -47,6 +47,72 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        internal static E_DBReturnCode ReadAllAreas(out List<Area> allAreas, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            allAreas = new List<Area>();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    allAreas = db.Areas.Include(a => a.Countries).Include(a => a.SubAreas).Include(a => a.SubjectLocations).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode ReadAllSubAreas(out List<SubArea> allSubAreas, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            allSubAreas = new List<SubArea>();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    allSubAreas = db.SubAreas.Include(sa => sa.Countries).Include(sa => sa.Areas).Include(sa => sa.SubjectLocation).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode ReadAllSubjectLocations(out List<SubjectLocation> allSubjectLocations, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            allSubjectLocations = new List<SubjectLocation>();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    allSubjectLocations = db.SubjectLocations.Include(s => s.Country).Include(s => s.SubArea).Include(s => s.Area).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
         internal static E_DBReturnCode ReadCountry(long id, out Country foundCountry, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
@@ -68,6 +134,72 @@ namespace LocationScout.DataAccess
                     {
                         // should not find more than one country for an Id
                         throw new Exception("Inconsitent data in database in PersistenceManager:ReadCountry.");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode ReadArea(long id, out Area foundAra, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            foundAra = new Area();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var found = db.Areas.Where(a => a.Id == id).Include(a => a.Countries).Include(a => a.SubAreas).Include(a => a.SubjectLocations).ToList();
+
+                    if (found.Count == 1)
+                    {
+                        foundAra = found[0];
+                    }
+
+                    else if (found.Count > 0)
+                    {
+                        // should not find more than one country for an Id
+                        throw new Exception("Inconsistent data in database in PersistenceManager:ReadArea.");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode ReadSubArea(long id, out SubArea foundSubAra, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            foundSubAra = new SubArea();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var found = db.SubAreas.Where(s => s.Id == id).Include(s => s.Countries).Include(s => s.Areas).Include(s => s.SubjectLocation).ToList();
+
+                    if (found.Count == 1)
+                    {
+                        foundSubAra = found[0];
+                    }
+
+                    else if (found.Count > 0)
+                    {
+                        // should not find more than one country for an Id
+                        throw new Exception("Inconsistent data in database in PersistenceManager:ReadSubArea.");
                     }
                 }
             }

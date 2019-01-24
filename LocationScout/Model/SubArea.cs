@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    public class SubArea : IEquatable<SubArea>
+    public class SubArea : Location, IEquatable<SubArea>
     {
         #region attributes
-        [Key]
-        public long Id { get; set; }
-        public string Name { get; set; }
+        // navigation properties
         public List<Area> Areas { get; set; }
         public List<Country> Countries { get; set; }
         public List<SubjectLocation> SubjectLocation { get; set; }

@@ -15,8 +15,6 @@ namespace LocationScout
     internal class LocationTabControler : TabControlerBase
     {
         #region attributes
-        private MainWindowControler _mainControler;
-
         public override AutoCompleteTextBox CountryControl { get { return Window.LocationCountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.LocationAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.LocationSubAreaControl; } }
@@ -24,9 +22,8 @@ namespace LocationScout
         #endregion
 
         #region contructors
-        public LocationTabControler(MainWindowControler mainControler, MainWindow window) : base (window)
+        public LocationTabControler(MainWindowControler mainControler, MainWindow window) : base (window, mainControler)
         {
-            _mainControler = mainControler;
         }
         #endregion
 

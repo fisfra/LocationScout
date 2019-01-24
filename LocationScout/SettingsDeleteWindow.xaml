@@ -43,25 +43,25 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <RadioButton GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2">Countries</RadioButton>
-                <TextBlock Name="CountriesTextBlock" Height="Auto" LineHeight="19" Grid.Row="1" Grid.Column="1">
+                <RadioButton Name="CountryRadioButton" GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2">Countries</RadioButton>
+                <TextBlock Name="CountryTextBlock" Height="Auto" LineHeight="19" Grid.Row="1" Grid.Column="1">
                     <Run Text="{Binding CountryAreaCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Areas will be deleted"/>
                     <LineBreak/>
                     <Run Text="{Binding CountrySubAreaCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Subareas will be deleted"/>
                     <LineBreak/>
-                    <Run Text="{Binding CountryPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Photo Places will be deleted"/>
+                    <Run Text="{Binding CountrySubjectLocationCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Subject Locations will be deleted"/>
                 </TextBlock>
 
-                <RadioButton GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2">Areas</RadioButton>
+                <RadioButton Name="AreaRadioButton" GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2">Areas</RadioButton>
                 <TextBlock Name="AreaTextBlock" Height="Auto" LineHeight="19" Grid.Row="3" Grid.Column="1">
                     <Run Text="{Binding AreaSubAreaCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Subareas will be deleted"/>
                     <LineBreak/>
-                    <Run Text="{Binding AreaPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Photo Places will be deleted"/>
+                    <Run Text="{Binding AreaPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Subject Locations will be deleted"/>
                 </TextBlock>
 
-                <RadioButton GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="2">Subareas</RadioButton>
+                <RadioButton Name="SubAreaTextRadioButton" GroupName="ObjectSelection" VerticalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="2">Subareas</RadioButton>
                 <TextBlock Name="SubAreaTextBlock" Height="Auto" LineHeight="19" Grid.Row="5" Grid.Column="1">
-                    <Run Text="{Binding SubAreaPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Photo Places will be deleted"/>
+                    <Run Text="{Binding SubAreaPhotoPlaceCountToDelete, Converter={StaticResource DeleteCountConverterKey}}"/><Run Text=" Subject Locations will be deleted"/>
                 </TextBlock>
                 
             </Grid>

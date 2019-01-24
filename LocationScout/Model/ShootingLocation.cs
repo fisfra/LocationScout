@@ -9,10 +9,9 @@ using System.Windows.Media.Imaging;
 
 namespace LocationScout.Model
 {
-    public class ShootingLocation : LocationBase
+    public class ShootingLocation : GPSLocationBase
     {
         #region attributes
-        public string Name { get; set; }
 
         // navigation properties
         public List<ParkingLocation> ParkingLocations { get; set; }     

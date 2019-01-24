@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace LocationScout.Model
 {
-    public class SubjectLocation : LocationBase
+    public class SubjectLocation : GPSLocationBase
     {
         #region attributes
-        public string Name { get; set; }
-
         // navigation properties
         public Country Country {get; set;}
         public Area Area {get; set;}

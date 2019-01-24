@@ -16,6 +16,21 @@ namespace LocationScout.DataAccess
             return PersistenceManager.ReadAllCountries(out allCountries, out errorMessage);
         }
 
+        internal static E_DBReturnCode ReadAllAreas(out List<Area> allAreas, out string errorMessage)
+        {
+            return PersistenceManager.ReadAllAreas(out allAreas, out errorMessage);
+        }
+
+        internal static E_DBReturnCode ReadAllSubAreas(out List<SubArea> allSubAreas, out string errorMessage)
+        {
+            return PersistenceManager.ReadAllSubAreas(out allSubAreas, out errorMessage);
+        }
+
+        internal static E_DBReturnCode ReadAllSubjectLocations(out List<SubjectLocation> allSubjectLocation, out string errorMessage)
+        {
+            return PersistenceManager.ReadAllSubjectLocations(out allSubjectLocation, out errorMessage);
+        }
+
         internal static E_DBReturnCode ReadCountry(long id, out Country foundCountry, out string errorMessage)
         {
             return PersistenceManager.ReadCountry(id, out foundCountry, out errorMessage);

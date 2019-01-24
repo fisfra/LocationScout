@@ -1,9 +1,11 @@
-﻿using System;
+﻿using LocationScout.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WPFUserControl;
 
 namespace LocationScout
 {
@@ -67,6 +69,21 @@ namespace LocationScout
             _dispatcherTimer.Stop();
 
             Window.StatusLabel.Content = string.Empty;
+        }
+
+        public void RefreshControl(List<Location> locations, AutoCompleteTextBox textBox)
+        {
+            if (locations != null)
+            {
+                // clear old locations and entered text
+                textBox.ClearSearchPool();
+                textBox.ClearText();
+
+                foreach (var location in locations)
+                {
+                    textBox.AddObject(location.Name, location);
+                }
+            }
         }
         #endregion
     }

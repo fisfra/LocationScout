@@ -21,10 +21,9 @@ namespace LocationScout
         private SettingTabControler _settingControler;
         private LocationTabControler _locationControler;
         private ListerControler _listerControler;
-
         private List<Country> _allCountries;
 
-        public List<Country> AllCountries { get => _allCountries; set => _allCountries = value; }
+        public List<Country> AllCountries { get { return _allCountries; } }
         #endregion
 
         #region contructors
@@ -34,14 +33,7 @@ namespace LocationScout
             _locationControler = new LocationTabControler(this, window);
             _listerControler = new ListerControler(window);
 
-            if (RefreshAllCountries(out string errorMessage) == E_DBReturnCode.error)
-            {
-                ShowMessage("Error reading saved data.\n" + errorMessage, E_MessageType.error);
-            }
-            else
-            {
-                RefreshCountryControls();
-            }
+            ReloadAndRefreshControls();
         }
         #endregion
 
@@ -59,11 +51,6 @@ namespace LocationScout
         internal void HandleLocationAdd()
         {
             _locationControler.Add();
-        }
-
-        internal E_DBReturnCode RefreshAllCountries(out string errorMessage)
-        {
-            return DataAccessAdapter.ReadAllCountries(out _allCountries, out errorMessage);
         }
 
         internal void LoadPhoto_1_1()
@@ -101,19 +88,27 @@ namespace LocationScout
             _settingControler.Delete();
         }
 
-        internal void RefreshCountryControls()
+        private void RefreshAllCountriesFromDB()
         {
-            if (_allCountries != null)
-            {
-                Window.SettingsCountryControl.ClearSearchPool();
-                Window.LocationCountryControl.ClearSearchPool();
+            var success = DataAccessAdapter.ReadAllCountries(out _allCountries, out string errorMessage);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading countries" + errorMessage, E_MessageType.error);
+        }
 
-                foreach (var country in _allCountries)
-                {
-                    Window.SettingsCountryControl.AddObject(country.Name, country);
-                    Window.LocationCountryControl.AddObject(country.Name, country);
-                }
-            }
+        private void RefreshCountryControls()
+        {
+            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.LocationCountryControl);
+            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.SettingsCountryControl);
+        }
+
+        public void ReloadAndRefreshControls()
+        {
+            // read from database
+            RefreshAllCountriesFromDB();
+            _settingControler.RefreshAllObjectsFromDB();
+
+            // refresh the country control
+            RefreshCountryControls();
+            _settingControler.ReloadAndRefreshControls();
         }
         #endregion
     }
