@@ -31,11 +31,6 @@ namespace LocationScout
         #endregion
 
         #region methods
-        private void SubAreaControl_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
-        {
-            Window.LocationNameTextBox.Focus();
-        }
-
         private void AreaControl_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             Window.LocationCountryControl.SetFocus();

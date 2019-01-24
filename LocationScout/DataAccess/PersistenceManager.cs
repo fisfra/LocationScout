@@ -139,7 +139,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode EditSubAreaName(long subAreaId, string newSubAreaName, out string errorMessage)
+        internal static E_DBReturnCode EditSubAreaName(long id, string name, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -148,10 +148,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Id == subAreaId);
+                    var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Id == id);
                     if (subAreaFromDB == null) throw new Exception("Inconsistent database values - Id of subAreaId.");
 
-                    subAreaFromDB.Name = newSubAreaName;
+                    subAreaFromDB.Name = name;
 
                     db.Entry(subAreaFromDB).State = EntityState.Modified;
                     db.SaveChanges();
@@ -166,7 +166,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode EditAreaName(long areaId, string newAreaName, out string errorMessage)
+        internal static E_DBReturnCode EditAreaName(long id, string name, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -175,10 +175,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var AreaFromDB = db.Areas.FirstOrDefault(o => o.Id == areaId);
+                    var AreaFromDB = db.Areas.FirstOrDefault(o => o.Id == id);
                     if (AreaFromDB == null) throw new Exception("Inconsistent database values - Id of areaId.");
 
-                    AreaFromDB.Name = newAreaName;
+                    AreaFromDB.Name = name;
 
                     db.Entry(AreaFromDB).State = EntityState.Modified;
                     db.SaveChanges();
@@ -193,7 +193,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode EditCountryName(long countryId, string newCountryName, out string errorMessage)
+        internal static E_DBReturnCode EditCountryName(long id, string name, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -202,10 +202,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Id == countryId);
+                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Id == id);
                     if (countryFromDB == null) throw new Exception("Inconsistent database values - Id of Country.");
 
-                    countryFromDB.Name = newCountryName;
+                    countryFromDB.Name = name;
 
                     db.Entry(countryFromDB).State = EntityState.Modified;
                     db.SaveChanges();
@@ -220,7 +220,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode EditSubjectLocationName(long subjectLocationId, string newSubjectLocationName, out string errorMessage)
+        internal static E_DBReturnCode EditSubjectLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -229,10 +229,11 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var subjectLocationFromDB = db.Countries.FirstOrDefault(o => o.Id == subjectLocationId);
+                    var subjectLocationFromDB = db.SubjectLocations.FirstOrDefault(o => o.Id == id);
                     if (subjectLocationFromDB == null) throw new Exception("Inconsistent database values - Id of SubjectLocation.");
 
-                    subjectLocationFromDB.Name = newSubjectLocationName;
+                    subjectLocationFromDB.Name = name;
+                    subjectLocationFromDB.Coordinates = coordinates;
 
                     db.Entry(subjectLocationFromDB).State = EntityState.Modified;
                     db.SaveChanges();
@@ -247,7 +248,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode ReadAllShootingLocations(long shootingLocationId, out List<ShootingLocation> shootingLocationsFound, out string errorMessage)
+        internal static E_DBReturnCode ReadAllShootingLocations(long id, out List<ShootingLocation> shootingLocationsFound, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             shootingLocationsFound = null;

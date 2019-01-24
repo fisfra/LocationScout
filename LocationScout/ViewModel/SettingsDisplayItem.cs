@@ -34,7 +34,7 @@ namespace LocationScout.ViewModel
                 OnPropertyChanged();
             }
         }
-        public string SubareaName
+        public string SubAreaName
         {
             get => _subareaName;
             set

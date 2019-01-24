@@ -25,7 +25,7 @@ namespace LocationScout.DataAccess
         {
             var countryName = displayItem.CountryName;
             var areaName = displayItem.AreaName;
-            var subAreaName = displayItem.SubareaName;
+            var subAreaName = displayItem.SubAreaName;
             var subjectLocationName = displayItem.SubjectLocationName;
             double? subjectLocationNameLatitude = displayItem.SubjectLocationLatitude;
             double? subjectLocationNameLongitude = displayItem.SubjectLocationLongitude;
@@ -56,24 +56,29 @@ namespace LocationScout.DataAccess
             return PersistenceManager.AddPhotoPlace(subjectLocationIds, parkingLocationIds, photosAsByteArray, shootingLocationName, out errorMessage);
         }
 
-        internal static E_DBReturnCode EditCountryName(long countryId, string newCountryName, out string errorMessage)
+        internal static E_DBReturnCode EditCountryName(long id, string name, out string errorMessage)
         {
-            return PersistenceManager.EditCountryName(countryId, newCountryName, out errorMessage);
+            return PersistenceManager.EditCountryName(id, name, out errorMessage);
         }
 
-        internal static E_DBReturnCode EditAreaName(long AreaId, string newAreaName, out string errorMessage)
+        internal static E_DBReturnCode EditAreaName(long id, string name, out string errorMessage)
         {
-            return PersistenceManager.EditAreaName(AreaId, newAreaName, out errorMessage);
+            return PersistenceManager.EditAreaName(id, name, out errorMessage);
         }
 
-        internal static E_DBReturnCode EditSubAreaName(long SubAreaId, string newSubAreaName, out string errorMessage)
+        internal static E_DBReturnCode EditSubAreaName(long id, string name, out string errorMessage)
         {
-            return PersistenceManager.EditSubAreaName(SubAreaId, newSubAreaName, out errorMessage);
+            return PersistenceManager.EditSubAreaName(id, name, out errorMessage);
         }
 
-        internal static E_DBReturnCode ReadShootingLocation(long shootingLocationId, out List<ShootingLocation> shootingLocations, out string errorMessage)
+        internal static E_DBReturnCode EditSubjectLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
         {
-            return PersistenceManager.ReadAllShootingLocations(shootingLocationId, out shootingLocations, out errorMessage);
+            return PersistenceManager.EditSubjectLocationName_GPS(id, name, coordinates, out errorMessage);
+        }
+
+        internal static E_DBReturnCode ReadShootingLocation(long id, out List<ShootingLocation> shootingLocations, out string errorMessage)
+        {
+            return PersistenceManager.ReadAllShootingLocations(id, out shootingLocations, out errorMessage);
         }
     }
 }
