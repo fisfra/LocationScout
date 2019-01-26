@@ -149,13 +149,13 @@ namespace LocationScout
                     if (subjectLocations != null)
                     {
                         // refresh control
-                        RefreshControl(subjectLocations.OfType<Location>().ToList(), SubjectLocationControl);
+                        RefreshControl(subjectLocations?.OfType<Location>().ToList(), SubjectLocationControl);
                     }
                 }
             }
             else
             {
-                RefreshControl(_allSubjectLocations.OfType<Location>().ToList(), SubjectLocationControl);
+                RefreshControl(_allSubjectLocations?.OfType<Location>().ToList(), SubjectLocationControl);
             }
 
             // take subarea name from subarea object (if in database) or from UI text
