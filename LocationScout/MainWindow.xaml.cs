@@ -42,16 +42,19 @@ namespace LocationScout
         #endregion
 
         #region methods
+
+        
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleClose();
         }
-
+        
         private void SettingAddButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleSettingAdd();
         }
 
+        
         private void LocationButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleLocationAdd();
@@ -86,17 +89,18 @@ namespace LocationScout
         {
             _controler.LoadPhoto_2_2();
         }
+        
 
         private void SettingsEditButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.Edit();
         }
-
+        
         private void SettingsDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.Delete();
         }
-
+        
         private void SettingsSubjectLocationLatitute_GotFocus(object sender, RoutedEventArgs e)
         {
             SettingsSubjectLocationLatitute.SelectAll();

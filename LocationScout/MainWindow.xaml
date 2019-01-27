@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:LocationScout"
         mc:Ignorable="d"
         Title="Location Scout" Height="585" Width="800" WindowStartupLocation="CenterScreen">
-    <Grid>
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -16,6 +16,7 @@
 
             <TabControl Margin="10,10,10,0" VerticalAlignment="Top" Grid.Row="0">
 
+                
                 <TabItem Header="Location">
                     <Grid Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
@@ -26,7 +27,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-
+                
                         <Grid Name="LocationContentGrid" Margin="0,0,0,5" Grid.Column="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="200"/>
@@ -53,18 +54,16 @@
 
                                     <Label Content="Country" Height="Auto" Grid.Column="0" Grid.Row="0"/>
                                     <control:AutoCompleteTextBox x:Name="LocationCountryControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
-                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="435" Grid.ColumnSpan="2" ListBoxReadOnly="True"/>
+                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.ColumnSpan="2" ListBoxReadOnly="True"/>
                                     
 
                                     <Label Content="Area" Height="Auto" Grid.Column="0" Grid.Row="1"/>
                                     <control:AutoCompleteTextBox x:Name="LocationAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" 
-                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="435" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="900" ListBoxReadOnly="True"/>
-                                    <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
+                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="900" ListBoxReadOnly="True"/>
 
                                     <Label Content="Sub-Area" Height="Auto" Grid.Column="0" Grid.Row="2"/>
                                     <control:AutoCompleteTextBox x:Name="LocationSubAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="2" Grid.Column="1" Grid.Row="2" 
-                                                                HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="435" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="800" ListBoxReadOnly="True"/>
-                                    <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
+                                                                HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.RowSpan="3" Grid.ColumnSpan="2" Panel.ZIndex="800" ListBoxReadOnly="True"/>
 
                                     <Label Content="Location Name" Height="Auto" Grid.Column="0" Grid.Row="3"/>
                                     <TextBox Name="LocationNameTextBox" Text="{Binding LocationName}" Height="18" TabIndex="3"  Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2"/>
@@ -160,13 +159,12 @@
                             <Button Name="LocationButtonShow" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="1" Click="LocationButtonShow_Click"/>
 
                         </Grid>
+                        
                     </Grid>
                 </TabItem>
 
                 <TabItem Header="Settings">
-
                     <Grid Background="#FFE5E5E5">
-
                         <Grid Margin="0,0,0,5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -201,33 +199,32 @@
 
                                     <Label Content="Countries" Margin="0,2,0,0" Grid.Column="0" Grid.Row="0"/>
                                     <control:AutoCompleteTextBox x:Name="SettingsCountryControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
-                                                                 AutoCompleteWidth="414" HorizontalAlignment="Left" Margin="5,8,5,0"/>
-                                    
+                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,0"/>
                                     <RichTextBox Name="SettingsCountryControlEdit" Height="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" 
                                                  Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
 
                                     <Label Content="Areas" Margin="0,2,0,0" Grid.Column="0" Grid.Row="1"/>
                                     <control:AutoCompleteTextBox x:Name="SettingsAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"
-                                                                 AutoCompleteWidth="414" HorizontalAlignment="Left" Margin="5,8,5,5"/>
+                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,5"/>
                                     <RichTextBox Name="SettingsAreaControlEdit" Height="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"
                                                  Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
 
                                     <Label Content="Sub-Areas"  Margin="0,2,0,0" Grid.Column="0" Grid.Row="2"/>
                                     <control:AutoCompleteTextBox x:Name="SettingsSubAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="2" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"
-                                                                 AutoCompleteWidth="414" HorizontalAlignment="Left" Margin="5,8,5,5"/>
+                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,5"/>
                                     <RichTextBox Name="SettingsSubAreaControlEdit" Height="18" KeyboardNavigation.TabIndex="2" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" 
                                                  Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
 
                                     <Label Content="Subject Location" Margin="0,2,0,0" Grid.Column="0" Grid.Row="3"/>
                                     <control:AutoCompleteTextBox x:Name="SettingsSubjectLocationControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="3" Grid.Column="1" Grid.Row="3"
-                                                                 AutoCompleteWidth="414" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="5,8,5,5"/>
+                                                                 AutoCompleteWidth="410" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="5,8,5,5"/>
                                     
                                     <RichTextBox Name="SettingsSubjectLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch"
                                                   Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
 
                                     <Label Content="GPS Subject Location [Lat/Long]"  Margin="0,2,0,0" Grid.Column="0" Grid.Row="4"/>
-                                    <TextBox Name="SettingsSubjectLocationLatitute" Text="{Binding SubjectLocationLatitude}" Height="18" Margin="5,0,5,2" KeyboardNavigation.TabIndex="4" Grid.Column="1" Grid.Row="4" GotFocus="SettingsSubjectLocationLatitute_GotFocus"/>
-                                    <TextBox Name="SettingsSubjectLocationLongitude" Text="{Binding SubjectLocationLongitude}" Height="18" Margin="5,0,5,2" KeyboardNavigation.TabIndex="5" Grid.Column="2" Grid.Row="4" GotFocus="SettingsSubjectLocationLongitude_GotFocus"/>
+                                    <TextBox Name="SettingsSubjectLocationLatitute" Text="{Binding SubjectLocationLatitude}" Height="18" Margin="6,0,+6,2" KeyboardNavigation.TabIndex="4" Grid.Column="1" Grid.Row="4" GotFocus="SettingsSubjectLocationLatitute_GotFocus"/>
+                                    <TextBox Name="SettingsSubjectLocationLongitude" Text="{Binding SubjectLocationLongitude}" Height="18" Margin="6,0,10,2" KeyboardNavigation.TabIndex="5" Grid.Column="2" Grid.Row="4" GotFocus="SettingsSubjectLocationLongitude_GotFocus"/>
 
                                 </Grid>
                             </GroupBox>
@@ -249,7 +246,6 @@
                                     <Label Content="Parking Location" Grid.Column="0" Grid.Row="0"/>
                                     <control:AutoCompleteTextBox x:Name="SettingsParkingLocationControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="9" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
                                                                   HorizontalAlignment="Left" Margin="5,6,5,0" Grid.RowSpan="3" Panel.ZIndex="1000"/>
-                                    <!-- RowSpan as workaround - otherwise dropdown list is cut off -->
                                     <RichTextBox Name="SettingsParkingControlEdit" Height="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Margin="5,0,5,0" Visibility="Hidden"/>
 
                                     <Label Content="GPS Parking Location [Lat/Long]" Grid.Column="0" Grid.Row="1"/>
@@ -281,6 +277,76 @@
                         </Grid>
                     </Grid>
                 </TabItem>
+                
+                <TabItem Header="Settings_New">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="120"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="300"/>
+                                <RowDefinition Height="130"/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+
+                            <GroupBox Header="Maintain Location" Margin="5,10,5,5" Grid.Row="0" Grid.Column="0">
+                                <Grid Name="MaintainLocationGrid_New" DataContext="DisplayItem" Margin="5,5,5,5" Grid.Column="0">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Content="Countries" Margin="0,2,0,0" Grid.Column="0" Grid.Row="0"/>
+                                    <control:AutoCompleteTextBox x:Name="SettingsCountryControl_New" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
+                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,0"/>
+
+                                    <Label Content="Test" Margin="0,2,0,0" Grid.Column="0" Grid.Row="2"/>
+                                    <control:AutoCompleteTextBox x:Name="TestControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"
+                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,0"/>
+
+
+
+
+                                </Grid>
+                            </GroupBox>
+
+                            <Grid Grid.Column="1" Grid.RowSpan="3">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Button Name="SettingsAddButton_New" Content="Add" KeyboardNavigation.TabIndex="6" Grid.Row="0" Width="100" Height="25" Margin="5,20,5,5" Click="SettingAddButton_Click"/>
+                                <Button Name="SettingsEditButton_New" Content="Edit" KeyboardNavigation.TabIndex="7" Grid.Row="1" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsEditButton_Click"/>
+                                <Button Name="SettingsDeleteButton_New" Content="Delete"  KeyboardNavigation.TabIndex="7" Grid.Row="2" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsDeleteButton_Click"/>
+                            </Grid>
+
+                        </Grid>
+                    </Grid>
+                </TabItem>
             </TabControl>
 
             <Grid Name="BottomLineGrid" Grid.Row="1">
@@ -289,8 +355,9 @@
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Name="StatusLabel" Height="Auto" Margin="10,0,10,0" Grid.Column="0"/>
+
                 <Button Content="Close" HorizontalAlignment="Right" Width="110" Height="25" Grid.Column="1" Margin="0,0,10,0" Click="CloseButton_Click"/>
+                
             </Grid>
         </Grid>
-    </Grid>
 </Window>

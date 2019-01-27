@@ -15,6 +15,7 @@ namespace LocationScout
     internal class LocationTabControler : TabControlerBase
     {
         #region attributes
+        
         public override AutoCompleteTextBox CountryControl { get { return Window.LocationCountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.LocationAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.LocationSubAreaControl; } }
@@ -28,6 +29,7 @@ namespace LocationScout
         #endregion
 
         #region methods
+        
         private void AreaControl_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             Window.LocationCountryControl.SetFocus();
@@ -98,6 +100,7 @@ namespace LocationScout
                 }
             }
         }
+       
         #endregion
     }
 }

@@ -26,6 +26,7 @@ namespace LocationScout
         private E_EditMode _currentEditMode;
 
         public override AutoCompleteTextBox CountryControl { get { return Window.SettingsCountryControl; } }
+        //public override AutoCompleteTextBox CountryControl { get { return Window.SettingsCountryControl_New; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.SettingsAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.SettingsSubAreaControl; } }
         public override AutoCompleteTextBox SubjectLocationControl { get { return Window.SettingsSubjectLocationControl; } }
@@ -40,12 +41,19 @@ namespace LocationScout
             DisplayItem = new SettingsDisplayItem();
 
             Window.MaintainLocationGrid.DataContext = DisplayItem;
+
+            // Test
+            //Window.TestControl.AddObject("Test-1", "Test-1-Object");
+            //Window.TestControl.AddObject("Test-2", "Test-2-Object");
         }
         #endregion
 
         #region methods
+
+        
         internal void Add()
         {
+            /*
             // get values from UI
             string countryName = Window.SettingsCountryControl.GetCurrentText();
             string areaName = Window.SettingsAreaControl.GetCurrentText();
@@ -67,7 +75,7 @@ namespace LocationScout
             // reset cursor
             Mouse.OverrideCursor = null;
 
-            Window.SettingsCountryControl.SetFocus();
+            Window.SettingsCountryControl.SetFocus();*/
         }
 
         public void ReloadAndRefreshControls()
@@ -107,7 +115,7 @@ namespace LocationScout
                     break;
             }
         }
-
+        
         internal void Edit()
         {
             // currently in "add" mode...
@@ -480,6 +488,7 @@ namespace LocationScout
             DisplayItem.SubjectLocationLatitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Latitude;
             DisplayItem.SubjectLocationLongitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Longitude;
         }
+        
         #endregion        
     }
 }

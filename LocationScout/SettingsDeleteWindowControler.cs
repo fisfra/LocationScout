@@ -23,6 +23,7 @@ namespace LocationScout
         #endregion
 
         #region methods
+        
         internal void InitializeDialog()
         {
             // check which controls have text and objects (are in DB)
@@ -191,6 +192,7 @@ namespace LocationScout
 
             displayItem.SubAreaPhotoPlaceCountToDelete = countrySubjectLocationCount;
         }
+        
         #endregion
     }
 }

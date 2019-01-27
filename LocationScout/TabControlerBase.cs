@@ -135,12 +135,12 @@ namespace LocationScout
             if (SubjectLocationControl.ListBoxReadOnly)
             {
                 // get the country / area / subarea names from UI
-                var countryName = Window.SettingsCountryControl.GetCurrentText();
-                var areaName = Window.SettingsAreaControl.GetCurrentText();
-                var subAreaName = Window.SettingsSubAreaControl.GetCurrentText();
+                var countryName = CountryControl.GetCurrentText();
+                var areaName = AreaControl.GetCurrentText();
+                var subAreaName = SubAreaControl.GetCurrentText();
 
                 // get country object from UI
-                if (Window.SettingsCountryControl.GetCurrentObject() is Country country)
+                if (CountryControl.GetCurrentObject() is Country country)
                 {
                     // find the corresponding subject location (need to match country, area and subarea)
                     var subjectLocations = country.SubjectLocations.Where(c => c.Country.Name == countryName && c.Area.Name == areaName && c.SubArea.Name == subAreaName).ToList();

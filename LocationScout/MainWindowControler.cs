@@ -37,17 +37,18 @@ namespace LocationScout
         }
         #endregion
 
-        #region methods
+        #region methods       
         internal void HandleClose()
         {
             Window.Close();
         }
-
+        
         internal void HandleSettingAdd()
         {
             _settingControler.Add();
         }
 
+       
         internal void HandleLocationAdd()
         {
             _locationControler.Add();
@@ -77,7 +78,7 @@ namespace LocationScout
         {
             _locationControler.LoadPhoto_2_2();
         }
-
+        
         internal void Edit()
         {
             _settingControler.Edit();
@@ -87,7 +88,7 @@ namespace LocationScout
         {
             _settingControler.Delete();
         }
-
+        
         private void RefreshAllCountriesFromDB()
         {
             var success = DataAccessAdapter.ReadAllCountries(out _allCountries, out string errorMessage);
@@ -98,6 +99,9 @@ namespace LocationScout
         {
             RefreshControl(_allCountries.OfType<Location>().ToList(), Window.LocationCountryControl);
             RefreshControl(_allCountries.OfType<Location>().ToList(), Window.SettingsCountryControl);
+
+            // testing
+            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.SettingsCountryControl_New);
         }
 
         public void ReloadAndRefreshControls()
