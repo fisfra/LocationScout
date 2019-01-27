@@ -218,26 +218,25 @@
                                 <control:AutoCompleteTextBox x:Name="SettingsCountryControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,0"/>
                                 <RichTextBox Name="SettingsCountryControlEdit" Height="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" 
-                                                Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
+                                             Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden" LostFocus="SettingsCountryControlEdit_LostFocus"/>
 
                                 <Label Content="Areas" Margin="0,2,0,0" Grid.Column="0" Grid.Row="1"/>
                                 <control:AutoCompleteTextBox x:Name="SettingsAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"
                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,5"/>
                                 <RichTextBox Name="SettingsAreaControlEdit" Height="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"
-                                                Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
+                                             Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden" LostFocus="SettingsAreaControlEdit_LostFocus"/>
 
                                 <Label Content="Sub-Areas"  Margin="0,2,0,0" Grid.Column="0" Grid.Row="2"/>
                                 <control:AutoCompleteTextBox x:Name="SettingsSubAreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="2" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"
                                                                 AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,5"/>
                                 <RichTextBox Name="SettingsSubAreaControlEdit" Height="18" KeyboardNavigation.TabIndex="2" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" 
-                                                Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
+                                             Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden" LostFocus="SettingsSubAreaControlEdit_LostFocus"/>
 
                                 <Label Content="Subject Location" Margin="0,2,0,0" Grid.Column="0" Grid.Row="3"/>
                                 <control:AutoCompleteTextBox x:Name="SettingsSubjectLocationControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="3" Grid.Column="1" Grid.Row="3"
                                                                 AutoCompleteWidth="410" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="5,8,5,5"/>
-                                    
                                 <RichTextBox Name="SettingsSubjectLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch"
-                                                Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden"/>
+                                             Grid.ColumnSpan="2" Margin="5,0,5,0" Visibility="Hidden" LostFocus="SettingsSubjectLocationControlEdit_LostFocus"/>
 
                                 <Label Content="GPS Subject Location [Lat/Long]"  Margin="0,2,0,0" Grid.Column="0" Grid.Row="4"/>
                                 <TextBox Name="SettingsSubjectLocationLatitute" Text="{Binding SubjectLocationLatitude}" Height="18" Margin="6,0,+6,2" KeyboardNavigation.TabIndex="4" Grid.Column="1" Grid.Row="4" GotFocus="SettingsSubjectLocationLatitute_GotFocus"/>

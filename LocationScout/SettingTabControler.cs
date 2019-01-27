@@ -88,6 +88,34 @@ namespace LocationScout
             Window.SettingsSubjectLocationLongitude.Text = string.Empty;
         }
 
+        internal void HandleSettingsAreaControlListFocus()
+        {
+            DisplayItem.AreaName = GetTextFromRichEditControl(Window.SettingsAreaControlEdit);
+        }
+
+        internal void HandleSettingsCountryControlListFocus()
+        {
+            DisplayItem.CountryName = GetTextFromRichEditControl(Window.SettingsCountryControlEdit);
+        }
+
+        internal void HandleSettingsSubjectLocationControlListFocus()
+        {
+            DisplayItem.SubjectLocationName = GetTextFromRichEditControl(Window.SettingsSubjectLocationControlEdit);
+        }
+
+        internal void HandleSettingsSubAreaControlListFocus()
+        {
+            DisplayItem.SubAreaName = GetTextFromRichEditControl(Window.SettingsSubAreaControlEdit);
+        }
+
+        private string GetTextFromRichEditControl(RichTextBox textbox)
+        {
+            var newText = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd).Text;
+            newText = newText?.TrimEnd('\r', '\n');
+
+            return newText;
+        }
+
         internal void Delete()
         {
             SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow(Window);
@@ -156,8 +184,9 @@ namespace LocationScout
                 // save the changes to the database
                 SaveEditChanges();
 
-                // reload data from database and refresh controls
-                ReloadAndRefreshControls();
+                // ask maincontroler to reload data from database and refresh all controls
+                // maincontroler needs to take care of this since it not only settings tab
+                MainControler.ReloadAndRefreshControls();
 
                 // reset the modes
                 _currentMode = E_Mode.add;
@@ -271,8 +300,7 @@ namespace LocationScout
         {
             // save the edits
             var area = Window.SettingsAreaControl.GetCurrentObject() as Area;
-            var newAreaName = new TextRange(Window.SettingsAreaControlEdit.Document.ContentStart, Window.SettingsAreaControlEdit.Document.ContentEnd).Text;
-            newAreaName = newAreaName.TrimEnd('\r', '\n');
+            var newAreaName = DisplayItem.AreaName;
 
             // write only to database if there was a change
             if (area.Name != newAreaName)
@@ -286,7 +314,6 @@ namespace LocationScout
                     ShowMessage("Error editing area name." + errorMessage, E_MessageType.error);
                 }
             }
-
             else
             {
                 ShowMessage("No change done.", E_MessageType.info);
@@ -297,13 +324,11 @@ namespace LocationScout
         {
             // save the edits
             var subArea = Window.SettingsSubAreaControl.GetCurrentObject() as SubArea;
-            var newSubAreaName = new TextRange(Window.SettingsSubAreaControlEdit.Document.ContentStart, Window.SettingsSubAreaControlEdit.Document.ContentEnd).Text;
-            newSubAreaName = newSubAreaName.TrimEnd('\r', '\n');
+            var newSubAreaName = DisplayItem.SubAreaName;
 
             // write only to database if there was a change
             if (subArea.Name != newSubAreaName)
             {
-
                 if (DataAccessAdapter.EditSubAreaName(subArea.Id, newSubAreaName, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
                     ShowMessage("Subarea name successfully changed.", E_MessageType.info);
@@ -313,7 +338,6 @@ namespace LocationScout
                     ShowMessage("Error editing Subarea name." + errorMessage, E_MessageType.error);
                 }
             }
-
             else
             {
                 ShowMessage("No change done.", E_MessageType.info);
@@ -324,12 +348,11 @@ namespace LocationScout
         {
             // save the edits
             var subLocation = Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation;
-            var newSubjectLocationName = new TextRange(Window.SettingsSubjectLocationControlEdit.Document.ContentStart, Window.SettingsSubjectLocationControlEdit.Document.ContentEnd).Text;
-            newSubjectLocationName = newSubjectLocationName.TrimEnd('\r', '\n');
+            var newSubjectLocationName = DisplayItem.SubjectLocationName;
             var newSubjectLocationGPS = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
 
             // write only to database if there was a change
-            if ( (subLocation.Name != newSubjectLocationName) || (subLocation.Coordinates.Latitude == newSubjectLocationGPS.Latitude) || (subLocation.Coordinates.Longitude == newSubjectLocationGPS.Longitude))
+            if ( (subLocation.Name != newSubjectLocationName) || (subLocation.Coordinates.Latitude != newSubjectLocationGPS.Latitude) || (subLocation.Coordinates.Longitude != newSubjectLocationGPS.Longitude))
             {
                 if (DataAccessAdapter.EditSubjectLocationName_GPS(subLocation.Id, newSubjectLocationName, newSubjectLocationGPS, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
@@ -340,7 +363,6 @@ namespace LocationScout
                     ShowMessage("Error editing Subject location data." + errorMessage, E_MessageType.error);
                 }
             }
-
             else
             {
                 ShowMessage("No change done.", E_MessageType.info);
@@ -351,14 +373,11 @@ namespace LocationScout
         {
             // save the edits
             var country = Window.SettingsCountryControl.GetCurrentObject() as Country;
-            //var newCountryName = new TextRange(Window.SettingsCountryControlEdit.Document.ContentStart, Window.SettingsCountryControlEdit.Document.ContentEnd).Text;
-            //newCountryName = newCountryName.TrimEnd('\r', '\n');
             var newCountryName = DisplayItem.CountryName;
 
             // write only to database if there was a change
             if (country.Name != newCountryName)
             {
-
                 if (DataAccessAdapter.EditCountryName(country.Id, newCountryName, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
                     ShowMessage("Country name successfully changed.", E_MessageType.info);
@@ -368,7 +387,6 @@ namespace LocationScout
                     ShowMessage("Error editing country name." + errorMessage, E_MessageType.error);
                 }
             }
-
             else
             {
                 ShowMessage("No change done.", E_MessageType.info);

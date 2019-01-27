@@ -113,6 +113,26 @@ namespace LocationScout
         {
             _controler.HandleGoopleMapsSubjectLocation();
         }
+
+        private void SettingsCountryControlEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleSettingsCountryControlListFocus();
+        }
+
+        private void SettingsAreaControlEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleSettingsAreaControlListFocus();
+        }
+
+        private void SettingsSubAreaControlEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleSettingsSubAreaControlListFocus();
+        }
+
+        private void SettingsSubjectLocationControlEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleSettingsSubjectLocationControlListFocus();
+        }        
         #endregion
     }
 }

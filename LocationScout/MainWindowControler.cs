@@ -115,9 +115,29 @@ namespace LocationScout
             _settingControler.ReloadAndRefreshControls();
         }
 
+        internal void HandleSettingsCountryControlListFocus()
+        {
+            _settingControler.HandleSettingsCountryControlListFocus();
+        }
+
+        internal void HandleSettingsAreaControlListFocus()
+        {
+            _settingControler.HandleSettingsAreaControlListFocus();
+        }
+
         internal void HandleGoopleMapsSubjectLocation()
         {
             _locationControler.HandleGoogleMapsSubjectLocation();
+        }
+
+        internal void HandleSettingsSubAreaControlListFocus()
+        {
+            _settingControler.HandleSettingsSubAreaControlListFocus();
+        }
+
+        internal void HandleSettingsSubjectLocationControlListFocus()
+        {
+            _settingControler.HandleSettingsSubjectLocationControlListFocus();
         }
         #endregion
     }
