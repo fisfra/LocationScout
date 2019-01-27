@@ -110,6 +110,7 @@
     <Compile Include="DataAccess\LocationScoutContext.cs" />
     <Compile Include="DataAccess\PersistenceManager.cs" />
     <Compile Include="DataAccess\TestDataGenerator.cs" />
+    <Compile Include="GoogleMapsHelper.cs" />
     <Compile Include="ListerControler.cs" />
     <Compile Include="Lister\LocationListerWindow.xaml.cs">
       <DependentUpon>LocationListerWindow.xaml</DependentUpon>

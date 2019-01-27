@@ -114,6 +114,11 @@ namespace LocationScout
             RefreshCountryControls();
             _settingControler.ReloadAndRefreshControls();
         }
+
+        internal void HandleGoopleMapsSubjectLocation()
+        {
+            _locationControler.HandleGoogleMapsSubjectLocation();
+        }
         #endregion
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WPFUserControl;
@@ -19,6 +20,8 @@ namespace LocationScout
         public override AutoCompleteTextBox AreaControl { get { return Window.LocationAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.LocationSubAreaControl; } }
         public override AutoCompleteTextBox SubjectLocationControl { get { return Window.LocationNameControl; } }
+        public override TextBox SubjectLocationLatitudeControl { get { return Window.SubjectLocationLatitudeTextBox; } }
+        public override TextBox SubjectLocationLongitudeControl { get { return Window.SubjectLocationLongitudeTextBox; } }
 
         public LocationDisplayItem DisplayItem { get; set; }
         #endregion
@@ -105,6 +108,12 @@ namespace LocationScout
             }
         }
 
+        internal void HandleGoogleMapsSubjectLocation()
+        {
+            var gps = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
+            GoogleMapsHelper.GoGoogleMap(gps);
+        }
+
         protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
             base.SubjectLocationControl_Leaving(sender, e);
@@ -114,6 +123,8 @@ namespace LocationScout
 
             Window.SettingsSubjectLocationLatitute.Focus();
             Window.SettingsSubjectLocationLatitute.CaretIndex = Window.SettingsSubjectLocationLatitute.Text.Length;
+
+            Window.SubjectGPSGoogleMapsButton.Focus();
         }
 
         #endregion

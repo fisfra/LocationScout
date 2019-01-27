@@ -27,6 +27,8 @@ namespace LocationScout
         public abstract AutoCompleteTextBox AreaControl { get; }
         public abstract AutoCompleteTextBox SubAreaControl { get; }
         public abstract AutoCompleteTextBox SubjectLocationControl { get; }
+        public abstract TextBox SubjectLocationLatitudeControl { get; }
+        public abstract TextBox SubjectLocationLongitudeControl { get; }
         #endregion
 
         #region constructors
@@ -83,8 +85,11 @@ namespace LocationScout
                 RefreshControl(_allAreas.OfType<Location>().ToList(), AreaControl);
             }
 
-            // clear old subarea text
+            // clear old text
             SubAreaControl.ClearText();
+            SubjectLocationControl.ClearText();
+            SubjectLocationLatitudeControl.Text = null;
+            SubjectLocationLongitudeControl.Text = null;
 
             // derived class can set the view model property
             // take country name from country object (if in database) or from UI text

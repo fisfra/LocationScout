@@ -82,11 +82,11 @@
                                         <ColumnDefinition Width="10*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Name="SubjectGPSLat" Text="{Binding SubjectLocationLatitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Latitude}}" 
+                                    <TextBox Name="SubjectLocationLatitudeTextBox" Text="{Binding SubjectLocationLatitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Latitude}}" 
                                              TabIndex="4" Height="18" Margin="0,0,5,0" IsEnabled="False" Grid.Column="0" Grid.Row="0"/>
-                                    <TextBox Name="SubjectGPSLong" Text="{Binding SubjectLocationLongitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Longitude}}" 
+                                    <TextBox Name="SubjectLocationLongitudeTextBox" Text="{Binding SubjectLocationLongitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Longitude}}" 
                                              TabIndex="5" Height="18" Margin="5,0,0,0" IsEnabled="False" Grid.Column="1" Grid.Row="0"/>
-                                <Button Name="SubjectGPSGoogleMapsButton" Content="GM" Height="23" Width="25" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Grid.Row="0"/>
+                                <Button Name="SubjectGPSGoogleMapsButton" Content="GM" Height="23" Width="25" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Grid.Row="0" Click="SubjectGPSGoogleMapsButton_Click"/>
                             </Grid>
 
                             </Grid>

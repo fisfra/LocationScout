@@ -67,7 +67,7 @@ namespace LocationScout.ViewModel
 
             Degrees = Convert.ToDouble(degrees);
             Minutes = Convert.ToDouble(minutes);
-            Seconds = Math.Round(Convert.ToDouble(seconds), 2);
+            Seconds = Math.Round(Convert.ToDouble(seconds), 1);
             Position = position;
         }
 

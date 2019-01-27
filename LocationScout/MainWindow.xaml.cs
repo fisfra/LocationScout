@@ -41,9 +41,7 @@ namespace LocationScout
         }
         #endregion
 
-        #region methods
-
-        
+        #region methods       
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleClose();
@@ -109,7 +107,12 @@ namespace LocationScout
         private void SettingsSubjectLocationLongitude_GotFocus(object sender, RoutedEventArgs e)
         {
             SettingsSubjectLocationLongitude.SelectAll();
-        } 
+        }
+
+        private void SubjectGPSGoogleMapsButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleGoopleMapsSubjectLocation();
+        }
         #endregion
     }
 }

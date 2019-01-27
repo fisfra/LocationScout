@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using WPFUserControl;
@@ -30,6 +31,8 @@ namespace LocationScout
         public override AutoCompleteTextBox AreaControl { get { return Window.SettingsAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.SettingsSubAreaControl; } }
         public override AutoCompleteTextBox SubjectLocationControl { get { return Window.SettingsSubjectLocationControl; } }
+        public override TextBox SubjectLocationLatitudeControl { get { return Window.SettingsSubjectLocationLatitute; } }
+        public override TextBox SubjectLocationLongitudeControl { get { return Window.SettingsSubjectLocationLongitude; } }
 
         public SettingsDisplayItem DisplayItem { get; set; }
         #endregion
