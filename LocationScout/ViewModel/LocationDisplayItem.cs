@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace LocationScout.ViewModel
 {
-    public class LocationDisplayItem : BaseObservableObject
+    public class LocationDisplayItem : SettingsDisplayItem
     {
         #region attributes
+        /*
         private string _locationName;
 
         private double _subjectLatitude;
@@ -209,15 +210,18 @@ namespace LocationScout.ViewModel
                 OnPropertyChanged();
             }
         }
+        */
         #endregion
 
         #region constructor
         public LocationDisplayItem()
         {
+            /*
             _shootinglocation1_1_photos = new ObservableCollection<byte[]>();
             _shootinglocation1_2_photos = new ObservableCollection<byte[]>();
             _shootinglocation2_1_photos = new ObservableCollection<byte[]>();
             _shootinglocation2_2_photos = new ObservableCollection<byte[]>();
+            */
         }
         #endregion
     }

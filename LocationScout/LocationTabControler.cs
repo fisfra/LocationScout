@@ -14,17 +14,21 @@ namespace LocationScout
 {
     internal class LocationTabControler : TabControlerBase
     {
-        #region attributes
-        
+        #region attributes        
         public override AutoCompleteTextBox CountryControl { get { return Window.LocationCountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.LocationAreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.LocationSubAreaControl; } }
-        public override AutoCompleteTextBox SubjectLocationControl { get {return new AutoCompleteTextBox(); } }
+        public override AutoCompleteTextBox SubjectLocationControl { get { return Window.LocationNameControl; } }
+
+        public LocationDisplayItem DisplayItem { get; set; }
         #endregion
 
         #region contructors
         public LocationTabControler(MainWindowControler mainControler, MainWindow window) : base (window, mainControler)
         {
+            DisplayItem = new LocationDisplayItem();
+
+            Window.Location_SubjectLocationGrid.DataContext = DisplayItem;
         }
         #endregion
 
@@ -64,22 +68,22 @@ namespace LocationScout
 
         internal void LoadPhoto_2_2()
         {
-            LoadPhoto(Window.LocationViewModel.ShootingLocation2_2_Photos);
+            //LoadPhoto(Window.LocationViewModel.ShootingLocation2_2_Photos);
         }
 
         internal void LoadPhoto_2_1()
         {
-            LoadPhoto(Window.LocationViewModel.ShootingLocation2_1_Photos);
+            //LoadPhoto(Window.LocationViewModel.ShootingLocation2_1_Photos);
         }
 
         internal void LoadPhoto_1_2()
         {
-            LoadPhoto(Window.LocationViewModel.ShootingLocation1_2_Photos);
+            //LoadPhoto(Window.LocationViewModel.ShootingLocation1_2_Photos);
         }
 
         internal void LoadPhoto_1_1()
         {
-            LoadPhoto(Window.LocationViewModel.ShootingLocation1_1_Photos);
+            //LoadPhoto(Window.LocationViewModel.ShootingLocation1_1_Photos);
         }
 
         private void LoadPhoto(ObservableCollection<byte[]> photos)
@@ -100,7 +104,18 @@ namespace LocationScout
                 }
             }
         }
-       
+
+        protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
+        {
+            base.SubjectLocationControl_Leaving(sender, e);
+
+            DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
+            DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
+
+            Window.SettingsSubjectLocationLatitute.Focus();
+            Window.SettingsSubjectLocationLatitute.CaretIndex = Window.SettingsSubjectLocationLatitute.Text.Length;
+        }
+
         #endregion
     }
 }

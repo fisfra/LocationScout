@@ -15,15 +15,22 @@ namespace LocationScout.ViewModel
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            // convert parameter
-            double doubleValue = System.Convert.ToDouble(value);
-            var coordinateType = (E_CoordinateType)parameter;
+            string convertedValue = "<not set>";
 
-            // determinate coordinate type (E, W, S, N)
-            var cp = GPSCoordinatesHelper.GetPosition(doubleValue, coordinateType);
+            if (value != null)
+            {
+                // convert parameter
+                double doubleValue = System.Convert.ToDouble(value);
+                var coordinateType = (E_CoordinateType)parameter;
 
-            // return the converted string value
-            return new GPSCoordinatesHelper(doubleValue, cp).ToString();
+                // determinate coordinate type (E, W, S, N)
+                var cp = GPSCoordinatesHelper.GetPosition(doubleValue, coordinateType);
+
+                // return the converted string value
+                convertedValue = new GPSCoordinatesHelper(doubleValue, cp).ToString();
+            }
+
+            return convertedValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

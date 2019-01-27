@@ -40,6 +40,7 @@ namespace LocationScout
             SubAreaControl.Leaving += SubAreaControl_Leaving;
             SubAreaControl.LeavingViaShift += SubAreaControl_LeavingViaShift;
             SubjectLocationControl.Leaving += SubjectLocationControl_Leaving;
+            SubjectLocationControl.LeavingViaShift += SubjectLocationControl_LeavingViaShift;
         }
         #endregion
 
@@ -173,6 +174,11 @@ namespace LocationScout
         {
             // take subject location name from subject location object (if in database) or from UI text
             SetSubjectLocationDisplayItem(e.Object is SubjectLocation subjectLocation ? subjectLocation.Name : SubjectLocationControl.GetCurrentText());
+        }
+
+        private void SubjectLocationControl_LeavingViaShift(object sender, AutoCompleteTextBoxControlEventArgs e)
+        {
+            SubAreaControl.SetFocus();
         }
 
         protected virtual void SetCountryDisplayItem(string countryName)

@@ -40,7 +40,7 @@ namespace LocationScout
             _currentMode = E_Mode.add;
             DisplayItem = new SettingsDisplayItem();
 
-            Window.MaintainLocationGrid.DataContext = DisplayItem;
+            Window.Settings_MaintainLocationGrid.DataContext = DisplayItem;
 
             // Test
             //Window.TestControl.AddObject("Test-1", "Test-1-Object");
@@ -48,12 +48,9 @@ namespace LocationScout
         }
         #endregion
 
-        #region methods
-
-        
+        #region methods      
         internal void Add()
         {
-            /*
             // get values from UI
             string countryName = Window.SettingsCountryControl.GetCurrentText();
             string areaName = Window.SettingsAreaControl.GetCurrentText();
@@ -75,7 +72,7 @@ namespace LocationScout
             // reset cursor
             Mouse.OverrideCursor = null;
 
-            Window.SettingsCountryControl.SetFocus();*/
+            Window.SettingsCountryControl.SetFocus();
         }
 
         public void ReloadAndRefreshControls()
@@ -484,9 +481,9 @@ namespace LocationScout
         protected override void SubAreaControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
             base.SubAreaControl_Leaving(sender, e);
-
-            DisplayItem.SubjectLocationLatitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Latitude;
-            DisplayItem.SubjectLocationLongitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Longitude;
+            
+            //DisplayItem.SubjectLocationLatitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Latitude;
+            //DisplayItem.SubjectLocationLongitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Longitude;
         }
         
         #endregion        
