@@ -77,7 +77,7 @@ namespace LocationScout
             // if area control is ready only, only area of the assigned country can be selected
             if (AreaControl.ListBoxReadOnly)
             {
-                RefreshControl((e.Object as Country).Areas.OfType<Location>().ToList(), AreaControl);
+                RefreshControl((e.Object as Country)?.Areas?.OfType<Location>().ToList(), AreaControl);
             }
             // otherwise all existing areas can be selected (or new onces can be entered)
             else

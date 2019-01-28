@@ -32,6 +32,7 @@ namespace LocationScout.DataAccess
         public DbSet<ShootingLocation> ShootingLocations { get; set; }  
         public DbSet<Photo> Photos { get; set; }
 
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SubjectLocation>()
@@ -46,8 +47,7 @@ namespace LocationScout.DataAccess
             modelBuilder.Entity<Photo>()
                         .HasRequired(p => p.ShootingLocation);
         }
-
-
+        
     }
 }
 
