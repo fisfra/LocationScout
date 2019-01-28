@@ -69,6 +69,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Elegantthemes-Beautiful-Flat-One-Color-Location %281%29.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoCompleteTextBox, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -333,6 +336,18 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="iconfinder_10_2135789.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1-25_icon-icons.com_68860.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pin_gps_location_find_map_search_icon-icons.com_59982.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Elegantthemes-Beautiful-Flat-One-Color-Location %281%29.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
