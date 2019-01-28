@@ -26,13 +26,12 @@ namespace LocationScout
         private E_Mode _currentMode;
         private E_EditMode _currentEditMode;
 
-        public override AutoCompleteTextBox CountryControl { get { return Window.SettingsCountryControl; } }
-        //public override AutoCompleteTextBox CountryControl { get { return Window.SettingsCountryControl_New; } }
-        public override AutoCompleteTextBox AreaControl { get { return Window.SettingsAreaControl; } }
-        public override AutoCompleteTextBox SubAreaControl { get { return Window.SettingsSubAreaControl; } }
-        public override AutoCompleteTextBox SubjectLocationControl { get { return Window.SettingsSubjectLocationControl; } }
-        public override TextBox SubjectLocationLatitudeControl { get { return Window.SettingsSubjectLocationLatitute; } }
-        public override TextBox SubjectLocationLongitudeControl { get { return Window.SettingsSubjectLocationLongitude; } }
+        public override AutoCompleteTextBox CountryControl { get { return Window.Settings_CountryControl; } }
+        public override AutoCompleteTextBox AreaControl { get { return Window.Settings_AreaControl; } }
+        public override AutoCompleteTextBox SubAreaControl { get { return Window.Settings_SubAreaControl; } }
+        public override AutoCompleteTextBox SubjectLocationControl { get { return Window.Settings_SubjectLocationControl; } }
+        public override TextBox SubjectLocationLatitudeControl { get { return Window.Settings_SubjectLocationLatituteTextBox; } }
+        public override TextBox SubjectLocationLongitudeControl { get { return Window.Settings_SubjectLocationLongitudeTextBox; } }
 
         public SettingsDisplayItem DisplayItem { get; set; }
         #endregion
@@ -44,10 +43,6 @@ namespace LocationScout
             DisplayItem = new SettingsDisplayItem();
 
             Window.Settings_MaintainLocationGrid.DataContext = DisplayItem;
-
-            // Test
-            //Window.TestControl.AddObject("Test-1", "Test-1-Object");
-            //Window.TestControl.AddObject("Test-2", "Test-2-Object");
         }
         #endregion
 
@@ -55,10 +50,10 @@ namespace LocationScout
         internal void Add()
         {
             // get values from UI
-            string countryName = Window.SettingsCountryControl.GetCurrentText();
-            string areaName = Window.SettingsAreaControl.GetCurrentText();
-            string subAreaName = Window.SettingsSubAreaControl.GetCurrentText();
-            string subjectLocationName = Window.SettingsSubjectLocationControl.GetCurrentText();
+            string countryName = Window.Settings_CountryControl.GetCurrentText();
+            string areaName = Window.Settings_AreaControl.GetCurrentText();
+            string subAreaName = Window.Settings_SubAreaControl.GetCurrentText();
+            string subjectLocationName = Window.Settings_SubjectLocationControl.GetCurrentText();
 
             // db operations might take a while
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
@@ -75,37 +70,37 @@ namespace LocationScout
             // reset cursor
             Mouse.OverrideCursor = null;
 
-            Window.SettingsCountryControl.SetFocus();
+            Window.Settings_CountryControl.SetFocus();
         }
 
         public void ReloadAndRefreshControls()
         {
-            Window.SettingsCountryControl.ClearText();
-            Window.SettingsAreaControl.ClearText();
-            Window.SettingsSubAreaControl.ClearText();
-            Window.SettingsSubjectLocationControl.ClearText();
-            Window.SettingsSubjectLocationLatitute.Text = string.Empty;
-            Window.SettingsSubjectLocationLongitude.Text = string.Empty;
+            Window.Settings_CountryControl.ClearText();
+            Window.Settings_AreaControl.ClearText();
+            Window.Settings_SubAreaControl.ClearText();
+            Window.Settings_SubjectLocationControl.ClearText();
+            Window.Settings_SubjectLocationLatituteTextBox.Text = string.Empty;
+            Window.Settings_SubjectLocationLongitudeTextBox.Text = string.Empty;
         }
 
         internal void HandleSettingsAreaControlListFocus()
         {
-            DisplayItem.AreaName = GetTextFromRichEditControl(Window.SettingsAreaControlEdit);
+            DisplayItem.AreaName = GetTextFromRichEditControl(Window.Settings_AreaControlEdit);
         }
 
         internal void HandleSettingsCountryControlListFocus()
         {
-            DisplayItem.CountryName = GetTextFromRichEditControl(Window.SettingsCountryControlEdit);
+            DisplayItem.CountryName = GetTextFromRichEditControl(Window.Settings_CountryControlEdit);
         }
 
         internal void HandleSettingsSubjectLocationControlListFocus()
         {
-            DisplayItem.SubjectLocationName = GetTextFromRichEditControl(Window.SettingsSubjectLocationControlEdit);
+            DisplayItem.SubjectLocationName = GetTextFromRichEditControl(Window.Settings_SubjectLocationControlEdit);
         }
 
         internal void HandleSettingsSubAreaControlListFocus()
         {
-            DisplayItem.SubAreaName = GetTextFromRichEditControl(Window.SettingsSubAreaControlEdit);
+            DisplayItem.SubAreaName = GetTextFromRichEditControl(Window.Settings_SubAreaControlEdit);
         }
 
         private string GetTextFromRichEditControl(RichTextBox textbox)
@@ -156,7 +151,7 @@ namespace LocationScout
                 if (_currentEditMode != E_EditMode.no_edit)
                 {
                     // change button label
-                    Window.SettingsEditButton.Content = "Save";
+                    Window.Settings_EditButton.Content = "Save";
 
                     // switch to edit mode
                     _currentMode = E_Mode.edit;
@@ -165,21 +160,21 @@ namespace LocationScout
             else
             {
                 // set control state
-                Window.SettingsCountryControlEdit.Visibility = Visibility.Hidden;
-                Window.SettingsCountryControl.Visibility = Visibility.Visible;
-                Window.SettingsAreaControlEdit.Visibility = Visibility.Hidden;
-                Window.SettingsAreaControl.Visibility = Visibility.Visible;
-                Window.SettingsSubAreaControlEdit.Visibility = Visibility.Hidden;
-                Window.SettingsSubAreaControl.Visibility = Visibility.Visible;
-                Window.SettingsSubjectLocationControlEdit.Visibility = Visibility.Hidden;
-                Window.SettingsSubjectLocationControl.Visibility = Visibility.Visible;
-                Window.SettingsEditButton.Content = "Edit";
-                Window.SettingsCountryControl.IsEnabled = true;
-                Window.SettingsAreaControl.IsEnabled = true;
-                Window.SettingsSubAreaControl.IsEnabled = true;
-                Window.SettingsSubjectLocationControl.IsEnabled = true;
-                Window.SettingsSubjectLocationLatitute.IsEnabled = true;
-                Window.SettingsSubjectLocationLongitude.IsEnabled = true;
+                Window.Settings_CountryControlEdit.Visibility = Visibility.Hidden;
+                Window.Settings_CountryControl.Visibility = Visibility.Visible;
+                Window.Settings_AreaControlEdit.Visibility = Visibility.Hidden;
+                Window.Settings_AreaControl.Visibility = Visibility.Visible;
+                Window.Settings_SubAreaControlEdit.Visibility = Visibility.Hidden;
+                Window.Settings_SubAreaControl.Visibility = Visibility.Visible;
+                Window.Settings_SubjectLocationControlEdit.Visibility = Visibility.Hidden;
+                Window.Settings_SubjectLocationControl.Visibility = Visibility.Visible;
+                Window.Settings_EditButton.Content = "Edit";
+                Window.Settings_CountryControl.IsEnabled = true;
+                Window.Settings_AreaControl.IsEnabled = true;
+                Window.Settings_SubAreaControl.IsEnabled = true;
+                Window.Settings_SubjectLocationControl.IsEnabled = true;
+                Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = true;
+                Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = true;
 
                 // save the changes to the database
                 SaveEditChanges();
@@ -225,81 +220,81 @@ namespace LocationScout
         private void SwitchEditModeCountry()
         {
             // hide the autocomplete textbox and show the edit textbox
-            Window.SettingsCountryControlEdit.Visibility = Visibility.Visible;
-            Window.SettingsCountryControl.Visibility = Visibility.Hidden;
+            Window.Settings_CountryControlEdit.Visibility = Visibility.Visible;
+            Window.Settings_CountryControl.Visibility = Visibility.Hidden;
 
             // disable textboxes not edited
-            Window.SettingsAreaControl.IsEnabled = false;
-            Window.SettingsSubAreaControl.IsEnabled = false;
-            Window.SettingsSubjectLocationControl.IsEnabled = false;
-            Window.SettingsSubjectLocationLatitute.IsEnabled = false;
-            Window.SettingsSubjectLocationLongitude.IsEnabled = false;
+            Window.Settings_AreaControl.IsEnabled = false;
+            Window.Settings_SubAreaControl.IsEnabled = false;
+            Window.Settings_SubjectLocationControl.IsEnabled = false;
+            Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = false;
+            Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = false;
 
             // set text to edit control
-            var editedText = Window.SettingsCountryControl.GetCurrentText();
-            Window.SettingsCountryControlEdit.Document.Blocks.Clear();
-            Window.SettingsCountryControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            var editedText = Window.Settings_CountryControl.GetCurrentText();
+            Window.Settings_CountryControlEdit.Document.Blocks.Clear();
+            Window.Settings_CountryControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
         }
 
         private void SwitchEditModeArea()
         {
             // hide the autocomplete textbox and show the edit textbox
-            Window.SettingsAreaControlEdit.Visibility = Visibility.Visible;
-            Window.SettingsAreaControl.Visibility = Visibility.Hidden;
+            Window.Settings_AreaControlEdit.Visibility = Visibility.Visible;
+            Window.Settings_AreaControl.Visibility = Visibility.Hidden;
 
             // disable textboxes not edited
-            Window.SettingsCountryControl.IsEnabled = false;
-            Window.SettingsSubAreaControl.IsEnabled = false;
-            Window.SettingsSubjectLocationControl.IsEnabled = false;
-            Window.SettingsSubjectLocationLatitute.IsEnabled = false;
-            Window.SettingsSubjectLocationLongitude.IsEnabled = false;
+            Window.Settings_CountryControl.IsEnabled = false;
+            Window.Settings_SubAreaControl.IsEnabled = false;
+            Window.Settings_SubjectLocationControl.IsEnabled = false;
+            Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = false;
+            Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = false;
 
             // set text to edit control
-            var editedText = Window.SettingsAreaControl.GetCurrentText();
-            Window.SettingsAreaControlEdit.Document.Blocks.Clear();
-            Window.SettingsAreaControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            var editedText = Window.Settings_AreaControl.GetCurrentText();
+            Window.Settings_AreaControlEdit.Document.Blocks.Clear();
+            Window.Settings_AreaControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
         }
 
         private void SwitchEditModeSubArea()
         {
             // hide the autocomplete textbox and show the edit textbox
-            Window.SettingsSubAreaControlEdit.Visibility = Visibility.Visible;
-            Window.SettingsSubAreaControl.Visibility = Visibility.Hidden;
+            Window.Settings_SubAreaControlEdit.Visibility = Visibility.Visible;
+            Window.Settings_SubAreaControl.Visibility = Visibility.Hidden;
 
             // disable textboxes not edited
-            Window.SettingsCountryControl.IsEnabled = false;
-            Window.SettingsAreaControl.IsEnabled = false;
-            Window.SettingsSubjectLocationControl.IsEnabled = false;
-            Window.SettingsSubjectLocationLatitute.IsEnabled = false;
-            Window.SettingsSubjectLocationLongitude.IsEnabled = false;
+            Window.Settings_CountryControl.IsEnabled = false;
+            Window.Settings_AreaControl.IsEnabled = false;
+            Window.Settings_SubjectLocationControl.IsEnabled = false;
+            Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = false;
+            Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = false;
 
             // set text to edit control
-            var editedText = Window.SettingsSubAreaControl.GetCurrentText();
-            Window.SettingsSubAreaControlEdit.Document.Blocks.Clear();
-            Window.SettingsSubAreaControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            var editedText = Window.Settings_SubAreaControl.GetCurrentText();
+            Window.Settings_SubAreaControlEdit.Document.Blocks.Clear();
+            Window.Settings_SubAreaControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
         }
 
         private void SwitchEditModeSubjectLocation()
         {
             // hide the autocomplete textbox and show the edit textbox
-            Window.SettingsSubjectLocationControlEdit.Visibility = Visibility.Visible;
-            Window.SettingsSubjectLocationControl.Visibility = Visibility.Hidden;
+            Window.Settings_SubjectLocationControlEdit.Visibility = Visibility.Visible;
+            Window.Settings_SubjectLocationControl.Visibility = Visibility.Hidden;
 
             // disable textboxes not edited
-            Window.SettingsCountryControl.IsEnabled = false;
-            Window.SettingsAreaControl.IsEnabled = false;
-            Window.SettingsSubAreaControl.IsEnabled = false;
+            Window.Settings_CountryControl.IsEnabled = false;
+            Window.Settings_AreaControl.IsEnabled = false;
+            Window.Settings_SubAreaControl.IsEnabled = false;
 
             // set text to edit control
-            var editedText = Window.SettingsSubjectLocationControl.GetCurrentText();
-            Window.SettingsSubjectLocationControlEdit.Document.Blocks.Clear();
-            Window.SettingsSubjectLocationControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            var editedText = Window.Settings_SubjectLocationControl.GetCurrentText();
+            Window.Settings_SubjectLocationControlEdit.Document.Blocks.Clear();
+            Window.Settings_SubjectLocationControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
         }
 
         private void SaveEditedAreaName()
         {
             // save the edits
-            var area = Window.SettingsAreaControl.GetCurrentObject() as Area;
+            var area = Window.Settings_AreaControl.GetCurrentObject() as Area;
             var newAreaName = DisplayItem.AreaName;
 
             // write only to database if there was a change
@@ -323,7 +318,7 @@ namespace LocationScout
         private void SaveEditedSubAreaName()
         {
             // save the edits
-            var subArea = Window.SettingsSubAreaControl.GetCurrentObject() as SubArea;
+            var subArea = Window.Settings_SubAreaControl.GetCurrentObject() as SubArea;
             var newSubAreaName = DisplayItem.SubAreaName;
 
             // write only to database if there was a change
@@ -347,7 +342,7 @@ namespace LocationScout
         private void SaveEditedSubjectLocation()
         {
             // save the edits
-            var subLocation = Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation;
+            var subLocation = Window.Settings_SubjectLocationControl.GetCurrentObject() as SubjectLocation;
             var newSubjectLocationName = DisplayItem.SubjectLocationName;
             var newSubjectLocationGPS = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
 
@@ -372,7 +367,7 @@ namespace LocationScout
         private void SaveEditedCountryName()
         {
             // save the edits
-            var country = Window.SettingsCountryControl.GetCurrentObject() as Country;
+            var country = Window.Settings_CountryControl.GetCurrentObject() as Country;
             var newCountryName = DisplayItem.CountryName;
 
             // write only to database if there was a change
@@ -399,17 +394,17 @@ namespace LocationScout
             E_EditMode editmode = E_EditMode.no_edit;
 
             // check which controls have text and objects (are in DB)
-            var hasCountryText = !string.IsNullOrEmpty(Window.SettingsCountryControl.GetCurrentText());
-            var countryInDB = Window.SettingsCountryControl.GetCurrentObject() != null;
+            var hasCountryText = !string.IsNullOrEmpty(Window.Settings_CountryControl.GetCurrentText());
+            var countryInDB = Window.Settings_CountryControl.GetCurrentObject() != null;
 
-            var hasAreaText = !string.IsNullOrEmpty(Window.SettingsAreaControl.GetCurrentText());
-            var areaInDB = Window.SettingsAreaControl.GetCurrentObject() != null;
+            var hasAreaText = !string.IsNullOrEmpty(Window.Settings_AreaControl.GetCurrentText());
+            var areaInDB = Window.Settings_AreaControl.GetCurrentObject() != null;
 
-            var hasSubAreaText = !string.IsNullOrEmpty(Window.SettingsSubAreaControl.GetCurrentText());
-            var subAreaInDB = Window.SettingsSubAreaControl.GetCurrentObject() != null;
+            var hasSubAreaText = !string.IsNullOrEmpty(Window.Settings_SubAreaControl.GetCurrentText());
+            var subAreaInDB = Window.Settings_SubAreaControl.GetCurrentObject() != null;
 
-            var hasSubjectLocationText = !string.IsNullOrEmpty(Window.SettingsSubjectLocationControl.GetCurrentText());
-            var subjectLocationInDB = Window.SettingsSubjectLocationControl.GetCurrentObject() != null;
+            var hasSubjectLocationText = !string.IsNullOrEmpty(Window.Settings_SubjectLocationControl.GetCurrentText());
+            var subjectLocationInDB = Window.Settings_SubjectLocationControl.GetCurrentObject() != null;
 
             // only country control has text, so edit country
             if (hasCountryText && !hasAreaText && !hasSubAreaText && !hasSubjectLocationText)
@@ -475,8 +470,8 @@ namespace LocationScout
             DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
             DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
 
-            Window.SettingsSubjectLocationLatitute.Focus();
-            Window.SettingsSubjectLocationLatitute.CaretIndex = Window.SettingsSubjectLocationLatitute.Text.Length;
+            Window.Settings_SubjectLocationLatituteTextBox.Focus();
+            Window.Settings_SubjectLocationLatituteTextBox.CaretIndex = Window.Settings_SubjectLocationLatituteTextBox.Text.Length;
         }
 
         protected override void SetCountryDisplayItem(string countryName)

@@ -46,13 +46,13 @@ namespace LocationScout
         {
             _controler.HandleClose();
         }
-        
+
         private void SettingAddButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleSettingAdd();
         }
 
-        
+
         private void LocationButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleLocationAdd();
@@ -68,45 +68,24 @@ namespace LocationScout
             _controler.HandleLocationShow();
         }
 
-        private void PhotoUpoad1_1Button_Click(object sender, RoutedEventArgs e)
-        {
-            _controler.LoadPhoto_1_1();
-        }
-
-        private void PhotoUpoad1_2Button_Click(object sender, RoutedEventArgs e)
-        {
-            _controler.LoadPhoto_1_2();
-        }
-
-        private void PhotoUpoad2_1Button_Click(object sender, RoutedEventArgs e)
-        {
-            _controler.LoadPhoto_2_1();
-        }
-
-        private void PhotoUpoad2_2Button_Click(object sender, RoutedEventArgs e)
-        {
-            _controler.LoadPhoto_2_2();
-        }
-        
-
         private void SettingsEditButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.Edit();
         }
-        
+
         private void SettingsDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.Delete();
         }
-        
+
         private void SettingsSubjectLocationLatitute_GotFocus(object sender, RoutedEventArgs e)
         {
-            SettingsSubjectLocationLatitute.SelectAll();
+            Settings_SubjectLocationLatituteTextBox.SelectAll();
         }
 
         private void SettingsSubjectLocationLongitude_GotFocus(object sender, RoutedEventArgs e)
         {
-            SettingsSubjectLocationLongitude.SelectAll();
+            Settings_SubjectLocationLongitudeTextBox.SelectAll();
         }
 
         private void SubjectGPSGoogleMapsButton_Click(object sender, RoutedEventArgs e)
@@ -132,7 +111,27 @@ namespace LocationScout
         private void SettingsSubjectLocationControlEdit_LostFocus(object sender, RoutedEventArgs e)
         {
             _controler.HandleSettingsSubjectLocationControlListFocus();
-        }        
+        }
+
+        private void PhotoUploadButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandlePhotoUpload();
+        }
+
+        private void RemovePhoto_1_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleRemovePhoto_1();
+        }
+
+        private void RemovePhoto_2_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleRemovePhoto_2();
+        }
+
+        private void RemovePhoto_3_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleRemovePhoto_3();
+        }
         #endregion
     }
 }

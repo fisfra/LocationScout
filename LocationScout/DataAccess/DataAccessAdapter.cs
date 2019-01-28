@@ -31,6 +31,16 @@ namespace LocationScout.DataAccess
             return PersistenceManager.ReadAllSubjectLocations(out allSubjectLocation, out errorMessage);
         }
 
+        internal static E_DBReturnCode ReadAllShootingLocations(out List<ShootingLocation> allShootingLocation, out string errorMessage)
+        {
+            return PersistenceManager.ReadAllShootingLocations(out allShootingLocation, out errorMessage);
+        }
+
+        internal static E_DBReturnCode ReadAllParkingLocations(out List<ParkingLocation> allParkingLocation, out string errorMessage)
+        {
+            return PersistenceManager.ReadAllParkingLocations(out allParkingLocation, out errorMessage);
+        }
+
         internal static E_DBReturnCode ReadCountry(long id, out Country foundCountry, out string errorMessage)
         {
             return PersistenceManager.ReadCountry(id, out foundCountry, out errorMessage);
@@ -49,25 +59,8 @@ namespace LocationScout.DataAccess
             return PersistenceManager.SmartAddCountry(countryName, areaName, subAreaName, subjectLocationName, subjectLocationCoordinates, out errorMessage);
         }
 
-        internal static E_DBReturnCode AddShootingLocation(List<long> subjectLocationIds, List<long> parkingLocationIds, List<byte[]> photosAsByteArray, string shootingLocationName, out string errorMessage)
+        internal static E_DBReturnCode AddPhotoLocation(List<long> subjectLocationIds, List<long> parkingLocationIds, List<byte[]> photosAsByteArray, string shootingLocationName, out string errorMessage)
         {
-            /*
-            var locationName = ldi.LocationName;
-            var subjectGPS = new GPSCoordinates(ldi.SubjectLatitude, ldi.SubjectLongitude);
-
-            var shooting1ParkingGPS = new GPSCoordinates(ldi.ShootingLocation1_Parking_Latitude, ldi.ShootingLocation1_Parking_Longitude);
-            var shooting1_1GPS = new GPSCoordinates(ldi.ShootingLocation1_1_Latitude, ldi.ShootingLocation1_1_Longitude);
-            var shooting1_2GPS = new GPSCoordinates(ldi.ShootingLocation1_2_Latitude, ldi.ShootingLocation1_2_Longitude);
-
-            var shooting2ParkingGPS = new GPSCoordinates(ldi.ShootingLocation2_Parking_Latitude, ldi.ShootingLocation2_Parking_Longitude);
-            var shooting2_1GPS = new GPSCoordinates(ldi.ShootingLocation2_1_Latitude, ldi.ShootingLocation2_1_Longitude);
-            var shooting2_2GPS = new GPSCoordinates(ldi.ShootingLocation2_2_Latitude, ldi.ShootingLocation2_2_Longitude);
-
-            var shooting1_1Photos = ldi.ShootingLocation1_1_Photos.ToList();
-            var shooting1_2Photos = ldi.ShootingLocation1_2_Photos.ToList();
-            var shooting2_1Photos = ldi.ShootingLocation2_1_Photos.ToList();
-            var shooting2_2Photos = ldi.ShootingLocation1_2_Photos.ToList();*/
-
             return PersistenceManager.AddPhotoPlace(subjectLocationIds, parkingLocationIds, photosAsByteArray, shootingLocationName, out errorMessage);
         }
 

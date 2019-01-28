@@ -113,6 +113,50 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        internal static E_DBReturnCode ReadAllShootingLocations(out List<ShootingLocation> allShootingLocations, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            allShootingLocations = new List<ShootingLocation>();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    allShootingLocations = db.ShootingLocations.Include(s => s.ParkingLocations).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode ReadAllParkingLocations(out List<ParkingLocation> allParkingLocations, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            allParkingLocations = new List<ParkingLocation>();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    allParkingLocations = db.ParkingLocations.Include(p => p.ShootingLocations).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
         internal static E_DBReturnCode ReadCountry(long id, out Country foundCountry, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;

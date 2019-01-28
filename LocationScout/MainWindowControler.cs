@@ -47,36 +47,15 @@ namespace LocationScout
         {
             _settingControler.Add();
         }
-
        
         internal void HandleLocationAdd()
         {
             _locationControler.Add();
         }
 
-        internal void LoadPhoto_1_1()
-        {
-            _locationControler.LoadPhoto_1_1();
-        }
-
-        internal void LoadPhoto_1_2()
-        {
-            _locationControler.LoadPhoto_1_2();
-        }
-
-        internal void LoadPhoto_2_1()
-        {
-            _locationControler.LoadPhoto_2_1();
-        }
-
         internal void HandleLocationShow()
         {
             _listerControler.Show();
-        }
-
-        internal void LoadPhoto_2_2()
-        {
-            _locationControler.LoadPhoto_2_2();
         }
         
         internal void Edit()
@@ -97,8 +76,8 @@ namespace LocationScout
 
         private void RefreshCountryControls()
         {
-            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.LocationCountryControl);
-            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.SettingsCountryControl);
+            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.Location_CountryControl);
+            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.Settings_CountryControl);
 
             // testing
             RefreshControl(_allCountries.OfType<Location>().ToList(), Window.SettingsCountryControl_New);
@@ -133,6 +112,26 @@ namespace LocationScout
         internal void HandleSettingsSubAreaControlListFocus()
         {
             _settingControler.HandleSettingsSubAreaControlListFocus();
+        }
+
+        internal void HandlePhotoUpload()
+        {
+            _locationControler.HandlePhotoUpload();
+        }
+
+        internal void HandleRemovePhoto_1()
+        {
+            _locationControler.HandleRemove(LocationTabControler.E_PhotoNumber.photo_1);
+        }
+
+        internal void HandleRemovePhoto_2()
+        {
+            _locationControler.HandleRemove(LocationTabControler.E_PhotoNumber.photo_2);
+        }
+
+        internal void HandleRemovePhoto_3()
+        {
+            _locationControler.HandleRemove(LocationTabControler.E_PhotoNumber.photo_3);
         }
 
         internal void HandleSettingsSubjectLocationControlListFocus()

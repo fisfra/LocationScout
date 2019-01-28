@@ -4,224 +4,119 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace LocationScout.ViewModel
 {
     public class LocationDisplayItem : SettingsDisplayItem
     {
         #region attributes
-        /*
-        private string _locationName;
+        private string _shootingLocationName;
+        private double? _shootingLocationLatitude;
+        private double? _shootingLocationLongitude;
+        private string _parkingLocationName;
+        private double? _parkingLocationLatitude;
+        private double? _parkingLocationLongitude;
+        private int _existingShootingLocationsName;
+        private BitmapImage _photo_1;
+        private BitmapImage _photo_2;
+        private BitmapImage _photo_3;
 
-        private double _subjectLatitude;
-        private double _subjectLongitude;
-
-        private double _shootinglocation1_parking_latitude;
-        private double _shootinglocation1_parking_longitude;
-        private double _shootinglocation1_1_latitude;
-        private double _shootinglocation1_1_longitude;
-        private double _shootinglocation1_2_latitude;
-        private double _shootinglocation1_2_longitude;
-
-        private double _shootinglocation2_parking_latitude;
-        private double _shootinglocation2_parking_longitude;
-        private double _shootinglocation2_1_latitude;
-        private double _shootinglocation2_1_longitude;        
-        private double _shootinglocation2_2_latitude;
-        private double _shootinglocation2_2_longitude;
-
-        private ObservableCollection<byte[]> _shootinglocation1_1_photos;
-        private ObservableCollection<byte[]> _shootinglocation1_2_photos;
-        private ObservableCollection<byte[]> _shootinglocation2_1_photos;
-        private ObservableCollection<byte[]> _shootinglocation2_2_photos;
-
-        public string LocationName
+        public string ShootingLocationName
         {
-            get { return _locationName; }
+            get { return _shootingLocationName; }
             set
             {
-                _locationName = value;
+                _shootingLocationName = value;
                 OnPropertyChanged();
             }
         }
-
-        public double SubjectLatitude
+        public double? ShootingLocationLatitude
         {
-            get { return _subjectLatitude; }
+            get { return _shootingLocationLatitude; }
             set
             {
-                _subjectLatitude = value;
+                _shootingLocationLatitude = value;
                 OnPropertyChanged();
             }
         }
-        public double SubjectLongitude
+        public double? ShootingLocationLongitude
         {
-            get { return _subjectLongitude; }
+            get { return _shootingLocationLongitude; }
             set
             {
-                _subjectLongitude = value;
+                _shootingLocationLongitude = value;
                 OnPropertyChanged();
             }
         }
-
-        public double ShootingLocation1_Parking_Latitude
+        public string ParkingLocationName
         {
-            get { return _shootinglocation1_parking_latitude; }
+            get { return _parkingLocationName; }
             set
             {
-                _shootinglocation1_parking_latitude = value;
+                _parkingLocationName = value;
                 OnPropertyChanged();
             }
         }
-        public double ShootingLocation1_Parking_Longitude
+        public double? ParkingLocationLatitude
         {
-            get { return _shootinglocation1_parking_longitude; }
+            get { return _parkingLocationLatitude; }
             set
             {
-                _shootinglocation1_parking_longitude = value;
+                _parkingLocationLatitude = value;
                 OnPropertyChanged();
             }
         }
-        public double ShootingLocation1_1_Latitude
+        public double? ParkingLocationLongitude
         {
-            get { return _shootinglocation1_1_latitude; }
+            get { return _parkingLocationLongitude; }
             set
             {
-                _shootinglocation1_1_latitude = value;
+                _parkingLocationLongitude = value;
                 OnPropertyChanged();
             }
         }
-        public double ShootingLocation1_1_Longitude
+        public int ExistingShootingLocationsName
         {
-            get { return _shootinglocation1_1_longitude; }
+            get { return _existingShootingLocationsName; }
             set
             {
-                _shootinglocation1_1_longitude = value;
+                _existingShootingLocationsName = value;
                 OnPropertyChanged();
             }
         }
-        public double ShootingLocation1_2_Latitude
+        public BitmapImage Photo_1
         {
-            get { return _shootinglocation1_2_latitude; }
+            get { return _photo_1; }
             set
             {
-                _shootinglocation1_2_latitude = value;
+                _photo_1 = value;
                 OnPropertyChanged();
             }
         }
-        public double ShootingLocation1_2_Longitude
+        public BitmapImage Photo_2
         {
-            get { return _shootinglocation1_2_longitude; }
+            get { return _photo_2; }
             set
             {
-                _shootinglocation1_2_longitude = value;
-                OnPropertyChanged();
-            }
-        }       
-
-        public double ShootingLocation2_Parking_Latitude
-        {
-            get { return _shootinglocation2_parking_latitude; }
-            set
-            {
-                _shootinglocation2_parking_latitude = value;
+                _photo_2 = value;
                 OnPropertyChanged();
             }
         }
-        public double ShootingLocation2_Parking_Longitude
+        public BitmapImage Photo_3
         {
-            get { return _shootinglocation2_parking_longitude; }
+            get { return _photo_3; }
             set
             {
-                _shootinglocation2_parking_longitude = value;
+                _photo_3 = value;
                 OnPropertyChanged();
             }
         }
-        public double ShootingLocation2_1_Latitude
-        {
-            get { return _shootinglocation2_1_latitude; }
-            set
-            {
-                _shootinglocation2_1_latitude = value;
-                OnPropertyChanged();
-            }
-        }
-        public double ShootingLocation2_1_Longitude
-        {
-            get { return _shootinglocation2_1_longitude; }
-            set
-            {
-                _shootinglocation2_1_longitude = value;
-                OnPropertyChanged();
-            }
-        }
-        public double ShootingLocation2_2_Latitude
-        {
-            get { return _shootinglocation2_2_latitude; }
-            set
-            {
-                _shootinglocation2_2_latitude = value;
-                OnPropertyChanged();
-            }
-        }
-        public double ShootingLocation2_2_Longitude
-        {
-            get { return _shootinglocation2_2_longitude; }
-            set
-            {
-                _shootinglocation2_2_longitude = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<byte[]> ShootingLocation1_1_Photos
-        {
-            get { return _shootinglocation1_1_photos; }
-            set
-            {
-                _shootinglocation1_1_photos = value;
-                OnPropertyChanged();
-            }
-        }
-        public ObservableCollection<byte[]> ShootingLocation1_2_Photos
-        {
-            get { return _shootinglocation1_2_photos; }
-            set
-            {
-                _shootinglocation1_2_photos = value;
-                OnPropertyChanged();
-            }
-        }
-        public ObservableCollection<byte[]> ShootingLocation2_1_Photos
-        {
-            get { return _shootinglocation2_1_photos; }
-            set
-            {
-                _shootinglocation2_1_photos = value;
-                OnPropertyChanged();
-            }
-        }
-        public ObservableCollection<byte[]> ShootingLocation2_2_Photos
-        {
-            get { return _shootinglocation2_2_photos; }
-            set
-            {
-                _shootinglocation2_2_photos = value;
-                OnPropertyChanged();
-            }
-        }
-        */
         #endregion
 
         #region constructor
         public LocationDisplayItem()
         {
-            /*
-            _shootinglocation1_1_photos = new ObservableCollection<byte[]>();
-            _shootinglocation1_2_photos = new ObservableCollection<byte[]>();
-            _shootinglocation2_1_photos = new ObservableCollection<byte[]>();
-            _shootinglocation2_2_photos = new ObservableCollection<byte[]>();
-            */
         }
         #endregion
     }

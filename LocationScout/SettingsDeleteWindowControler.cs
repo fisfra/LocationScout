@@ -27,17 +27,17 @@ namespace LocationScout
         internal void InitializeDialog()
         {
             // check which controls have text and objects (are in DB)
-            var hasCountryText = !string.IsNullOrEmpty(Window.SettingsCountryControl.GetCurrentText());
-            var countryInDB = Window.SettingsCountryControl.GetCurrentObject() != null;
+            var hasCountryText = !string.IsNullOrEmpty(Window.Settings_CountryControl.GetCurrentText());
+            var countryInDB = Window.Settings_CountryControl.GetCurrentObject() != null;
 
-            var hasAreaText = !string.IsNullOrEmpty(Window.SettingsAreaControl.GetCurrentText());
-            var areaInDB = Window.SettingsAreaControl.GetCurrentObject() != null;
+            var hasAreaText = !string.IsNullOrEmpty(Window.Settings_AreaControl.GetCurrentText());
+            var areaInDB = Window.Settings_AreaControl.GetCurrentObject() != null;
 
-            var hasSubAreaText = !string.IsNullOrEmpty(Window.SettingsSubAreaControl.GetCurrentText());
-            var subAreaInDB = Window.SettingsSubAreaControl.GetCurrentObject() != null;
+            var hasSubAreaText = !string.IsNullOrEmpty(Window.Settings_SubAreaControl.GetCurrentText());
+            var subAreaInDB = Window.Settings_SubAreaControl.GetCurrentObject() != null;
 
-            var hasSubjectLocationText = !string.IsNullOrEmpty(Window.SettingsSubjectLocationControl.GetCurrentText());
-            var subjectLocationInDB = Window.SettingsSubjectLocationControl.GetCurrentObject() != null;
+            var hasSubjectLocationText = !string.IsNullOrEmpty(Window.Settings_SubjectLocationControl.GetCurrentText());
+            var subjectLocationInDB = Window.Settings_SubjectLocationControl.GetCurrentObject() != null;
 
             // only country control has text, so edit country
             if (hasCountryText && !hasAreaText && !hasSubAreaText)
@@ -106,7 +106,7 @@ namespace LocationScout
         private void SetDeleteDialogCountryInformation(SettingsDeleteDisplayItem displayItem)
         {
             // get country from UI
-            if (Window.SettingsCountryControl.GetCurrentObject() is Country countryFromUI)
+            if (Window.Settings_CountryControl.GetCurrentObject() is Country countryFromUI)
             {
                 // get count of deleted areas / subareas
                 var countryAreaCount = 0;
@@ -151,7 +151,7 @@ namespace LocationScout
 
         private void SetDeleteDialogAreaInformation(SettingsDeleteDisplayItem displayItem)
         {
-            var areaFromUI = Window.SettingsAreaControl.GetCurrentObject() as Area;
+            var areaFromUI = Window.Settings_AreaControl.GetCurrentObject() as Area;
 
             if (PersistenceManager.ReadArea(areaFromUI.Id, out Area areaFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
             {
@@ -180,7 +180,7 @@ namespace LocationScout
 
         private void SetDeleteDialogSubAreaInformation(SettingsDeleteDisplayItem displayItem)
         {
-            var subAreaFromUI = Window.SettingsSubAreaControl.GetCurrentObject() as SubArea;
+            var subAreaFromUI = Window.Settings_SubAreaControl.GetCurrentObject() as SubArea;
 
             if (PersistenceManager.ReadSubArea(subAreaFromUI.Id, out SubArea subAreaFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
             {
