@@ -116,7 +116,7 @@ namespace LocationScout
                 foreach (var area in countryFromUI.Areas)
                 {
                     // read addtional area informtion from database
-                    var success = PersistenceManager.ReadArea(area.Id, out Area areaFullInformation, out string errorMessage);
+                    var success = DataAccessAdapter.ReadAreaById(area.Id, out Area areaFullInformation, out string errorMessage);
                     if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading area information." + errorMessage, E_MessageType.error);
 
                     // area has one one country, so it can be deleted
@@ -126,7 +126,7 @@ namespace LocationScout
                     foreach (var subarea in areaFullInformation.SubAreas)
                     {
                         // read additonal subarea information from database
-                        success = PersistenceManager.ReadSubArea(subarea.Id, out SubArea subAreaFullInformation, out errorMessage);
+                        success = DataAccessAdapter.ReadSubAreaById(subarea.Id, out SubArea subAreaFullInformation, out errorMessage);
                         if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading subarea information." + errorMessage, E_MessageType.error);
 
                         // subarea has only one area, so it can be deleted
@@ -153,7 +153,7 @@ namespace LocationScout
         {
             var areaFromUI = Window.Settings_AreaControl.GetCurrentObject() as Area;
 
-            if (PersistenceManager.ReadArea(areaFromUI.Id, out Area areaFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
+            if (PersistenceManager.ReadAreaById(areaFromUI.Id, out Area areaFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
             {
                 ShowMessage("Error reading area information." + errorMessage, E_MessageType.error);
             }
@@ -162,7 +162,7 @@ namespace LocationScout
             var areaSubAreaCount = areaFromDB.SubAreas.Count;
             foreach (var sa in areaFromDB.SubAreas)
             {
-                if (PersistenceManager.ReadSubArea(sa.Id, out SubArea subAreaFromDB, out errorMessage) == PersistenceManager.E_DBReturnCode.error)
+                if (PersistenceManager.ReadSubAreaById(sa.Id, out SubArea subAreaFromDB, out errorMessage) == PersistenceManager.E_DBReturnCode.error)
                 {
                     ShowMessage("Error reading subarea information." + errorMessage, E_MessageType.error);
                 }
@@ -182,7 +182,7 @@ namespace LocationScout
         {
             var subAreaFromUI = Window.Settings_SubAreaControl.GetCurrentObject() as SubArea;
 
-            if (PersistenceManager.ReadSubArea(subAreaFromUI.Id, out SubArea subAreaFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
+            if (DataAccessAdapter.ReadSubAreaById(subAreaFromUI.Id, out SubArea subAreaFromDB, out string errorMessage) == PersistenceManager.E_DBReturnCode.error)
             {
                 ShowMessage("Error reading subarea information." + errorMessage, E_MessageType.error);
             }

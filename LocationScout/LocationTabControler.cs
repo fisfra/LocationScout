@@ -64,33 +64,85 @@ namespace LocationScout
         private void RefreshParkingLocationsFromDB()
         {
             var success = DataAccessAdapter.ReadAllParkingLocations(out _allParkingLocations, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading Parking locations" + errorMessage, E_MessageType.error);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading parking locations" + errorMessage, E_MessageType.error);
         }
 
         internal void Add()
         {
+            // 
+            string errorMessage = string.Empty;
+
             // data from UI
             var subjectLocation = Window.Location_SubjectLocationControl.GetCurrentObject() as SubjectLocation;
             var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
+            
             var shootingLocationName = DisplayItem.ShootingLocationName;
 
             // db operations might take a while
             Mouse.OverrideCursor = Cursors.Wait;
 
-            // add country to database
-            E_DBReturnCode success = DataAccessAdapter.AddPhotoLocation(new List<long>() { subjectLocation.Id }, new List<long>() { parkingLocation.Id }, null, shootingLocationName, out string errorMessages);
+            // new parking location (object is null)
+            long parkingLocationId = -1;
+            if (parkingLocation == null)
+            {
+                var parkingLocationName = DisplayItem.ParkingLocationName;
+                var parkingLocationGPS = new GPSCoordinates(DisplayItem.ParkingLocationLatitude, DisplayItem.ParkingLocationLongitude);
 
-            // refresh or error handling
-            // AfterDBWriteSteps(success, errorMessage);
+                parkingLocationId = AddParkingLocation(parkingLocationName, parkingLocationGPS, out errorMessage);
+                if (parkingLocationId == -1)
+                {
+                    ShowMessage("Error writing parking locations to database" + errorMessage, E_MessageType.error);
+                    return;
+                }
+            }
+
+            // add country to database
+            var success = DataAccessAdapter.SmartAddPhotoLocation(DisplayItem, subjectLocation.Id, parkingLocationId, out errorMessage);
+
+            switch (success)
+            {
+                case E_DBReturnCode.no_error:
+                    ShowMessage("Photo Location successuflly added", E_MessageType.success);
+                    break;
+                case E_DBReturnCode.error:
+                    ShowMessage("Error adding PhotoLocation to database" + errorMessage, E_MessageType.error);
+                    break;
+                case E_DBReturnCode.already_existing:
+                    // to do
+                    break;
+                default:
+                    Debug.Assert(false);
+                    throw new Exception("Unknown enum value in LocationTabControler::Add");
+            }
 
             // reset cursor
             Mouse.OverrideCursor = null;
 
-            // clear the controls and reset focus
-            // _window.SettingsCountryControl.ClearText();
-            // _window.SettingsAreaControl.ClearText();
-            // _window.SettingsSubAreaControl.ClearText();
-            // _window.SettingsCountryControl.SetFocus();*/
+            // clear the controls and refresh controls
+            Window.Location_CountryControl.ClearText();
+            Window.Location_AreaControl.ClearText();
+            Window.Location_SubAreaControl.ClearText();
+            Window.Location_SubjectLocationControl.ClearText();
+            Window.ShootingLocationControl.ClearText();
+            Window.ParkingLocationControl.ClearText();
+            DisplayItem.Reset();
+            RefreshShootingLocationsFromDB();
+            RefreshParkingLocationsFromDB();           
+
+            // reset cursor
+            Mouse.OverrideCursor = null;
+
+            Window.Location_CountryControl.SetFocus();
+        }
+
+        private long AddParkingLocation(string parkingLocationName, GPSCoordinates parkingLocationGPS, out string errorMessage)
+        {
+            long newId = -1;
+
+            // write to database (newId == -1 in case of error, so no additional error handling required)
+            DataAccessAdapter.AddParkingLocation(parkingLocationName, parkingLocationGPS, out newId, out errorMessage);
+
+            return newId;
         }
 
         internal void HandleRemove(E_PhotoNumber photoNumber)
@@ -206,9 +258,10 @@ namespace LocationScout
 
         private void ShootingLocationNameControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
+            // set the view model
             DisplayItem.ShootingLocationName = e.Object is ShootingLocation shootingLocation ? shootingLocation.Name : Window.ShootingLocationControl.GetCurrentText();
 
-            Window.ShootingLocationLatitudeTextbox.Focus();
+                                   Window.ShootingLocationLatitudeTextbox.Focus();
         }
 
         private void ParkingLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)

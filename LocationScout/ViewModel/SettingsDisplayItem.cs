@@ -71,5 +71,17 @@ namespace LocationScout.ViewModel
             }
         }
         #endregion
+
+        #region methods
+        public virtual void Reset()
+        {
+            CountryName = string.Empty;
+            AreaName = string.Empty;
+            SubAreaName = string.Empty;
+            SubjectLocationName = string.Empty;
+            SubjectLocationLatitude = null;
+            SubjectLocationLongitude = null;
+        }
+        #endregion
     }
 }

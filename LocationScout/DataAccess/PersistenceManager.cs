@@ -157,7 +157,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode ReadCountry(long id, out Country foundCountry, out string errorMessage)
+        internal static E_DBReturnCode ReadCountryById(long id, out Country foundCountry, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -190,11 +190,11 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode ReadArea(long id, out Area foundAra, out string errorMessage)
+        internal static E_DBReturnCode ReadAreaById(long id, out Area foundArea, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
-            foundAra = new Area();
+            foundArea = new Area();
 
             try
             {
@@ -204,7 +204,7 @@ namespace LocationScout.DataAccess
 
                     if (found.Count == 1)
                     {
-                        foundAra = found[0];
+                        foundArea = found[0];
                     }
 
                     else if (found.Count > 0)
@@ -223,11 +223,11 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode ReadSubArea(long id, out SubArea foundSubAra, out string errorMessage)
+        internal static E_DBReturnCode ReadSubAreaById(long id, out SubArea foundSubArea, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
-            foundSubAra = new SubArea();
+            foundSubArea = new SubArea();
 
             try
             {
@@ -237,7 +237,7 @@ namespace LocationScout.DataAccess
 
                     if (found.Count == 1)
                     {
-                        foundSubAra = found[0];
+                        foundSubArea = found[0];
                     }
 
                     else if (found.Count > 0)
@@ -256,7 +256,8 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode AddPhotoPlace(List<long> subjectLocationIds, List<long> parkingLocationIds, List<byte[]> photosAsByteArray, string shootingLocationName, out string errorMessage)
+        internal static E_DBReturnCode SmartAddPhotoPlace(long subjectLocationId, long parkingLocationId, List<byte[]> photosAsByteArray, string shootingLocationName, 
+                                                          GPSCoordinates shootingLocationGPS, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -265,45 +266,61 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    // get subject locations from database
-                    List<SubjectLocation> subjectLocationsFromDB = new List<SubjectLocation>();
-                    foreach (var id in subjectLocationIds)
-                    {
-                        subjectLocationsFromDB.Add(db.SubjectLocations.FirstOrDefault(o => o.Id == id));
-                     }
+                    // get subject location from database
+                    var subjectLocationFromDB = db.SubjectLocations.FirstOrDefault(o => o.Id == subjectLocationId);
+                    if (subjectLocationFromDB == null) throw new Exception("Invalid Subject Location Id in PersistenceManager::SmartAddPhotoPlace");
 
-                    // get parking locations from database
-                    List<ParkingLocation> parkingLocationsFromDB = new List<ParkingLocation>();
-                    foreach (var id in parkingLocationIds)
-                    {
-                        parkingLocationsFromDB.Add(db.ParkingLocations.FirstOrDefault(o => o.Id == id));
-                    }
+                    // get parking location from database
+                    var parkingLocationFromDB = db.ParkingLocations.FirstOrDefault(o => o.Id == parkingLocationId);
+                    if (parkingLocationFromDB == null) throw new Exception("Invalid Parking Location Id in PersistenceManager::SmartAddPhotoPlace");
+
 
                     // create the new shooting location
-                    ShootingLocation newShootingLocation = new ShootingLocation()
-                    {
-                        Name = shootingLocationName
-                    };
+                    ShootingLocation newShootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };
 
                     // add photos to shooting location and set navigation property in photos
                     foreach (var ba in photosAsByteArray)
                     {
+                        if (newShootingLocation.Photos == null) newShootingLocation.Photos = new List<Photo>();
                         newShootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = newShootingLocation });
                     }
+               
+                    // add shooting location to subject location
+                    if (subjectLocationFromDB.ShootLocations == null) subjectLocationFromDB.ShootLocations = new List<ShootingLocation>();
+                    subjectLocationFromDB.ShootLocations.Add(newShootingLocation);
 
-                    // set navigation properties for subject location
-                    foreach (var subjectLocationFromDB in subjectLocationsFromDB)
-                    {
-                        subjectLocationFromDB.ShootLocations.Add(newShootingLocation);
-                    }
-
-                    // set navgation properties for parking location
-                    foreach (var parkingLocationFromDB in parkingLocationsFromDB)
-                    {
-                        parkingLocationFromDB.ShootingLocations.Add(newShootingLocation);
-                    }
+                    // add shootling location to parking location
+                    if (parkingLocationFromDB.ShootingLocations == null) parkingLocationFromDB.ShootingLocations = new List<ShootingLocation>();
+                    parkingLocationFromDB.ShootingLocations.Add(newShootingLocation);
 
                     db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode AddParkingLocation(string parkingLocationName, GPSCoordinates parkingLocationCoordinates, out long id, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            id = -1;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var newParkingLocation = new ParkingLocation() { Name = parkingLocationName, Coordinates = parkingLocationCoordinates };
+                    db.ParkingLocations.Add(newParkingLocation);
+
+                    db.SaveChanges();
+
+                    id = newParkingLocation.Id;
                 }
             }
             catch (Exception e)
@@ -434,14 +451,6 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    /*
-                    photoPlacesFound = db.PhotoPlaces.Include(pp => pp.PlaceSubjectLocation)
-                                    .Include(pp => pp.ParkingLocations.Select(pl => pl.ShootingLocations.Select(sl => sl.Photos)))
-                                    .Include(pp => pp.PlaceSubjectLocation.SubjectCountry)
-                                    .Include(pp => pp.PlaceSubjectLocation.SubjectArea)
-                                    .Include(pp => pp.PlaceSubjectLocation.SubjectSubArea).ToList();*/
-
-
                     // get the table data including all joint tables
                     shootingLocationsFound = db.ShootingLocations.Include(sl => sl.Photos)
                                                                  .Include(sl => sl.SubjectLocations)

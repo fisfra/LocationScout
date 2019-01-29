@@ -119,5 +119,20 @@ namespace LocationScout.ViewModel
         {
         }
         #endregion
+
+        #region methods
+        public override void Reset()
+        {
+            base.Reset();
+
+            ShootingLocationName = string.Empty;
+            ShootingLocationLatitude = null;
+            ShootingLocationLongitude = null;
+            ParkingLocationName = string.Empty;
+            ParkingLocationLatitude = null;
+            ParkingLocationLongitude = null;
+            ExistingShootingLocationsName = 0;
+        }
+        #endregion
     }
 }

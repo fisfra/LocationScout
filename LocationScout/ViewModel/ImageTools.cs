@@ -22,7 +22,7 @@ namespace LocationScout.ViewModel
             return fileData;
         }
 
-        internal static BitmapImage LoadImage(byte[] imageData)
+        internal static BitmapImage ByteArrayToBitmapImage(byte[] imageData)
         {
             if (imageData == null || imageData.Length == 0) return null;
             var image = new BitmapImage();
@@ -38,6 +38,20 @@ namespace LocationScout.ViewModel
             }
             image.Freeze();
             return image;
+        }
+
+        internal static byte[] BitmapImageToByteArray(BitmapImage impage)
+        {
+            byte[] data;
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(impage));
+            using (MemoryStream ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                data = ms.ToArray();
+            }
+
+            return data;
         }
     }
 }

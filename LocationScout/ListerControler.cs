@@ -139,7 +139,7 @@ namespace LocationScout
                         CurrentDisplayItem.ShootingLocation1_1_Photos.Add(photo.ImageBytes);
                     }
 
-                    CurrentDisplayItem.CurrentPhoto = photos.Count > 0 ? ImageTools.LoadImage(photos[0].ImageBytes) : null;
+                    CurrentDisplayItem.CurrentPhoto = photos.Count > 0 ? ImageTools.ByteArrayToBitmapImage(photos[0].ImageBytes) : null;
                 }
             }
 
