@@ -20,7 +20,6 @@ namespace LocationScout
         #region attributes
         private SettingTabControler _settingControler;
         private LocationTabControler _locationControler;
-        private ListerControler _listerControler;
         private List<Country> _allCountries;
 
         public List<Country> AllCountries { get { return _allCountries; } }
@@ -31,7 +30,6 @@ namespace LocationScout
         {
             _settingControler = new SettingTabControler(this, window);
             _locationControler = new LocationTabControler(this, window);
-            _listerControler = new ListerControler(window);
 
             ReloadAndRefreshControls();
         }
@@ -55,7 +53,7 @@ namespace LocationScout
 
         internal void HandleLocationShow()
         {
-            _listerControler.Show();
+            _locationControler.ShowLister();
         }
         
         internal void Edit()

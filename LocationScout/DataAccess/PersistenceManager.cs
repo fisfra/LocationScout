@@ -123,7 +123,12 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allShootingLocations = db.ShootingLocations.Include(s => s.ParkingLocations).Include(s => s.Photos).Include(s => s.SubjectLocations).ToList();
+                    allShootingLocations = db.ShootingLocations.Include(s => s.ParkingLocations)
+                                                               .Include(s => s.Photos)
+                                                               .Include(s => s.SubjectLocations.Select(sl => sl.Area))
+                                                               .Include(s => s.SubjectLocations.Select(sl => sl.SubArea))
+                                                               .Include(s => s.SubjectLocations.Select(sl => sl.Country))
+                                                               .ToList();
                 }
             }
             catch (Exception e)

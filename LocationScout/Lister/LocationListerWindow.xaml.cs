@@ -24,13 +24,11 @@ namespace LocationScout.Lister
         #endregion
 
         #region constructors
-        public LocationListerWindow(ListerControler listerControler)
+        public LocationListerWindow(MainWindow mainWindow)
         {
-            _controler = listerControler;
-
             InitializeComponent();
 
-
+            _controler = new ListerControler(mainWindow, this);
         }
         #endregion
 

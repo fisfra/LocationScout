@@ -345,15 +345,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="iconfinder_10_2135789.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="1-25_icon-icons.com_68860.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="pin_gps_location_find_map_search_icon-icons.com_59982.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Elegantthemes-Beautiful-Flat-One-Color-Location %281%29.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -53,7 +53,7 @@
 
                     <GridView>
 
-                        <GridViewColumn Header=" Location" Width ="200" DisplayMemberBinding="{Binding LocationName}">
+                        <GridViewColumn Header=" Shooting Location" Width ="200" DisplayMemberBinding="{Binding ShootingLocationName}">
                             <GridViewColumn.HeaderContainerStyle>
                                 <Style TargetType="{x:Type GridViewColumnHeader}">
                                     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -122,15 +122,16 @@
             </ListView>
 
             <GroupBox Header="Photo Place" Margin="0,10,0,0" Grid.Row="1">
-                
+
                 <Grid Name="PhotoPlaceGrid">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="4*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="4*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="30*"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
@@ -140,27 +141,30 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label Content="Parking / Shooting Location 1" Grid.Row="0" Grid.Column="0"/>
-                    <Button Name="ParkingLocation1_Button" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="2" Click="ParkingLocation1_Button_Click"/>
-                    <TextBox Name="ParkingLocation1_TextBox" Text="{Binding ParkingLocation1_GPS, Converter={StaticResource GPSConverterComplexKey}}" Height="18" Margin="0,0,5,0" Grid.Row="0" Grid.Column="1"/>
-                    <TextBox Name="ParkingShootingLocation1_1_TextBox" Text="{Binding ShootingLocation1_1_GPS, Converter={StaticResource GPSConverterComplexKey}}" Margin="0,0,5,0" Height="18" Grid.Row="0" Grid.Column="3"/>
-                    <Button Name="ParkingShootingLocation1_1_Button" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="4" Click="ParkingShootingLocation1_1_Button_Click"/>
-                    <TextBox Name="ParkingShootingLocation1_2_TextBox" Text="{Binding ShootingLocation1_2_GPS, Converter={StaticResource GPSConverterComplexKey}}" Margin="0,0,5,0" Height="18" Grid.Row="1" Grid.Column="3"/>
-                    <Button Name="ParkingShootingLocation1_2_Button" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="4" Click="ParkingShootingLocation1_2_Button_Click"/>
+                    <Label Content="Subject Location" Grid.Row="0" Grid.Column="0"/>
+                    <TextBox Name="SubjectLocationNameTextBox" Text="{Binding SubjectLocationName}" Height="18" Margin="5,0,5,0" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="1"/>
+                    <TextBox Name="SubjectLocationLatitudeTextBox" Text="{Binding SubjectLocationLatitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Latitude}}" Height="18" Margin="5,0,5,0" Grid.Row="1" Grid.Column="1"/>
+                    <TextBox Name="SubjectLocationLongitudeTextBox" Text="{Binding SubjectLocationLongitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Longitude}}" Height="18" Margin="5,0,5,0" Grid.Row="1" Grid.Column="2"/>
+                    <Button Name="SubjectLocationGoogleMapsButton" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="3"/>
 
-                    <Label Content="Parking / Shooting Location 2" Grid.Row="2" Grid.Column="0"/>
-                    <Button Name="ParkingLocation2_Button" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" Click="ParkingLocation2_Button_Click"/>
-                    <TextBox Name="ParkingLocation2_TextBox" Text="{Binding ParkingLocation2_GPS, Converter={StaticResource GPSConverterComplexKey}}" Height="18" Margin="0,0,5,0" Grid.Row="2" Grid.Column="1"/>
-                    <TextBox Name="ParkingShootingLocation2_1_TextBox" Text="{Binding ShootingLocation2_1_GPS, Converter={StaticResource GPSConverterComplexKey}}" Margin="0,0,5,0" Height="18" Grid.Row="2" Grid.Column="3"/>
-                    <Button Name="ParkingShootingLocation2_1_Button" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="4" Click="ParkingShootingLocation2_1_Button_Click"/>
-                    <TextBox Name="ParkingShootingLocation2_2_TextBox" Text="{Binding ShootingLocation2_2_GPS, Converter={StaticResource GPSConverterComplexKey}}" Margin="0,0,5,0" Height="18" Grid.Row="3" Grid.Column="3"/>
-                    <Button Name="ParkingShootingLocation2_2_Button" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="4" Click="ParkingShootingLocation2_2_Button_Click"/>
+                    <Label Content="Parking Location" Grid.Row="2" Grid.Column="0"/>
+                    <TextBox Name="ParkingLocationNameTextBox" Text="{Binding ParkingLocationName}" Height="18" Margin="5,0,5,0" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1"/>
+                    <TextBox Name="ParkingLocationLatitudeTextBox" Text="{Binding ParkingLocationLatitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Latitude}}" Height="18" Margin="5,0,5,0" Grid.Row="3" Grid.Column="1"/>
+                    <TextBox Name="ParkingLocationLongitudeTextBox" Text="{Binding ParkingLocationLongitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Longitude}}" Height="18" Margin="5,0,5,0" Grid.Row="3" Grid.Column="2"/>
+                    <Button Name="ParkingLocationGoogleMapsButton" Content="GM" Height="20" Width="25" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="3"/>
 
-                    <Image Name="PreviewImage" Source="{Binding CurrentPhoto}" Grid.RowSpan="4" Grid.Column="5">
-                        
-                    </Image>
+                    <Border Background="#FFEEEEEE" Grid.RowSpan="4" Grid.Column="4" Margin="2,2,2,2">
+                        <Image Name="Photo_1" Source="{Binding Photo_1}"/>
+                    </Border>
+
+                    <Border Background="#FFEEEEEE" Grid.RowSpan="4" Grid.Column="5" Margin="2,2,2,2">
+                        <Image Name="Photo_2" Source="{Binding Photo_1}"/>
+                    </Border>
+
+                    <Border Background="#FFEEEEEE" Grid.RowSpan="4" Grid.Column="6" Margin="2,2,2,2">
+                        <Image Name="Photo_3" Source="{Binding Photo_1}"/>
+                    </Border>
                 </Grid>
-                
             </GroupBox>
                       
         </Grid>

@@ -12,6 +12,7 @@ using System.Windows.Input;
 using static LocationScout.DataAccess.PersistenceManager;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
+using LocationScout.Lister;
 
 namespace LocationScout
 {
@@ -50,6 +51,12 @@ namespace LocationScout
         #endregion
 
         #region methods
+        internal void ShowLister()
+        {
+            LocationListerWindow window = new LocationListerWindow(base.Window);
+            window.Show();
+        }
+
         private void AreaControl_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             Window.Location_CountryControl.SetFocus();
