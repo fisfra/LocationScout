@@ -276,6 +276,10 @@ namespace LocationScout.DataAccess
 
                     // create the new shooting location
                     ShootingLocation newShootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };
+                    newShootingLocation.ParkingLocations = new List<ParkingLocation>();
+                    newShootingLocation.ParkingLocations.Add(parkingLocationFromDB);
+                    newShootingLocation.SubjectLocations = new List<SubjectLocation>();
+                    newShootingLocation.SubjectLocations.Add(subjectLocationFromDB);
 
                     // add photos to shooting location and set navigation property in photos
                     foreach (var ba in photosAsByteArray)
@@ -283,7 +287,8 @@ namespace LocationScout.DataAccess
                         if (newShootingLocation.Photos == null) newShootingLocation.Photos = new List<Photo>();
                         newShootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = newShootingLocation });
                     }
-               
+                    db.ShootingLocations.Add(newShootingLocation);
+
                     // add shooting location to subject location
                     if (subjectLocationFromDB.ShootLocations == null) subjectLocationFromDB.ShootLocations = new List<ShootingLocation>();
                     subjectLocationFromDB.ShootLocations.Add(newShootingLocation);

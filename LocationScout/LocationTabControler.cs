@@ -255,6 +255,8 @@ namespace LocationScout
         private void ShootingLocationNameControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
             // set the view model
+
+            // existing shooting location
             if (e.Object is ShootingLocation shootingLocation)
             {
                 DisplayItem.ShootingLocationName = shootingLocation.Name;
@@ -267,6 +269,13 @@ namespace LocationScout
                 DisplayItem.Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(2)?.ImageBytes);
             }
 
+            // new shooting location
+            else
+            {
+                // other attributes set via databinding
+                DisplayItem.ShootingLocationName = Window.ShootingLocationControl.GetCurrentText();
+            }
+
             //
             RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
 
@@ -275,10 +284,18 @@ namespace LocationScout
 
         private void ParkingLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
+            // existing parking location
             if (e.Object is ParkingLocation parkingLocation)
             {
+                DisplayItem.ParkingLocationName = parkingLocation.Name;
                 DisplayItem.ParkingLocationLatitude = parkingLocation.Coordinates.Latitude;
                 DisplayItem.ParkingLocationLongitude = parkingLocation.Coordinates.Longitude;
+            }
+
+            // new parking location
+            else
+            {
+                DisplayItem.ParkingLocationName = Window.ParkingLocationControl.GetCurrentText();
             }
 
             //
