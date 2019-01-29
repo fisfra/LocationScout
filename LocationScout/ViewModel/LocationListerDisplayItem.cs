@@ -6,6 +6,8 @@ namespace LocationScout.ViewModel
     {
         #region attributes
         private string _shootingLocationName;
+        private double? _shootingLocationLatitude;
+        private double? _shootingLocationLongitude;
         private string _countryName;
         private string _areaName;
         private string _subAreaName;
@@ -28,6 +30,24 @@ namespace LocationScout.ViewModel
             set
             {
                 _shootingLocationName = value;
+                OnPropertyChanged();
+            }
+        }
+        public double? ShootingLocationLatitude
+        {
+            get { return _shootingLocationLatitude; }
+            set
+            {
+                _shootingLocationLatitude = value;
+                OnPropertyChanged();
+            }
+        }
+        public double? ShootingLocationLongitude
+        {
+            get { return _shootingLocationLongitude; }
+            set
+            {
+                _shootingLocationLongitude = value;
                 OnPropertyChanged();
             }
         }

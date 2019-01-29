@@ -46,8 +46,16 @@ namespace LocationScout
             {
                 var newDisplayItem = new LocationListerDisplayItem()
                 {
-                    ParkingLocationName = shootingLocation.ParkingLocations[0].Name,
-                    ShootingLocationName = shootingLocation.Name
+                    ParkingLocationName = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Name,
+                    ParkingLocationLatitude = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Coordinates?.Latitude,
+                    ParkingLocationLongitude = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Coordinates?.Longitude,
+                    ShootingLocationName = shootingLocation.Name,
+                    ShootingLocationLatitude = shootingLocation.Coordinates.Latitude,
+                    ShootingLocationLongitude = shootingLocation.Coordinates.Longitude,
+                    Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(0)?.ImageBytes),
+                    Photo_2 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(1)?.ImageBytes),
+                    Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(2)?.ImageBytes),
+                    Tag = shootingLocation
                 };
 
                 foreach (var subjectLocation in shootingLocation.SubjectLocations)
@@ -58,8 +66,9 @@ namespace LocationScout
                     newDisplayItem.SubAreaName = subjectLocation.SubArea.Name;
                     newDisplayItem.SubjectLocationLatitude = subjectLocation.Coordinates.Latitude;
                     newDisplayItem.SubjectLocationLongitude = subjectLocation.Coordinates.Longitude;
-                    newDisplayItem.Tag = shootingLocation;
                 }
+
+                newDisplayItem.Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(0)?.ImageBytes);
 
                 AllDisplayItems.Add(newDisplayItem);                
             }
@@ -68,22 +77,21 @@ namespace LocationScout
         internal void HandleSelectionChanged()
         {
             var selectedItem = _listerWindow.LocationListView.SelectedItem as LocationListerDisplayItem;
-            if (selectedItem?.Tag is ShootingLocation shootingLocation)
+            if (selectedItem is LocationListerDisplayItem displayItem)
             {
-                CurrentDisplayItem.SubjectLocationName = selectedItem.SubjectLocationName;
-                CurrentDisplayItem.SubjectLocationLatitude = selectedItem.SubjectLocationLatitude;
-                CurrentDisplayItem.SubjectLocationLongitude = selectedItem.SubjectLocationLongitude;
+                CurrentDisplayItem.SubjectLocationName = displayItem.SubjectLocationName;
+                CurrentDisplayItem.SubjectLocationLatitude = displayItem.SubjectLocationLatitude;
+                CurrentDisplayItem.SubjectLocationLongitude = displayItem.SubjectLocationLongitude;
 
-                CurrentDisplayItem.ParkingLocationName = selectedItem.ParkingLocationName;
-                CurrentDisplayItem.ParkingLocationLatitude = selectedItem.ParkingLocationLatitude;
-                CurrentDisplayItem.ParkingLocationLongitude = selectedItem.ParkingLocationLongitude;
+                CurrentDisplayItem.ParkingLocationName = displayItem.ParkingLocationName;
+                CurrentDisplayItem.ParkingLocationLatitude = displayItem.ParkingLocationLatitude;
+                CurrentDisplayItem.ParkingLocationLongitude = displayItem.ParkingLocationLongitude;
 
-                CurrentDisplayItem.Photo_1 = selectedItem.Photo_1;
-                CurrentDisplayItem.Photo_2 = selectedItem.Photo_2;
-                CurrentDisplayItem.Photo_3 = selectedItem.Photo_3;
+                CurrentDisplayItem.Photo_1 = displayItem.Photo_1;
+                CurrentDisplayItem.Photo_2 = displayItem.Photo_2;
+                CurrentDisplayItem.Photo_3 = displayItem.Photo_3;
 
-                // tag
-                CurrentDisplayItem.Tag = shootingLocation;
+                CurrentDisplayItem.Tag = displayItem.Tag;
             }
         }
 

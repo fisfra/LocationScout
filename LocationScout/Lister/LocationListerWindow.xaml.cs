@@ -43,37 +43,6 @@ namespace LocationScout.Lister
             _controler.HandleGoogleMaps();
         }
 
-
-        private void ParkingLocation1_Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ParkingLocation2_Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ParkingShootingLocation1_1_Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ParkingShootingLocation1_2_Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ParkingShootingLocation2_1_Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ParkingShootingLocation2_2_Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void LocationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _controler.HandleSelectionChanged();

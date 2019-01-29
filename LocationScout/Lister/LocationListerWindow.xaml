@@ -85,11 +85,11 @@
                             </GridViewColumn.HeaderContainerStyle>
                         </GridViewColumn>
 
-                        <GridViewColumn Header=" GPS-Lat" Width ="150">
+                        <GridViewColumn Header=" GPS-Latitude" Width ="150">
                             
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding SubjectLatitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Latitude}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding ShootingLocationLatitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Latitude}}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                             
@@ -101,11 +101,11 @@
                             
                         </GridViewColumn>
 
-                        <GridViewColumn Header=" GPS-Long" Width ="150">
+                        <GridViewColumn Header=" GPS-Longitude" Width ="150">
                             
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding SubjectLongitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Longitude}}" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding ShootingLocationLongitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Longitude}}" TextAlignment="Right"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                             
@@ -158,11 +158,11 @@
                     </Border>
 
                     <Border Background="#FFEEEEEE" Grid.RowSpan="4" Grid.Column="5" Margin="2,2,2,2">
-                        <Image Name="Photo_2" Source="{Binding Photo_1}"/>
+                        <Image Name="Photo_2" Source="{Binding Photo_2}"/>
                     </Border>
 
                     <Border Background="#FFEEEEEE" Grid.RowSpan="4" Grid.Column="6" Margin="2,2,2,2">
-                        <Image Name="Photo_3" Source="{Binding Photo_1}"/>
+                        <Image Name="Photo_3" Source="{Binding Photo_3}"/>
                     </Border>
                 </Grid>
             </GroupBox>
