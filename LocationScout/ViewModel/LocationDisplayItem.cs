@@ -17,7 +17,7 @@ namespace LocationScout.ViewModel
         private string _parkingLocationName;
         private double? _parkingLocationLatitude;
         private double? _parkingLocationLongitude;
-        private int _existingShootingLocationsName;
+        private int _existingShootingLocationsCount;
         private BitmapImage _photo_1;
         private BitmapImage _photo_2;
         private BitmapImage _photo_3;
@@ -76,12 +76,12 @@ namespace LocationScout.ViewModel
                 OnPropertyChanged();
             }
         }
-        public int ExistingShootingLocationsName
+        public int ExistingShootingLocationsCount
         {
-            get { return _existingShootingLocationsName; }
+            get { return _existingShootingLocationsCount; }
             set
             {
-                _existingShootingLocationsName = value;
+                _existingShootingLocationsCount = value;
                 OnPropertyChanged();
             }
         }
@@ -131,7 +131,7 @@ namespace LocationScout.ViewModel
             ParkingLocationName = string.Empty;
             ParkingLocationLatitude = null;
             ParkingLocationLongitude = null;
-            ExistingShootingLocationsName = 0;
+            ExistingShootingLocationsCount = 0;
         }
         #endregion
     }

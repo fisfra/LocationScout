@@ -123,7 +123,7 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allShootingLocations = db.ShootingLocations.Include(s => s.ParkingLocations).ToList();
+                    allShootingLocations = db.ShootingLocations.Include(s => s.ParkingLocations).Include(s => s.Photos).Include(s => s.SubjectLocations).ToList();
                 }
             }
             catch (Exception e)
@@ -273,7 +273,6 @@ namespace LocationScout.DataAccess
                     // get parking location from database
                     var parkingLocationFromDB = db.ParkingLocations.FirstOrDefault(o => o.Id == parkingLocationId);
                     if (parkingLocationFromDB == null) throw new Exception("Invalid Parking Location Id in PersistenceManager::SmartAddPhotoPlace");
-
 
                     // create the new shooting location
                     ShootingLocation newShootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };

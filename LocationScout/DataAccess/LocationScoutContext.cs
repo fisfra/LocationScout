@@ -46,8 +46,26 @@ namespace LocationScout.DataAccess
 
             modelBuilder.Entity<Photo>()
                         .HasRequired(p => p.ShootingLocation);
+
+            modelBuilder.Entity<Country>()
+                        .HasRequired(c => c.Name);
+
+            modelBuilder.Entity<Area>()
+                        .HasRequired(a => a.Name);
+
+            modelBuilder.Entity<SubArea>()
+                        .HasRequired(s => s.Name);
+
+            modelBuilder.Entity<SubjectLocation>()
+                        .HasRequired(s => s.Name);
+
+            modelBuilder.Entity<ShootingLocation>()
+                        .HasRequired(s => s.Name);
+
+            modelBuilder.Entity<ParkingLocation>()
+            .HasRequired(s => s.Name);
         }
-        
+
     }
 }
 

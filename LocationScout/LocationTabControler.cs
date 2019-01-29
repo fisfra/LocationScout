@@ -58,13 +58,13 @@ namespace LocationScout
         private void RefreshShootingLocationsFromDB()
         {
             var success = DataAccessAdapter.ReadAllShootingLocations(out _allShootingLocations, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading shooting locations" + errorMessage, E_MessageType.error);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading shooting locations\n" + errorMessage, E_MessageType.error);
         }
 
         private void RefreshParkingLocationsFromDB()
         {
             var success = DataAccessAdapter.ReadAllParkingLocations(out _allParkingLocations, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading parking locations" + errorMessage, E_MessageType.error);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading parking locations\n" + errorMessage, E_MessageType.error);
         }
 
         internal void Add()
@@ -81,8 +81,10 @@ namespace LocationScout
             // db operations might take a while
             Mouse.OverrideCursor = Cursors.Wait;
 
+            // set parking location (if new parking location, initial value is -1)
+            long parkingLocationId = parkingLocation != null ? parkingLocation.Id :- 1;
+
             // new parking location (object is null)
-            long parkingLocationId = -1;
             if (parkingLocation == null)
             {
                 var parkingLocationName = DisplayItem.ParkingLocationName;
@@ -91,7 +93,7 @@ namespace LocationScout
                 parkingLocationId = AddParkingLocation(parkingLocationName, parkingLocationGPS, out errorMessage);
                 if (parkingLocationId == -1)
                 {
-                    ShowMessage("Error writing parking locations to database" + errorMessage, E_MessageType.error);
+                    ShowMessage("Error writing parking locations to database\n" + errorMessage, E_MessageType.error);
                     return;
                 }
             }
@@ -102,10 +104,10 @@ namespace LocationScout
             switch (success)
             {
                 case E_DBReturnCode.no_error:
-                    ShowMessage("Photo Location successuflly added", E_MessageType.success);
+                    ShowMessage("Photo Location successfully added", E_MessageType.success);
                     break;
                 case E_DBReturnCode.error:
-                    ShowMessage("Error adding PhotoLocation to database" + errorMessage, E_MessageType.error);
+                    ShowMessage("Error adding PhotoLocation to database\n" + errorMessage, E_MessageType.error);
                     break;
                 case E_DBReturnCode.already_existing:
                     // to do
@@ -123,11 +125,11 @@ namespace LocationScout
             Window.Location_AreaControl.ClearText();
             Window.Location_SubAreaControl.ClearText();
             Window.Location_SubjectLocationControl.ClearText();
-            Window.ShootingLocationControl.ClearText();
-            Window.ParkingLocationControl.ClearText();
             DisplayItem.Reset();
             RefreshShootingLocationsFromDB();
-            RefreshParkingLocationsFromDB();           
+            RefreshParkingLocationsFromDB();       
+            RefreshControl(_allShootingLocations?.OfType<Location>()?.ToList(), Window.ShootingLocationControl);
+            RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
 
             // reset cursor
             Mouse.OverrideCursor = null;
@@ -239,15 +241,9 @@ namespace LocationScout
             base.SubjectLocationControl_Leaving(sender, e);
 
             // set the view model
+            DisplayItem.SubjectLocationName = (e.Object as SubjectLocation)?.Name;
             DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
             DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
-
-            // get the subject location object from UI
-            var selectedSubjectLocation = Window.Location_SubjectLocationControl.GetCurrentObject() as SubjectLocation;
-
-            // if the subject location has already shooting locations
-            List<ShootingLocation> existingShootingLocations = selectedSubjectLocation != null ? selectedSubjectLocation.ShootLocations : _allShootingLocations;
-            DisplayItem.ExistingShootingLocationsName = existingShootingLocations != null ? existingShootingLocations.Count : 0;
 
             //
             RefreshControl(_allShootingLocations?.OfType<Location>()?.ToList(), Window.ShootingLocationControl);
@@ -259,14 +255,34 @@ namespace LocationScout
         private void ShootingLocationNameControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
             // set the view model
-            DisplayItem.ShootingLocationName = e.Object is ShootingLocation shootingLocation ? shootingLocation.Name : Window.ShootingLocationControl.GetCurrentText();
+            if (e.Object is ShootingLocation shootingLocation)
+            {
+                DisplayItem.ShootingLocationName = shootingLocation.Name;
+                DisplayItem.ShootingLocationLatitude = shootingLocation.Coordinates?.Latitude;
+                DisplayItem.ShootingLocationLongitude = shootingLocation.Coordinates?.Longitude;
 
-                                   Window.ShootingLocationLatitudeTextbox.Focus();
+                // might be null if no photos exist
+                DisplayItem.Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(0)?.ImageBytes);
+                DisplayItem.Photo_2 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(1)?.ImageBytes);
+                DisplayItem.Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(2)?.ImageBytes);
+            }
+
+            //
+            RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
+
+            Window.ShootingLocationLatitudeTextbox.Focus();
         }
 
         private void ParkingLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
         {
-            DisplayItem.ParkingLocationName = e.Object is ParkingLocation parkingLocation ? parkingLocation.Name : Window.ParkingLocationControl.GetCurrentText();
+            if (e.Object is ParkingLocation parkingLocation)
+            {
+                DisplayItem.ParkingLocationLatitude = parkingLocation.Coordinates.Latitude;
+                DisplayItem.ParkingLocationLongitude = parkingLocation.Coordinates.Longitude;
+            }
+
+            //
+            DisplayItem.ParkingLocationName = e.Object is ParkingLocation pl ? pl.Name : Window.ParkingLocationControl.GetCurrentText();
 
             Window.ParkingLocationLatitudeTextbox.Focus();
         }
