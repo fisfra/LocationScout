@@ -56,7 +56,7 @@ namespace LocationScout
             _locationControler.ShowLister();
         }
         
-        internal void Edit()
+        internal void SettingsEdit()
         {
             _settingControler.Edit();
         }
@@ -76,9 +76,6 @@ namespace LocationScout
         {
             RefreshControl(_allCountries.OfType<Location>().ToList(), Window.Location_CountryControl);
             RefreshControl(_allCountries.OfType<Location>().ToList(), Window.Settings_CountryControl);
-
-            // testing
-            RefreshControl(_allCountries.OfType<Location>().ToList(), Window.SettingsCountryControl_New);
         }
 
         public void ReloadAndRefreshControls()
@@ -86,20 +83,22 @@ namespace LocationScout
             // read from database
             RefreshAllCountriesFromDB();
             _settingControler.RefreshAllObjectsFromDB();
+            _locationControler.RefreshAllObjectsFromDB(false); // use parameter to avoid double refreshing
 
             // refresh the country control
             RefreshCountryControls();
             _settingControler.ReloadAndRefreshControls();
+            _locationControler.ReloadAndRefreshControls();
         }
 
-        internal void HandleSettingsCountryControlListFocus()
+        internal void HandleSettingsCountryControlEditLostFocus()
         {
-            _settingControler.HandleSettingsCountryControlListFocus();
+            _settingControler.HandleSettingsCountryControlEditLostFocus();
         }
 
-        internal void HandleSettingsAreaControlListFocus()
+        internal void HandleSettingsAreaControlEditLostFocus()
         {
-            _settingControler.HandleSettingsAreaControlListFocus();
+            _settingControler.HandleSettingsAreaControlEditLostFocus();
         }
 
         internal void HandleGoopleMapsSubjectLocation()
@@ -107,9 +106,9 @@ namespace LocationScout
             _locationControler.HandleGoogleMapsSubjectLocation();
         }
 
-        internal void HandleSettingsSubAreaControlListFocus()
+        internal void HandleSettingsSubAreaControlEditLostFocus()
         {
-            _settingControler.HandleSettingsSubAreaControlListFocus();
+            _settingControler.HandleSettingsSubAreaControlEditLostFocus();
         }
 
         internal void HandlePhotoUpload()
@@ -132,9 +131,24 @@ namespace LocationScout
             _locationControler.HandleRemove(LocationTabControler.E_PhotoNumber.photo_3);
         }
 
-        internal void HandleSettingsSubjectLocationControlListFocus()
+        internal void HandleSettingsSubjectLocationControlEditLostFocus()
         {
-            _settingControler.HandleSettingsSubjectLocationControlListFocus();
+            _settingControler.HandleSettingsSubjectLocationControlEditLostFocus();
+        }
+
+        internal void HandleShootingLocationControlEditLostFocus()
+        {
+            _locationControler.HandleShootingLocationControlEditLostFocus();
+        }
+
+        internal void LocationEdit()
+        {
+            _locationControler.Edit();
+        }
+
+        internal void HandleParkingLocationControlEditLostFocus()
+        {
+            _locationControler.HandleParkingLocationControlEditLostFocus();
         }
         #endregion
     }

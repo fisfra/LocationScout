@@ -20,9 +20,9 @@
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
-        <TabControl Margin="10,10,10,0" VerticalAlignment="Top" Grid.Row="0"> 
+        <TabControl Margin="10,10,10,0" VerticalAlignment="Top" Grid.Row="0">
 
-        <TabItem Header="Location">
+            <TabItem Header="Location">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -32,7 +32,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                
+
                     <Grid Name="LocationContentGrid" Margin="0,0,0,5" Grid.Column="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="180"/>
@@ -61,6 +61,7 @@
                                 <control:AutoCompleteTextBox x:Name="Location_CountryControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.ColumnSpan="2" ListBoxReadOnly="True"/>
 
+
                                 <Label Content="Area" Height="Auto" Grid.Column="0" Grid.Row="1"/>
                                 <control:AutoCompleteTextBox x:Name="Location_AreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" 
                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.ColumnSpan="2" ListBoxReadOnly="True"/>
@@ -72,7 +73,7 @@
                                 <Label Content="Location Name" Height="Auto" Grid.Column="0" Grid.Row="3"/>
                                 <control:AutoCompleteTextBox x:Name="Location_SubjectLocationControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="3" Grid.Column="1" Grid.Row="3" 
                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.ColumnSpan="2" ListBoxReadOnly="True"/>
-                                   
+
                                 <Label Content="GPS [Lat / Long]" Height="Auto" Grid.Column="0" Grid.Row="4"/>
 
                                 <Grid Grid.ColumnSpan="2" Grid.Row="4" Grid.Column="1">
@@ -86,8 +87,8 @@
                                              TabIndex="4" Height="18" Margin="0,0,5,0" IsEnabled="False" Grid.Column="0" Grid.Row="0"/>
                                     <TextBox Name="Location_SubjectLocationLongitudeTextBox" Text="{Binding SubjectLocationLongitude, Converter={StaticResource GPSConverterKey}, ConverterParameter={x:Static ViewModel:E_CoordinateType.Longitude}}" 
                                              TabIndex="5" Height="18" Margin="5,0,0,0" IsEnabled="False" Grid.Column="1" Grid.Row="0"/>
-                                <Button Name="SubjectGPSGoogleMapsButton" Content="GM" Height="23" Width="25" KeyboardNavigation.TabIndex="4" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Grid.Row="0" Click="SubjectGPSGoogleMapsButton_Click"/>
-                            </Grid>
+                                    <Button Name="SubjectGPSGoogleMapsButton" Content="GM" Height="23" Width="25" KeyboardNavigation.TabIndex="4" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Column="2" Grid.Row="0" Click="SubjectGPSGoogleMapsButton_Click"/>
+                                </Grid>
 
                             </Grid>
                         </GroupBox>
@@ -119,26 +120,29 @@
 
                                     <control:AutoCompleteTextBox x:Name="ShootingLocationControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="5" Grid.Column="0" Grid.Row="0" 
                                                              HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="300" Grid.ColumnSpan="3" ListBoxReadOnly="False"/>
+                                    <RichTextBox Name="ShootingLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="0" Grid.Row="0" Width="300"                                             
+                                                 Grid.ColumnSpan="3" Margin="0,0,0,0" Visibility="Hidden" HorizontalAlignment="Left" LostFocus="ShootingLocationControlEdit_LostFocus"/>
 
                                     <Label Content="Existing: " Grid.Column="3"/>
                                     <TextBox Name="ShootlingLocationsCountTextBox" Text="{Binding ExistingShootingLocationsName}" IsEnabled="False" Height="18" Width="25" Grid.Column="4"/>
                                 </Grid>
-                                
+
                                 <Label Content="GPS [Lat/Long]" Height="Auto" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
                                 <Grid Grid.Row="1" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="80*"/>
-                                        <ColumnDefinition Width="80*"/>
-                                        <ColumnDefinition Width="30*"/>
-                                        <ColumnDefinition Width="30*"/>
-                                        <ColumnDefinition Width="40*"/>
+                                        <ColumnDefinition Width="133*"/>
+                                        <ColumnDefinition Width="93*"/>
+                                        <ColumnDefinition Width="39*"/>
+                                        <ColumnDefinition Width="50*"/>
+                                        <ColumnDefinition Width="50*"/>
+                                        <ColumnDefinition Width="66*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Name="ShootingLocationLatitudeTextbox" Text="{Binding ShootingLocationLatitude}" VerticalAlignment="Center" Height="18" KeyboardNavigation.TabIndex="6" Grid.Column="0" Grid.Row="0"/>
-                                    <TextBox Name="ShootingLocationLongitudeTextbox" Text="{Binding ShootingLocationLongitude}" VerticalAlignment="Center" Height="18" KeyboardNavigation.TabIndex="7" Margin="5,0,0,0" Grid.Column="1" Grid.Row="0"/>
-                                    <Button Name="ShootingGPSGoogleMapsButton"  Content="GM" Height="23" Width="25" HorizontalAlignment="Left" Margin="10,0,0,0" KeyboardNavigation.TabIndex="8" Grid.Row="1" Grid.Column="2"/>
-                                    <Label Name="PhotoCount1_1Label" VerticalAlignment="Center" HorizontalAlignment="Center" Content="" Grid.Column="3" Grid.Row="0"/>
-                                    <Button Name="PhotoUploadButton" Content="Photos" Height="23" Width="50" VerticalAlignment="Center" Grid.Column="4" Grid.Row="0" KeyboardNavigation.TabIndex="8" Click="PhotoUploadButton_Click"/>
+                                    <TextBox Name="ShootingLocationLatitudeTextBox" Text="{Binding ShootingLocationLatitude}" VerticalAlignment="Center" Height="18" KeyboardNavigation.TabIndex="6" Grid.Column="0" Grid.Row="0" Margin="0,6,0,5"/>
+                                    <TextBox Name="ShootingLocationLongitudeTextBox" Text="{Binding ShootingLocationLongitude}" VerticalAlignment="Center" Height="18" KeyboardNavigation.TabIndex="7" Margin="5,6,0,5" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"/>
+                                    <Button Name="ShootingGPSGoogleMapsButton"  Content="GM" Height="23" Width="25" HorizontalAlignment="Left" Margin="10,3,0,3" KeyboardNavigation.TabIndex="8" Grid.Column="3"/>
+                                    <Label Name="PhotoCount1_1Label" VerticalAlignment="Center" HorizontalAlignment="Center" Content="" Grid.Column="4" Grid.Row="0" Margin="20,2,20,1"/>
+                                    <Button Name="PhotoUploadButton" Content="Photos" Height="23" Width="50" VerticalAlignment="Center" Grid.Column="5" Grid.Row="0" KeyboardNavigation.TabIndex="8" Click="PhotoUploadButton_Click" Margin="8,3"/>
                                 </Grid>
 
                                 <Grid Name="PhotoGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="2,2,2,2">
@@ -179,7 +183,7 @@
                                     </Border>
                                 </Grid>
 
-                    </Grid>
+                            </Grid>
                         </GroupBox>
 
                         <GroupBox Header="Parking Location" Margin="10,5,5,5" Grid.Row="2">
@@ -197,6 +201,8 @@
                                 <Label Content="Location Name" Height="Auto" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
                                 <control:AutoCompleteTextBox x:Name="ParkingLocationControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="9" Grid.Column="1" Grid.Row="0" 
                                                              HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.ColumnSpan="2" ListBoxReadOnly="False"/>
+                                <RichTextBox Name="ParkingLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="9" Grid.Column="1" Grid.Row="0" Width="430"                                             
+                                                 Grid.ColumnSpan="2" Margin="0,0,0,0" Visibility="Hidden" LostFocus="ParkingLocationControl_LostFocus"/>
 
                                 <Label Content="GPS [Lat/Long]" Height="Auto" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
                                 <Grid Grid.Row="1" Grid.Column="1">
@@ -208,8 +214,8 @@
                                         <ColumnDefinition Width="40*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Name="ParkingLocationLatitudeTextbox" Text="{Binding ParkingLocationLatitude}" VerticalAlignment="Center" Height="18"  KeyboardNavigation.TabIndex="10" Grid.Column="0" Grid.Row="0"/>
-                                    <TextBox Name="ParkingLocationLongitudeTextbox" Text="{Binding ParkingLocationLongitude}" VerticalAlignment="Center" Height="18"  KeyboardNavigation.TabIndex="11" Margin="5,0,0,0" Grid.Column="1" Grid.Row="0"/>
+                                    <TextBox Name="ParkingLocationLatitudeTextBox" Text="{Binding ParkingLocationLatitude}" VerticalAlignment="Center" Height="18"  KeyboardNavigation.TabIndex="10" Grid.Column="0" Grid.Row="0"/>
+                                    <TextBox Name="ParkingLocationLongitudeTextBox" Text="{Binding ParkingLocationLongitude}" VerticalAlignment="Center" Height="18"  KeyboardNavigation.TabIndex="11" Margin="5,0,0,0" Grid.Column="1" Grid.Row="0"/>
                                     <Button Name="ParkingGPSGoogleMapsButton"  Content="GM" Height="23" Width="25" HorizontalAlignment="Left" Margin="10,0,0,0" KeyboardNavigation.TabIndex="12" Grid.Row="1" Grid.Column="2"/>
                                 </Grid>
 
@@ -223,16 +229,20 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
 
-                        <Button Name="LocationButtonAdd" Content="Add" Width="100" Margin="5,2,5,3" Grid.Row="0" Click="LocationButtonAdd_Click"/>
-                        <Button Name="LocationButtonShow" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="1" Click="LocationButtonShow_Click"/>
-
+                        <Button Name="Location_AddButton" Content="Add" Width="100" Margin="5,2,5,3" Grid.Row="0" Click="LocationButtonAdd_Click"/>
+                        <Button Name="Location_EditButton" Content="Edit" Width="100" Margin="5,2,5,3" Grid.Row="1" Click="LocationButtonEdit_Click"/>
+                        <Button Name="Location_DeleteButton" Content="Delete" Width="100" Margin="5,2,5,3" Grid.Row="2" Click="LocationButtonEdit_Click"/>
+                        <Button Name="Location_ShowButton" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="4" Click="LocationButtonShow_Click"/>
                     </Grid>
-                        
+
                 </Grid>
             </TabItem>
 
@@ -321,7 +331,7 @@
                     </Grid>
                 </Grid>
             </TabItem>
-                
+
             <TabItem Header="Settings_New">
                 <Grid Background="#FFE5E5E5">
                     <Grid Margin="0,0,0,5">
@@ -401,7 +411,7 @@
             <Label Name="StatusLabel" Height="Auto" Margin="10,0,10,0" Grid.Column="0"/>
 
             <Button Content="Close" HorizontalAlignment="Right" Width="110" Height="25" Grid.Column="1" Margin="0,0,10,0" Click="CloseButton_Click"/>
-                
+
         </Grid>
     </Grid>
 </Window>

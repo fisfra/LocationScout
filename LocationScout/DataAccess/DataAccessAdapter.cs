@@ -111,5 +111,15 @@ namespace LocationScout.DataAccess
         {
             return PersistenceManager.ReadAllShootingLocations(id, out shootingLocations, out errorMessage);
         }
+
+        internal static E_DBReturnCode EditParkingLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
+        {
+            return PersistenceManager.EditParkingLocationName_GPS(id, name, coordinates, out errorMessage);
+        }
+
+        internal static E_DBReturnCode EditShootingLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
+        {
+            return PersistenceManager.EditShootingLocationName_GPS(id, name, coordinates, out errorMessage);
+        }
     }
 }

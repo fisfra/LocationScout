@@ -195,6 +195,62 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        internal static E_DBReturnCode EditShootingLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var shootingLocationFromDB = db.ShootingLocations.FirstOrDefault(o => o.Id == id);
+                    if (shootingLocationFromDB == null) throw new Exception("Inconsistent database values - Id of ShootingLocation.");
+
+                    shootingLocationFromDB.Name = name;
+                    shootingLocationFromDB.Coordinates = coordinates;
+
+                    db.Entry(shootingLocationFromDB).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode EditParkingLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var parkingLocationFromDB = db.ParkingLocations.FirstOrDefault(o => o.Id == id);
+                    if (parkingLocationFromDB == null) throw new Exception("Inconsistent database values - Id of ParkingLocation.");
+
+                    parkingLocationFromDB.Name = name;
+                    parkingLocationFromDB.Coordinates = coordinates;
+
+                    db.Entry(parkingLocationFromDB).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
         internal static E_DBReturnCode ReadAreaById(long id, out Area foundArea, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;

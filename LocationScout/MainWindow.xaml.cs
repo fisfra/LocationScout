@@ -70,7 +70,7 @@ namespace LocationScout
 
         private void SettingsEditButton_Click(object sender, RoutedEventArgs e)
         {
-            _controler.Edit();
+            _controler.SettingsEdit();
         }
 
         private void SettingsDeleteButton_Click(object sender, RoutedEventArgs e)
@@ -95,22 +95,22 @@ namespace LocationScout
 
         private void SettingsCountryControlEdit_LostFocus(object sender, RoutedEventArgs e)
         {
-            _controler.HandleSettingsCountryControlListFocus();
+            _controler.HandleSettingsCountryControlEditLostFocus();
         }
 
         private void SettingsAreaControlEdit_LostFocus(object sender, RoutedEventArgs e)
         {
-            _controler.HandleSettingsAreaControlListFocus();
+            _controler.HandleSettingsAreaControlEditLostFocus();
         }
 
         private void SettingsSubAreaControlEdit_LostFocus(object sender, RoutedEventArgs e)
         {
-            _controler.HandleSettingsSubAreaControlListFocus();
+            _controler.HandleSettingsSubAreaControlEditLostFocus();
         }
 
         private void SettingsSubjectLocationControlEdit_LostFocus(object sender, RoutedEventArgs e)
         {
-            _controler.HandleSettingsSubjectLocationControlListFocus();
+            _controler.HandleSettingsSubjectLocationControlEditLostFocus();
         }
 
         private void PhotoUploadButton_Click(object sender, RoutedEventArgs e)
@@ -132,6 +132,21 @@ namespace LocationScout
         {
             _controler.HandleRemovePhoto_3();
         }
+    
+        private void LocationButtonEdit_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.LocationEdit();
+        }
+
+        private void ShootingLocationControlEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleShootingLocationControlEditLostFocus();
+        }
+
+        private void ParkingLocationControl_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleParkingLocationControlEditLostFocus();
+        } 
         #endregion
     }
 }

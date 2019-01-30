@@ -7,21 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using WPFUserControl;
 
 namespace LocationScout
 {
     internal abstract class TabControlerBase : ControlerBase
     {
-        #region enum
+        #region enums
+        protected enum E_Mode { add, edit };
+        protected enum E_EditMode { no_edit, edit_country, edit_area, edit_subarea, edit_subjectlocation, edit_shootinglocation, edit_parkinglocation };
         #endregion
 
         #region attributes
+        private E_Mode _currentMode;
+        //private E_EditMode _currentEditMode;
+
         private List<Area> _allAreas;
         private List<SubArea> _allSubAreas;
         private List<SubjectLocation> _allSubjectLocations;
 
         protected MainWindowControler MainControler { get; private set; }
+        protected E_EditMode CurrentEditMode { get; set; }
 
         public abstract AutoCompleteTextBox CountryControl { get; }
         public abstract AutoCompleteTextBox AreaControl { get; }
@@ -29,6 +36,13 @@ namespace LocationScout
         public abstract AutoCompleteTextBox SubjectLocationControl { get; }
         public abstract TextBox SubjectLocationLatitudeControl { get; }
         public abstract TextBox SubjectLocationLongitudeControl { get; }
+
+        protected abstract Button EditButton { get; }
+        protected abstract Button AddButton { get; }
+        protected abstract Button DeleteButton { get; }
+        protected abstract E_EditMode DoEdit();
+        protected abstract void SaveEditChanges();
+        public abstract void ReloadAndRefreshControls();
         #endregion
 
         #region constructors
@@ -43,15 +57,21 @@ namespace LocationScout
             SubAreaControl.LeavingViaShift += SubAreaControl_LeavingViaShift;
             SubjectLocationControl.Leaving += SubjectLocationControl_Leaving;
             SubjectLocationControl.LeavingViaShift += SubjectLocationControl_LeavingViaShift;
+
+            _currentMode = E_Mode.add;
         }
         #endregion
 
         #region methods
-        public void RefreshAllObjectsFromDB()
+        public virtual void RefreshAllObjectsFromDB(bool fullrefresh = true)
         {
-            RefreshAllAreasFromDB();
-            RefreshAllSubAreasFromDB();
-            RefreshAllSubjectLocationsFromDB();
+            // base class might use parameter
+            if (fullrefresh)
+            {
+                RefreshAllAreasFromDB();
+                RefreshAllSubAreasFromDB();
+                RefreshAllSubjectLocationsFromDB();
+            }
         }
 
         private void RefreshAllAreasFromDB()
@@ -212,6 +232,77 @@ namespace LocationScout
             return subAreas1.Select(a => a)
                             .Intersect(subAreas2.Select(b => new SubArea { Id = b.Id, Areas = b.Areas, Name = b.Name, Countries = b.Countries }))
                             .ToList();
+        }
+
+        public virtual void Edit()
+        {
+            // currently in "add" mode...
+            if (_currentMode == E_Mode.add)
+            {
+                // check if editing is possible and switch controls
+                CurrentEditMode = DoEdit();
+
+                // edit is possible
+                if (CurrentEditMode != E_EditMode.no_edit)
+                {
+                    // change button label
+                    EditButton.Content = "Save";
+                    AddButton.IsEnabled = false;
+                    DeleteButton.IsEnabled = false;
+
+                    // switch to edit mode
+                    _currentMode = E_Mode.edit;
+                }
+            }
+            else
+            {
+                // set control state
+                ResetControlState();
+
+                // save the changes to the database
+                SaveEditChanges();
+
+                // ask maincontroler to reload data from database and refresh all controls
+                // maincontroler needs to take care of this since it not only settings tab
+                MainControler.ReloadAndRefreshControls();
+
+                // reset the modes
+                _currentMode = E_Mode.add;
+                CurrentEditMode = E_EditMode.no_edit;
+            }
+        }
+
+        protected virtual void SwitchEditModeShootingLocation(AutoCompleteTextBox targetControl, RichTextBox targetEditControl, List<Control> otherControls)
+        {
+            // hide the autocomplete textbox and show the edit textbox
+            targetEditControl.Visibility = Visibility.Visible;
+            targetControl.Visibility = Visibility.Hidden;
+
+            // disable controls that should not bed edited
+            foreach (var control in otherControls)
+            {
+                control.IsEnabled = false;
+            }
+
+            // set text to edit control
+            var editedText = targetControl.GetCurrentText();
+            targetEditControl.Document.Blocks.Clear();
+            targetEditControl.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+        }
+
+        protected virtual void ResetControlState()
+        {
+            EditButton.Content = "Edit";
+            AddButton.IsEnabled = true;
+            DeleteButton.IsEnabled = true;
+        }
+
+        protected string GetTextFromRichEditControl(RichTextBox textbox)
+        {
+            var newText = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd).Text;
+            newText = newText?.TrimEnd('\r', '\n');
+
+            return newText;
         }
         #endregion
     }

@@ -18,13 +18,13 @@ namespace LocationScout
     internal class SettingTabControler : TabControlerBase
     {
         #region enums
-        private enum E_Mode { add, edit};
-        private enum E_EditMode { no_edit, edit_country, edit_area, edit_subarea, edit_subjectlocation};
+        //private enum E_Mode { add, edit};
+        //private enum E_EditMode { no_edit, edit_country, edit_area, edit_subarea, edit_subjectlocation};
         #endregion
 
         #region attributes
-        private E_Mode _currentMode;
-        private E_EditMode _currentEditMode;
+        //private E_Mode _currentMode;
+        //private E_EditMode _currentEditMode;
 
         public override AutoCompleteTextBox CountryControl { get { return Window.Settings_CountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.Settings_AreaControl; } }
@@ -33,13 +33,17 @@ namespace LocationScout
         public override TextBox SubjectLocationLatitudeControl { get { return Window.Settings_SubjectLocationLatituteTextBox; } }
         public override TextBox SubjectLocationLongitudeControl { get { return Window.Settings_SubjectLocationLongitudeTextBox; } }
 
+        protected override Button EditButton { get { return Window.Settings_EditButton; } }
+        protected override Button AddButton { get { return Window.Settings_AddButton; } }
+        protected override Button DeleteButton { get { return Window.Settings_DeleteButton; } }
+
         public SettingsDisplayItem DisplayItem { get; set; }
         #endregion
 
         #region constructors
         public SettingTabControler(MainWindowControler mainControler, MainWindow window) : base(window, mainControler)
         {            
-            _currentMode = E_Mode.add;
+            //_currentMode = E_Mode.add;
             DisplayItem = new SettingsDisplayItem();
 
             Window.Settings_MaintainLocationGrid.DataContext = DisplayItem;
@@ -73,7 +77,7 @@ namespace LocationScout
             Window.Settings_CountryControl.SetFocus();
         }
 
-        public void ReloadAndRefreshControls()
+        public override void ReloadAndRefreshControls()
         {
             Window.Settings_CountryControl.ClearText();
             Window.Settings_AreaControl.ClearText();
@@ -83,32 +87,24 @@ namespace LocationScout
             Window.Settings_SubjectLocationLongitudeTextBox.Text = string.Empty;
         }
 
-        internal void HandleSettingsAreaControlListFocus()
+        internal void HandleSettingsAreaControlEditLostFocus()
         {
             DisplayItem.AreaName = GetTextFromRichEditControl(Window.Settings_AreaControlEdit);
         }
 
-        internal void HandleSettingsCountryControlListFocus()
+        internal void HandleSettingsCountryControlEditLostFocus()
         {
             DisplayItem.CountryName = GetTextFromRichEditControl(Window.Settings_CountryControlEdit);
         }
 
-        internal void HandleSettingsSubjectLocationControlListFocus()
+        internal void HandleSettingsSubjectLocationControlEditLostFocus()
         {
             DisplayItem.SubjectLocationName = GetTextFromRichEditControl(Window.Settings_SubjectLocationControlEdit);
         }
 
-        internal void HandleSettingsSubAreaControlListFocus()
+        internal void HandleSettingsSubAreaControlEditLostFocus()
         {
             DisplayItem.SubAreaName = GetTextFromRichEditControl(Window.Settings_SubAreaControlEdit);
-        }
-
-        private string GetTextFromRichEditControl(RichTextBox textbox)
-        {
-            var newText = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd).Text;
-            newText = newText?.TrimEnd('\r', '\n');
-
-            return newText;
         }
 
         internal void Delete()
@@ -138,7 +134,8 @@ namespace LocationScout
                     break;
             }
         }
-        
+
+        /*
         internal void Edit()
         {
             // currently in "add" mode...
@@ -187,13 +184,35 @@ namespace LocationScout
                 _currentMode = E_Mode.add;
                 _currentEditMode = E_EditMode.no_edit;
             }
+        }*/
+
+        protected override void ResetControlState()
+        {
+            base.ResetControlState();
+
+            Window.Settings_CountryControlEdit.Visibility = Visibility.Hidden;
+            Window.Settings_CountryControl.Visibility = Visibility.Visible;
+            Window.Settings_AreaControlEdit.Visibility = Visibility.Hidden;
+            Window.Settings_AreaControl.Visibility = Visibility.Visible;
+            Window.Settings_SubAreaControlEdit.Visibility = Visibility.Hidden;
+            Window.Settings_SubAreaControl.Visibility = Visibility.Visible;
+            Window.Settings_SubjectLocationControlEdit.Visibility = Visibility.Hidden;
+            Window.Settings_SubjectLocationControl.Visibility = Visibility.Visible;
+            Window.Settings_CountryControl.IsEnabled = true;
+            Window.Settings_AreaControl.IsEnabled = true;
+            Window.Settings_SubAreaControl.IsEnabled = true;
+            Window.Settings_SubjectLocationControl.IsEnabled = true;
+            Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = true;
+            Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = true;
         }
 
-        private void SaveEditChanges()
+        protected override void SaveEditChanges()
         {
-            switch (_currentEditMode)
+            switch (CurrentEditMode)
             {
                 case E_EditMode.no_edit:
+                case E_EditMode.edit_shootinglocation:
+                case E_EditMode.edit_parkinglocation:
                     Debug.Assert(false);
                     throw new Exception("Wrong enum value in SettingTabControler::SaveEditChanges()");
 
@@ -208,9 +227,11 @@ namespace LocationScout
                 case E_EditMode.edit_subarea:
                     SaveEditedSubAreaName();
                     break;
+
                 case E_EditMode.edit_subjectlocation:
                     SaveEditedSubjectLocation();
                     break;
+
                 default:
                     Debug.Assert(false);
                     throw new Exception("Unknown enum value in SettingTabControler::SaveEditChanges()");
@@ -219,76 +240,56 @@ namespace LocationScout
 
         private void SwitchEditModeCountry()
         {
-            // hide the autocomplete textbox and show the edit textbox
-            Window.Settings_CountryControlEdit.Visibility = Visibility.Visible;
-            Window.Settings_CountryControl.Visibility = Visibility.Hidden;
+            var controlsToDisable = new List<Control>()
+            {
+                Window.Settings_AreaControl,
+                Window.Settings_SubAreaControl,
+                Window.Settings_SubjectLocationControl,
+                Window.Settings_SubjectLocationLatituteTextBox,
+                Window.Settings_SubjectLocationLongitudeTextBox
+            };
 
-            // disable textboxes not edited
-            Window.Settings_AreaControl.IsEnabled = false;
-            Window.Settings_SubAreaControl.IsEnabled = false;
-            Window.Settings_SubjectLocationControl.IsEnabled = false;
-            Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = false;
-            Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = false;
-
-            // set text to edit control
-            var editedText = Window.Settings_CountryControl.GetCurrentText();
-            Window.Settings_CountryControlEdit.Document.Blocks.Clear();
-            Window.Settings_CountryControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            SwitchEditModeShootingLocation(Window.Settings_CountryControl, Window.Settings_CountryControlEdit, controlsToDisable);
         }
 
         private void SwitchEditModeArea()
         {
-            // hide the autocomplete textbox and show the edit textbox
-            Window.Settings_AreaControlEdit.Visibility = Visibility.Visible;
-            Window.Settings_AreaControl.Visibility = Visibility.Hidden;
+            var controlsToDisable = new List<Control>()
+            {
+                Window.Settings_CountryControl,
+                Window.Settings_SubAreaControl,
+                Window.Settings_SubjectLocationControl,
+                Window.Settings_SubjectLocationLatituteTextBox,
+                Window.Settings_SubjectLocationLongitudeTextBox
+            };
 
-            // disable textboxes not edited
-            Window.Settings_CountryControl.IsEnabled = false;
-            Window.Settings_SubAreaControl.IsEnabled = false;
-            Window.Settings_SubjectLocationControl.IsEnabled = false;
-            Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = false;
-            Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = false;
-
-            // set text to edit control
-            var editedText = Window.Settings_AreaControl.GetCurrentText();
-            Window.Settings_AreaControlEdit.Document.Blocks.Clear();
-            Window.Settings_AreaControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            SwitchEditModeShootingLocation(Window.Settings_AreaControl, Window.Settings_AreaControlEdit, controlsToDisable);
         }
 
         private void SwitchEditModeSubArea()
         {
-            // hide the autocomplete textbox and show the edit textbox
-            Window.Settings_SubAreaControlEdit.Visibility = Visibility.Visible;
-            Window.Settings_SubAreaControl.Visibility = Visibility.Hidden;
+            var controlsToDisable = new List<Control>()
+            {
+                Window.Settings_CountryControl,
+                Window.Settings_AreaControl,
+                Window.Settings_SubjectLocationControl,
+                Window.Settings_SubjectLocationLatituteTextBox,
+                Window.Settings_SubjectLocationLongitudeTextBox
+            };
 
-            // disable textboxes not edited
-            Window.Settings_CountryControl.IsEnabled = false;
-            Window.Settings_AreaControl.IsEnabled = false;
-            Window.Settings_SubjectLocationControl.IsEnabled = false;
-            Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = false;
-            Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = false;
-
-            // set text to edit control
-            var editedText = Window.Settings_SubAreaControl.GetCurrentText();
-            Window.Settings_SubAreaControlEdit.Document.Blocks.Clear();
-            Window.Settings_SubAreaControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            SwitchEditModeShootingLocation(Window.Settings_SubAreaControl, Window.Settings_SubAreaControlEdit, controlsToDisable);
         }
 
         private void SwitchEditModeSubjectLocation()
         {
-            // hide the autocomplete textbox and show the edit textbox
-            Window.Settings_SubjectLocationControlEdit.Visibility = Visibility.Visible;
-            Window.Settings_SubjectLocationControl.Visibility = Visibility.Hidden;
+            var controlsToDisable = new List<Control>()
+            {
+                Window.Settings_CountryControl,
+                Window.Settings_AreaControl,
+                Window.Settings_SubAreaControl
+            };
 
-            // disable textboxes not edited
-            Window.Settings_CountryControl.IsEnabled = false;
-            Window.Settings_AreaControl.IsEnabled = false;
-            Window.Settings_SubAreaControl.IsEnabled = false;
-
-            // set text to edit control
-            var editedText = Window.Settings_SubjectLocationControl.GetCurrentText();
-            Window.Settings_SubjectLocationControlEdit.Document.Blocks.Clear();
-            Window.Settings_SubjectLocationControlEdit.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+            SwitchEditModeShootingLocation(Window.Settings_SubjectLocationControl, Window.Settings_SubjectLocationControlEdit, controlsToDisable);
         }
 
         private void SaveEditedAreaName()
@@ -388,7 +389,7 @@ namespace LocationScout
             }
         }
 
-        private E_EditMode DoEdit()
+        protected override E_EditMode DoEdit()
         {
             // return the edit mode
             E_EditMode editmode = E_EditMode.no_edit;
@@ -501,7 +502,6 @@ namespace LocationScout
             //DisplayItem.SubjectLocationLatitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Latitude;
             //DisplayItem.SubjectLocationLongitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Longitude;
         }
-        
-        #endregion        
+        #endregion
     }
 }
