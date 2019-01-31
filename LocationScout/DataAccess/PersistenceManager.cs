@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using LocationScout.ViewModel;
+using System.Diagnostics;
 
 namespace LocationScout.DataAccess
 {
@@ -533,6 +534,8 @@ namespace LocationScout.DataAccess
 
         internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, string subjectLocationName, GPSCoordinates subjectLocationCoordinates, out string errorMesssage)
         {
+            Debug.Assert(!string.IsNullOrEmpty(countryName));
+
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMesssage = string.Empty;
 
@@ -546,45 +549,139 @@ namespace LocationScout.DataAccess
                     var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Name == subAreaName);
                     var subjectLocationFromDB = db.SubjectLocations.FirstOrDefault(o => o.Name == subjectLocationName);
 
-                    // create new objects or take the once from DB
-                    var country = (countryFromDB == null) ? new Country() { Name = countryName, Areas = new List<Area>(), SubAreas = new List<SubArea>() } : countryFromDB;
-                    var area = (areaFromDB == null) ? new Area() { Name = areaName, Countries = new List<Country>(), SubAreas = new List<SubArea>() } : areaFromDB;
-                    var subArea = (subAreaFromDB == null) ? new SubArea() { Name = subAreaName, Countries = new List<Country>(), Areas = new List<Area>() } : subAreaFromDB;
-                    var subjectLocation = (subjectLocationFromDB == null) ? new SubjectLocation() { Name = subjectLocationName, Country = country, Area = area, SubArea = subArea,
-                                                                                                    Coordinates = subjectLocationCoordinates} : subjectLocationFromDB;
+                    // country: 
+                    // * take object from database or create a new one (countryName must not be null or empty) 
+                    // area / subarea / subject location:
+                    // * take object from database if there is one
+                    // * create a new object if the name was set
+                    // * do nothing (object is null) if not in database, but there was no name set in UI
+                    //   (this happens if you enter e. g. just a country,but no area)
+                    // Futher consistency checks should be done in DatabaseAdapter
+                    var country = (countryFromDB == null) ? 
+                        new Country() { Name = countryName, Areas = new List<Area>(), SubAreas = new List<SubArea>() } : countryFromDB;
 
-                    // add relations, if new country
-                    if (countryFromDB == null)
+                    var area = ((areaFromDB == null) && (!string.IsNullOrEmpty(areaName))) ?
+                        new Area() { Name = areaName, Countries = new List<Country>(), SubAreas = new List<SubArea>() } : areaFromDB;
+
+                    var subArea = ((subAreaFromDB == null) && (!string.IsNullOrEmpty(subAreaName)))? 
+                        new SubArea() { Name = subAreaName, Countries = new List<Country>(), Areas = new List<Area>() } : subAreaFromDB;
+
+                    var subjectLocation = ((subjectLocationFromDB == null) && (!string.IsNullOrEmpty(subjectLocationName))) ? 
+                        new SubjectLocation() { Name = subjectLocationName, Country = country, Area = area, SubArea = subArea,
+                                                Coordinates = subjectLocationCoordinates} : subjectLocationFromDB;
+
+                    bool changesToDB = false;
+
+                    // adjust country
+                    if (country != null)
                     {
-                        country.Areas.Add(area);
-                        country.SubAreas.Add(subArea);
-                        db.Countries.Add(country);
+                        // navigation property area
+                        if (area != null)
+                        {
+                            if (country.Areas == null) country.Areas = new List<Area>();
+                            country.Areas.Add(area);
+                        }
+
+                        // navigation property subarea
+                        if (subArea != null)
+                        {
+                            if (country.SubAreas == null) country.SubAreas = new List<SubArea>();
+                            country.SubAreas.Add(subArea);
+                        }
+
+                        // add to database if new country or navigation property added
+                        if ((area != null) || (subArea != null) || (countryFromDB == null))
+                        {
+                            if (countryFromDB != null)
+                            {
+                                db.Entry(country).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                db.Countries.Add(country);
+                            }
+
+                            changesToDB = true;
+                        }
                     }
 
-                    // add relations, if new area
-                    if (areaFromDB == null)
+                    // adjust area
+                    if (area != null) 
                     {
-                        area.Countries.Add(country);
-                        area.SubAreas.Add(subArea);
-                        db.Areas.Add(area);
+                        // navigaton property subarea
+                        if (subArea != null)
+                        {
+                            if (area.SubAreas == null) area.SubAreas = new List<SubArea>();
+                            area.SubAreas.Add(subArea);
+                        }
+
+                        // navigation property country
+                        if (country != null)
+                        {
+                            if (area.Countries == null) area.Countries = new List<Country>();
+                            area.Countries.Add(country);
+                        }
+
+                        // add to database if new area or navigation property added
+                        if ((subArea != null) || (country != null) || (areaFromDB == null))
+                        {
+                            if (areaFromDB != null)
+                            {
+                                db.Entry(area).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                db.Areas.Add(area);
+                            }
+
+                            changesToDB = true;
+                        }
                     }
 
-                    // add relations, if new subarea
-                    if (subAreaFromDB == null)
+                    // adjust subarea
+                    if (subArea != null)
                     {
-                        subArea.Areas.Add(area);
-                        subArea.Countries.Add(country);
-                        db.SubAreas.Add(subArea);
+                        // navigaton property area
+                        if (area != null)
+                        {
+                            if (subArea.Areas == null) subArea.Areas = new List<Area>();
+                            subArea.Areas.Add(area);
+                        }
+
+                        // navigation property country
+                        if (country != null)
+                        {
+                            if (subArea.Countries == null) subArea.Countries = new List<Country>();
+                            subArea.Countries.Add(country);
+                        }
+
+                        // add to database if subarea or navigation property added
+                        if ((area != null) || (country != null) || (subAreaFromDB == null))
+                        {
+                            if (subAreaFromDB != null)
+                            {
+                                db.Entry(subArea).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                db.SubAreas.Add(subArea);
+                            }
+
+                            changesToDB = true;
+                        }
                     }
 
-                    // add relation, if new subject location
-                    if (subjectLocationFromDB == null)
+                    // subject location
+                    if (subjectLocation != null)
                     {
-                        db.SubjectLocations.Add(subjectLocation);
+                        if (subjectLocationFromDB != null) db.Entry(subjectLocation).State = EntityState.Modified;
+                        else db.SubjectLocations.Add(subjectLocation);
+                        changesToDB = true;
                     }
 
-                    // if at least one is new...
-                    if ( (countryFromDB == null) || (areaFromDB == null) || (subAreaFromDB == null) || (subjectLocationFromDB == null) )
+
+                    // if at least one changes was applied...
+                    if (changesToDB)
                     {
                         // ... save the changes to the DB
                         db.SaveChanges();

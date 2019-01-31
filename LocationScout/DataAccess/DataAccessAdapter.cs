@@ -66,6 +66,10 @@ namespace LocationScout.DataAccess
             double? subjectLocationNameLongitude = displayItem.SubjectLocationLongitude;
             GPSCoordinates subjectLocationCoordinates = new GPSCoordinates(subjectLocationNameLatitude, subjectLocationNameLongitude);
 
+            // some consistency checks
+            if (string.IsNullOrEmpty(countryName)) throw new Exception("Country must be set when adding a country (DataAccessAdapter::SmartAddCountry).\n");
+            if (!string.IsNullOrEmpty(subAreaName) && string.IsNullOrEmpty(areaName)) throw new Exception("Area name must be set if SubArea name is set (DataAccessAdapter::SmartAddCountry\n");
+
             return PersistenceManager.SmartAddCountry(countryName, areaName, subAreaName, subjectLocationName, subjectLocationCoordinates, out errorMessage);
         }
 

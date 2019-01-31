@@ -53,11 +53,9 @@ namespace LocationScout
         #region methods      
         internal void Add()
         {
-            // get values from UI
-            string countryName = Window.Settings_CountryControl.GetCurrentText();
-            string areaName = Window.Settings_AreaControl.GetCurrentText();
-            string subAreaName = Window.Settings_SubAreaControl.GetCurrentText();
-            string subjectLocationName = Window.Settings_SubjectLocationControl.GetCurrentText();
+            // if the autocomplete textboxes are not left via TAB but by clicking directly on a button,
+            // the display item is not udpated - so do this here as a workaround
+            UpdateDisplayItem();
 
             // db operations might take a while
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
@@ -75,6 +73,14 @@ namespace LocationScout
             Mouse.OverrideCursor = null;
 
             Window.Settings_CountryControl.SetFocus();
+        }
+
+        private void UpdateDisplayItem()
+        {
+            DisplayItem.CountryName = Window.Settings_CountryControl.GetCurrentText();
+            DisplayItem.AreaName = Window.Settings_AreaControl.GetCurrentText();
+            DisplayItem.SubAreaName = Window.Settings_SubAreaControl.GetCurrentText();
+            DisplayItem.SubjectLocationName = Window.Settings_SubjectLocationControl.GetCurrentText();
         }
 
         public override void ReloadAndRefreshControls()
