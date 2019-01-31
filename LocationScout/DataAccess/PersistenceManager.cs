@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.Entity;
-using LocationScout.ViewModel;
 using System.Diagnostics;
 
 namespace LocationScout.DataAccess
@@ -544,11 +541,34 @@ namespace LocationScout.DataAccess
                 using (var db = new LocationScoutContext())
                 {
                     // first check if country / area / subarea already exist in the DB
-                    var countryFromDB = db.Countries.FirstOrDefault(o => o.Name == countryName);
-                    var areaFromDB = db.Areas.FirstOrDefault(o => o.Name == areaName);
-                    var subAreaFromDB = db.SubAreas.FirstOrDefault(o => o.Name == subAreaName);
-                    var subjectLocationFromDB = db.SubjectLocations.FirstOrDefault(o => o.Name == subjectLocationName);
+                    var countryFromDB = db.Countries.Where(c => c.Name == countryName)
+                                                    .Include(c => c.Areas)
+                                                    .Include(c => c.SubAreas)
+                                                    .Include(c => c.SubjectLocations)
+                                                    .ToList()
+                                                    .ElementAtOrDefault(0);
 
+                    var areaFromDB = db.Areas.Where(a => a.Name == areaName)
+                                       .Include(a => a.SubAreas)
+                                       .Include(a => a.Countries)
+                                       .Include(a => a.SubjectLocations)
+                                       .ToList()
+                                       .ElementAtOrDefault(0);
+
+                    var subAreaFromDB = db.SubAreas.Where(s => s.Name == subAreaName)
+                                                   .Include(s => s.Areas)
+                                                   .Include(s => s.Countries)
+                                                   .Include(s => s.SubjectLocation)
+                                                   .ToList()
+                                                   .ElementAtOrDefault(0);
+
+                    var subjectLocationFromDB = db.SubjectLocations.Where(s => s.Name == subjectLocationName)
+                                                                   .Include(s => s.Area)
+                                                                   .Include(s => s.SubArea)
+                                                                   .Include(s => s.Country)
+                                                                   .ToList()
+                                                                   .ElementAtOrDefault(0);
+                    
                     // country: 
                     // * take object from database or create a new one (countryName must not be null or empty) 
                     // area / subarea / subject location:
@@ -579,14 +599,21 @@ namespace LocationScout.DataAccess
                         if (area != null)
                         {
                             if (country.Areas == null) country.Areas = new List<Area>();
-                            country.Areas.Add(area);
+                            if (!country.Areas.Contains(area)) country.Areas.Add(area);
                         }
 
                         // navigation property subarea
                         if (subArea != null)
                         {
                             if (country.SubAreas == null) country.SubAreas = new List<SubArea>();
-                            country.SubAreas.Add(subArea);
+                            if(!country.Areas.Contains(area)) country.SubAreas.Add(subArea);
+                        }
+
+                        // navigation property subject location
+                        if (subjectLocation != null)
+                        {
+                            if (country.SubjectLocations == null) country.SubjectLocations = new List<SubjectLocation>();
+                            if (!country.SubjectLocations.Contains(subjectLocation)) country.SubjectLocations.Add(subjectLocation);
                         }
 
                         // add to database if new country or navigation property added
@@ -612,14 +639,14 @@ namespace LocationScout.DataAccess
                         if (subArea != null)
                         {
                             if (area.SubAreas == null) area.SubAreas = new List<SubArea>();
-                            area.SubAreas.Add(subArea);
+                            if (!area.SubAreas.Contains(subArea)) area.SubAreas.Add(subArea);
                         }
 
                         // navigation property country
                         if (country != null)
                         {
                             if (area.Countries == null) area.Countries = new List<Country>();
-                            area.Countries.Add(country);
+                            if (!area.Countries.Contains(country)) area.Countries.Add(country);
                         }
 
                         // add to database if new area or navigation property added
@@ -645,14 +672,14 @@ namespace LocationScout.DataAccess
                         if (area != null)
                         {
                             if (subArea.Areas == null) subArea.Areas = new List<Area>();
-                            subArea.Areas.Add(area);
+                            if (!subArea.Areas.Contains(area)) subArea.Areas.Add(area);
                         }
 
                         // navigation property country
                         if (country != null)
                         {
                             if (subArea.Countries == null) subArea.Countries = new List<Country>();
-                            subArea.Countries.Add(country);
+                            if (!subArea.Countries.Contains(country)) subArea.Countries.Add(country);
                         }
 
                         // add to database if subarea or navigation property added
@@ -674,8 +701,15 @@ namespace LocationScout.DataAccess
                     // subject location
                     if (subjectLocation != null)
                     {
-                        if (subjectLocationFromDB != null) db.Entry(subjectLocation).State = EntityState.Modified;
-                        else db.SubjectLocations.Add(subjectLocation);
+                        if (subjectLocationFromDB != null)
+                        {
+                            db.Entry(subjectLocation).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            db.SubjectLocations.Add(subjectLocation);
+                        }
+
                         changesToDB = true;
                     }
 
