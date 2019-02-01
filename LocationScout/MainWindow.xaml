@@ -12,6 +12,7 @@
     <Window.Resources>
         <ViewModel:GPSConverter x:Key="GPSConverterKey"/>
         <ViewModel:GPSConverterComplex x:Key="GPSConverterComplexKey"/>
+        <ViewModel:ToStringConverter x:Key="ToStringConverterKey"/>
     </Window.Resources>
 
     <Grid>
@@ -123,8 +124,10 @@
                                     <RichTextBox Name="ShootingLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="0" Grid.Row="0" Width="300"                                             
                                                  Grid.ColumnSpan="3" Margin="0,0,0,0" Visibility="Hidden" HorizontalAlignment="Left" LostFocus="ShootingLocationControlEdit_LostFocus"/>
 
+                                    <!--
                                     <Label Content="Existing: " Grid.Column="3"/>
                                     <TextBox Name="ShootlingLocationsCountTextBox" Text="{Binding ExistingShootingLocationsName}" IsEnabled="False" Height="18" Width="25" Grid.Column="4"/>
+                                    -->
                                 </Grid>
 
                                 <Label Content="GPS [Lat/Long]" Height="Auto" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
@@ -261,7 +264,7 @@
                         </Grid.RowDefinitions>
 
                         <GroupBox Header="Maintain Location" Margin="5,10,5,5" Grid.Row="0" Grid.Column="0">
-                            <Grid Name="Settings_MaintainLocationGrid" DataContext="DisplayItem" Margin="5,5,5,5" Grid.Column="0">
+                            <Grid Name="Settings_MaintainLocationGrid" Margin="5,5,5,5" Grid.Column="0">
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
@@ -326,76 +329,6 @@
                             <Button Name="Settings_AddButton" Content="Add" KeyboardNavigation.TabIndex="6" Grid.Row="0" Width="100" Height="25" Margin="5,5,5,5" Click="SettingAddButton_Click"/>
                             <Button Name="Settings_EditButton" Content="Edit" KeyboardNavigation.TabIndex="7" Grid.Row="1" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsEditButton_Click"/>
                             <Button Name="Settings_DeleteButton" Content="Delete"  KeyboardNavigation.TabIndex="7" Grid.Row="2" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsDeleteButton_Click"/>
-                        </Grid>
-
-                    </Grid>
-                </Grid>
-            </TabItem>
-
-            <TabItem Header="Settings_New">
-                <Grid Background="#FFE5E5E5">
-                    <Grid Margin="0,0,0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="120"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="300"/>
-                            <RowDefinition Height="130"/>
-                            <RowDefinition Height="50"/>
-                        </Grid.RowDefinitions>
-
-                        <GroupBox Header="Maintain Location" Margin="5,10,5,5" Grid.Row="0" Grid.Column="0">
-                            <Grid Name="MaintainLocationGrid_New" DataContext="DisplayItem" Margin="5,5,5,5" Grid.Column="0">
-
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="190"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Label Content="Countries" Margin="0,2,0,0" Grid.Column="0" Grid.Row="0"/>
-                                <control:AutoCompleteTextBox x:Name="SettingsCountryControl_New" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
-                                                                AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,0"/>
-
-                                <Label Content="Test" Margin="0,2,0,0" Grid.Column="0" Grid.Row="2"/>
-                                <control:AutoCompleteTextBox x:Name="TestControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"
-                                                                AutoCompleteWidth="410" HorizontalAlignment="Left" Margin="5,8,5,0"/>
-
-
-
-
-                            </Grid>
-                        </GroupBox>
-
-                        <Grid Grid.Column="1" Grid.RowSpan="3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <Button Name="SettingsAddButton_New" Content="Add" KeyboardNavigation.TabIndex="6" Grid.Row="0" Width="100" Height="25" Margin="5,20,5,5" Click="SettingAddButton_Click"/>
-                            <Button Name="SettingsEditButton_New" Content="Edit" KeyboardNavigation.TabIndex="7" Grid.Row="1" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsEditButton_Click"/>
-                            <Button Name="SettingsDeleteButton_New" Content="Delete"  KeyboardNavigation.TabIndex="7" Grid.Row="2" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsDeleteButton_Click"/>
                         </Grid>
 
                     </Grid>

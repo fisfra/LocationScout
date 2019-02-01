@@ -43,7 +43,6 @@ namespace LocationScout
         #region constructors
         public SettingTabControler(MainWindowControler mainControler, MainWindow window) : base(window, mainControler)
         {            
-            //_currentMode = E_Mode.add;
             DisplayItem = new SettingsDisplayItem();
 
             Window.Settings_MaintainLocationGrid.DataContext = DisplayItem;

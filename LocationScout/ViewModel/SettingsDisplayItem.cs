@@ -72,6 +72,12 @@ namespace LocationScout.ViewModel
         }
         #endregion
 
+        #region constructor
+        public SettingsDisplayItem()
+        {
+        }
+        #endregion
+
         #region methods
         public virtual void Reset()
         {
