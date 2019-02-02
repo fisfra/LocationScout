@@ -15,17 +15,12 @@ using WPFUserControl;
 
 namespace LocationScout
 {
-    internal class SettingTabControler : TabControlerBase
+    internal class SettingTabControler  : TabControlerBase
     {
         #region enums
-        //private enum E_Mode { add, edit};
-        //private enum E_EditMode { no_edit, edit_country, edit_area, edit_subarea, edit_subjectlocation};
         #endregion
 
         #region attributes
-        //private E_Mode _currentMode;
-        //private E_EditMode _currentEditMode;
-
         public override AutoCompleteTextBox CountryControl { get { return Window.Settings_CountryControl; } }
         public override AutoCompleteTextBox AreaControl { get { return Window.Settings_AreaControl; } }
         public override AutoCompleteTextBox SubAreaControl { get { return Window.Settings_SubAreaControl; } }
@@ -139,57 +134,6 @@ namespace LocationScout
                     break;
             }
         }
-
-        /*
-        internal void Edit()
-        {
-            // currently in "add" mode...
-            if (_currentMode == E_Mode.add)
-            {
-                // check if editing is possible and switch controls
-                _currentEditMode = DoEdit();
-
-                // edit is possible
-                if (_currentEditMode != E_EditMode.no_edit)
-                {
-                    // change button label
-                    Window.Settings_EditButton.Content = "Save";
-
-                    // switch to edit mode
-                    _currentMode = E_Mode.edit;
-                }
-            }
-            else
-            {
-                // set control state
-                Window.Settings_CountryControlEdit.Visibility = Visibility.Hidden;
-                Window.Settings_CountryControl.Visibility = Visibility.Visible;
-                Window.Settings_AreaControlEdit.Visibility = Visibility.Hidden;
-                Window.Settings_AreaControl.Visibility = Visibility.Visible;
-                Window.Settings_SubAreaControlEdit.Visibility = Visibility.Hidden;
-                Window.Settings_SubAreaControl.Visibility = Visibility.Visible;
-                Window.Settings_SubjectLocationControlEdit.Visibility = Visibility.Hidden;
-                Window.Settings_SubjectLocationControl.Visibility = Visibility.Visible;
-                Window.Settings_EditButton.Content = "Edit";
-                Window.Settings_CountryControl.IsEnabled = true;
-                Window.Settings_AreaControl.IsEnabled = true;
-                Window.Settings_SubAreaControl.IsEnabled = true;
-                Window.Settings_SubjectLocationControl.IsEnabled = true;
-                Window.Settings_SubjectLocationLatituteTextBox.IsEnabled = true;
-                Window.Settings_SubjectLocationLongitudeTextBox.IsEnabled = true;
-
-                // save the changes to the database
-                SaveEditChanges();
-
-                // ask maincontroler to reload data from database and refresh all controls
-                // maincontroler needs to take care of this since it not only settings tab
-                MainControler.ReloadAndRefreshControls();
-
-                // reset the modes
-                _currentMode = E_Mode.add;
-                _currentEditMode = E_EditMode.no_edit;
-            }
-        }*/
 
         protected override void ResetControlState()
         {

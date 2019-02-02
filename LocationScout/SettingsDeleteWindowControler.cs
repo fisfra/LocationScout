@@ -147,6 +147,7 @@ namespace LocationScout
                 displayItem.CountrySubAreaCountToDelete = countrySubAreaCount;
                 displayItem.CountrySubjectLocationCountToDelete = countrySubjectLocationCount;
             }
+
         }
 
         private void SetDeleteDialogAreaInformation(SettingsDeleteDisplayItem displayItem)

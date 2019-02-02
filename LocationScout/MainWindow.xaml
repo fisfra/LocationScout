@@ -22,7 +22,6 @@
         </Grid.RowDefinitions>
 
         <TabControl Margin="10,10,10,0" VerticalAlignment="Top" Grid.Row="0">
-
             <TabItem Header="Location">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -33,7 +32,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-
+                    
                     <Grid Name="LocationContentGrid" Margin="0,0,0,5" Grid.Column="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="180"/>
@@ -42,6 +41,7 @@
                         </Grid.RowDefinitions>
 
                         <GroupBox Header="Subject Location" Margin="10,10,5,5" Grid.Row="0">
+                         
                             <Grid Name="Location_SubjectLocationGrid" Margin="5,5,5,5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="170"/>
@@ -61,7 +61,6 @@
                                 <Label Content="Country" Height="Auto" Grid.Column="0" Grid.Row="0"/>
                                 <control:AutoCompleteTextBox x:Name="Location_CountryControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="0" Grid.Column="1" Grid.Row="0" 
                                                                 HorizontalAlignment="Left" Margin="0,5,0,0" AutoCompleteWidth="430" Grid.ColumnSpan="2" ListBoxReadOnly="True"/>
-
 
                                 <Label Content="Area" Height="Auto" Grid.Column="0" Grid.Row="1"/>
                                 <control:AutoCompleteTextBox x:Name="Location_AreaControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="1" Grid.Column="1" Grid.Row="1" 
@@ -124,10 +123,6 @@
                                     <RichTextBox Name="ShootingLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="0" Grid.Row="0" Width="300"                                             
                                                  Grid.ColumnSpan="3" Margin="0,0,0,0" Visibility="Hidden" HorizontalAlignment="Left" LostFocus="ShootingLocationControlEdit_LostFocus"/>
 
-                                    <!--
-                                    <Label Content="Existing: " Grid.Column="3"/>
-                                    <TextBox Name="ShootlingLocationsCountTextBox" Text="{Binding ExistingShootingLocationsName}" IsEnabled="False" Height="18" Width="25" Grid.Column="4"/>
-                                    -->
                                 </Grid>
 
                                 <Label Content="GPS [Lat/Long]" Height="Auto" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
@@ -224,8 +219,6 @@
 
                             </Grid>
                         </GroupBox>
-
-
                     </Grid>
 
                     <Grid Name="LocationButtonGrid" Margin="5,5,5,10" Grid.Column="1">
@@ -245,10 +238,10 @@
                         <Button Name="Location_DeleteButton" Content="Delete" Width="100" Margin="5,2,5,3" Grid.Row="2" Click="LocationButtonEdit_Click"/>
                         <Button Name="Location_ShowButton" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="4" Click="LocationButtonShow_Click"/>
                     </Grid>
-
+                        
                 </Grid>
             </TabItem>
-
+            
             <TabItem Header="Settings">
                 <Grid Background="#FFE5E5E5">
                     <Grid Margin="0,0,0,5">
@@ -334,6 +327,7 @@
                     </Grid>
                 </Grid>
             </TabItem>
+
         </TabControl>
 
         <Grid Name="BottomLineGrid" Grid.Row="1">

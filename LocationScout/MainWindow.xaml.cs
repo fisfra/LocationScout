@@ -39,7 +39,7 @@ namespace LocationScout
             // call after initilaze component
             _controler = new MainWindowControler(this);
         }
-        #endregion
+        #endregion    
 
         #region methods       
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -51,7 +51,6 @@ namespace LocationScout
         {
             _controler.HandleSettingAdd();
         }
-
 
         private void LocationButtonAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -148,5 +147,6 @@ namespace LocationScout
             _controler.HandleParkingLocationControlEditLostFocus();
         } 
         #endregion
+
     }
 }
