@@ -44,7 +44,16 @@ namespace LocationScout.ViewModel
         {
             byte[] data;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(impage));
+
+            try
+            {
+                encoder.Frames.Add(BitmapFrame.Create(impage));
+            }
+            catch (NotSupportedException)
+            {
+                // that is not a problem
+            }
+
             using (MemoryStream ms = new MemoryStream())
             {
                 encoder.Save(ms);
