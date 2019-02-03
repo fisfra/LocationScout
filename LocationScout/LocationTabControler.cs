@@ -70,6 +70,9 @@ namespace LocationScout
             Window.ParkingLocationControl.ClearText();
             Window.ParkingLocationLatitudeTextBox.Text = string.Empty;
             Window.ParkingLocationLongitudeTextBox.Text = string.Empty;
+
+            RefreshShootLocationControl();
+            RefreshParkingLocationControl();
         }
 
         public override void RefreshAllObjectsFromDB(bool fullrefresh = true)
@@ -173,14 +176,24 @@ namespace LocationScout
             Window.Location_SubjectLocationControl.ClearText();
             DisplayItem.Reset();
             RefreshShootingLocationsFromDB();
-            RefreshParkingLocationsFromDB();       
-            RefreshControl(_allShootingLocations?.OfType<Location>()?.ToList(), Window.ShootingLocationControl);
-            RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
+            RefreshParkingLocationsFromDB();
+            RefreshShootLocationControl();
+            RefreshParkingLocationControl();
 
             // reset cursor
             Mouse.OverrideCursor = null;
 
             Window.Location_CountryControl.SetFocus();
+        }
+
+        private void RefreshShootLocationControl()
+        {
+            RefreshControl(_allShootingLocations?.OfType<Location>()?.ToList(), Window.ShootingLocationControl);
+        }
+
+        private void RefreshParkingLocationControl()
+        {
+            RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
         }
 
         internal void HandleParkingLocationControlEditLostFocus()
@@ -205,7 +218,7 @@ namespace LocationScout
             var hasParkingLocationText = !string.IsNullOrEmpty(Window.ParkingLocationControl.GetCurrentText());
             var parkingLocationInDB = Window.ParkingLocationControl.GetCurrentObject() != null;
 
-            // only shooting location control has text, so edit shooting locaton
+            // only shooting location control has text, so edit shooting location
             if (hasShootingLocationText && !hasParkingLocationText)
             {
                 // edit only saved values
@@ -217,7 +230,7 @@ namespace LocationScout
                 }
             }
 
-            // both shooting and parking locaton have test, so edit parking location
+            // both shooting and parking locaton have text, so edit parking location
             else if (hasShootingLocationText && hasParkingLocationText)
             {
                 // edit only saved values
@@ -479,7 +492,7 @@ namespace LocationScout
             DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
 
             //
-            RefreshControl(_allShootingLocations?.OfType<Location>()?.ToList(), Window.ShootingLocationControl);
+            RefreshShootLocationControl();
 
             // 
             Window.ShootingLocationControl.SetFocus();
@@ -510,7 +523,7 @@ namespace LocationScout
             }
 
             //
-            RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
+            RefreshParkingLocationControl();
 
             Window.ShootingLocationLatitudeTextBox.Focus();
         }
