@@ -1,4 +1,4 @@
-﻿<Window x:Class="LocationScout.MainWindow"
+﻿<local:ClipboardMonitorWindow x:Class="LocationScout.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -237,6 +237,8 @@
                         <Button Name="Location_EditButton" Content="Edit" Width="100" Margin="5,2,5,3" Grid.Row="1" Click="LocationButtonEdit_Click"/>
                         <Button Name="Location_DeleteButton" Content="Delete" Width="100" Margin="5,2,5,3" Grid.Row="2" Click="LocationButtonEdit_Click"/>
                         <Button Name="Location_ShowButton" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="4" Click="LocationButtonShow_Click"/>
+                        
+                        
                     </Grid>
                         
                 </Grid>
@@ -306,6 +308,14 @@
                             </Grid>
                         </GroupBox>
 
+                        <GroupBox Header="Settings" Grid.Row="1" Grid.Column="0">
+                            <Grid Margin="5,10,5,5" Name="Settings_SettingsGrid">
+                                <CheckBox Name="AutoPasteCheckBox" IsChecked="{Binding AutoPasteFromClipboard}">
+                                    Auto-paste from Clipboard
+                                </CheckBox>
+                            </Grid>
+                        </GroupBox>
+                        
                         <Grid Grid.Column="1" Grid.RowSpan="3">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -341,4 +351,4 @@
 
         </Grid>
     </Grid>
-</Window>
+</local:ClipboardMonitorWindow>

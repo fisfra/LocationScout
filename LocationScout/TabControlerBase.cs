@@ -42,6 +42,7 @@ namespace LocationScout
         protected abstract Button DeleteButton { get; }
         protected abstract E_EditMode DoEdit();
         protected abstract void SaveEditChanges();
+        public abstract void HandleClipboardChange(string clipboardText);
         public abstract void ReloadAndRefreshControls();
         #endregion
 

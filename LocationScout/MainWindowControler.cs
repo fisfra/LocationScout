@@ -32,15 +32,24 @@ namespace LocationScout
             _locationControler = new LocationTabControler(this, window);
 
             ReloadAndRefreshControls();
+
         }
         #endregion
 
-        #region methods       
+        #region methods             
         internal void HandleClose()
         {
             Window.Close();
         }
-        
+
+        internal void HandleClipboardUpdate()
+        {
+            string clipboardText = Clipboard.GetText();
+
+            _locationControler.HandleClipboardChange(clipboardText);
+            _settingControler.HandleClipboardChange(clipboardText);
+        }
+
         internal void HandleSettingAdd()
         {
             _settingControler.Add();

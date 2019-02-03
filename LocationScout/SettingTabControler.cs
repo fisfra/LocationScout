@@ -41,10 +41,16 @@ namespace LocationScout
             DisplayItem = new SettingsDisplayItem();
 
             Window.Settings_MaintainLocationGrid.DataContext = DisplayItem;
+            Window.Settings_SettingsGrid.DataContext = DisplayItem;
         }
         #endregion
 
         #region methods      
+        public override void HandleClipboardChange(string clipboardText)
+        {
+            // to do
+        }
+
         internal void Add()
         {
             // if the autocomplete textboxes are not left via TAB but by clicking directly on a button,

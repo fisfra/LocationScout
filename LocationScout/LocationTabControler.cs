@@ -15,6 +15,8 @@ using System.Diagnostics;
 using LocationScout.Lister;
 using System.Windows.Documents;
 using System.Windows;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace LocationScout
 {
@@ -56,6 +58,19 @@ namespace LocationScout
         #endregion
 
         #region methods
+        public override void HandleClipboardChange(string clipboardText)
+        {
+            // get focussed control (even if the whole window is not in focus)
+            IInputElement focusedControl = FocusManager.GetFocusedElement(Window);
+
+            // textbox focused
+            if (focusedControl is TextBox textbox)
+            {
+                textbox.Text = clipboardText;
+            }
+
+        }
+
         public override void ReloadAndRefreshControls()
         {
             Window.Location_CountryControl.ClearText();

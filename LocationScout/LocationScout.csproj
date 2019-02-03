@@ -208,6 +208,7 @@
     <Compile Include="SettingsDeleteWindowControler.cs" />
     <Compile Include="SettingTabControler.cs" />
     <Compile Include="TabControlerBase.cs" />
+    <Compile Include="ViewModel\ClipboardMonitorWindow.cs" />
     <Compile Include="ViewModel\Converters.cs" />
     <Compile Include="ViewModel\GPSCoordinatesHelper.cs" />
     <Compile Include="ViewModel\ImageTools.cs" />

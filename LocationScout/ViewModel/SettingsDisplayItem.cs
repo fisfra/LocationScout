@@ -15,6 +15,7 @@ namespace LocationScout.ViewModel
         private string _subjectLocationName;
         private double? _subjectLocationLatitude;
         private double? _subjectLocationLongitude;
+        private bool _autoPasteFromClipboard = true;
 
         public string CountryName
         {
@@ -67,6 +68,15 @@ namespace LocationScout.ViewModel
             set
             {
                 _subjectLocationLongitude = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool AutoPasteFromClipboard
+        {
+            get => _autoPasteFromClipboard;
+            set
+            {
+                _autoPasteFromClipboard = value;
                 OnPropertyChanged();
             }
         }

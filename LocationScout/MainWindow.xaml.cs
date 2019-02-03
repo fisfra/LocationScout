@@ -19,7 +19,7 @@ namespace LocationScout
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : ClipboardMonitorWindow
     {
         #region attributes
         private MainWindowControler _controler;
@@ -39,9 +39,14 @@ namespace LocationScout
             // call after initilaze component
             _controler = new MainWindowControler(this);
         }
-        #endregion    
+        #endregion
 
-        #region methods       
+        #region methods   
+        protected override void OnClipboardUpdate()
+        {
+            _controler.HandleClipboardUpdate();
+        }
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleClose();
