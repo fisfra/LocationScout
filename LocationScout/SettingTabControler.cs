@@ -46,9 +46,13 @@ namespace LocationScout
         #endregion
 
         #region methods      
-        public override void HandleClipboardChange(string clipboardText)
+        protected override void CheckGPSPaste(TextBox textbox, List<string> coordinates)
         {
-            // to do
+            if ((textbox.Name == Window.Settings_SubjectLocationLatituteTextBox.Name) || (textbox.Name == Window.Settings_SubjectLocationLongitudeTextBox.Name))
+            {
+                Window.Settings_SubjectLocationLatituteTextBox.Text = coordinates[0];
+                Window.Settings_SubjectLocationLongitudeTextBox.Text = coordinates[1];
+            }
         }
 
         internal void Add()
@@ -89,8 +93,8 @@ namespace LocationScout
             Window.Settings_AreaControl.ClearText();
             Window.Settings_SubAreaControl.ClearText();
             Window.Settings_SubjectLocationControl.ClearText();
-            Window.Settings_SubjectLocationLatituteTextBox.Text = string.Empty;
-            Window.Settings_SubjectLocationLongitudeTextBox.Text = string.Empty;
+            Window.Settings_SubjectLocationLatituteTextBox.Text = null;
+            Window.Settings_SubjectLocationLongitudeTextBox.Text = null;
         }
 
         internal void HandleSettingsAreaControlEditLostFocus()

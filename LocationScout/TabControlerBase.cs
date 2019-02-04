@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using WPFUserControl;
 
 namespace LocationScout
@@ -42,7 +43,7 @@ namespace LocationScout
         protected abstract Button DeleteButton { get; }
         protected abstract E_EditMode DoEdit();
         protected abstract void SaveEditChanges();
-        public abstract void HandleClipboardChange(string clipboardText);
+        protected abstract void CheckGPSPaste(TextBox textbox, List<string> coordinates);
         public abstract void ReloadAndRefreshControls();
         #endregion
 
@@ -64,6 +65,30 @@ namespace LocationScout
         #endregion
 
         #region methods
+
+        public virtual void HandleClipboardChange(string clipboardText)
+        {
+            // get focussed control (even if the whole window is not in focus)
+            IInputElement focusedControl = FocusManager.GetFocusedElement(Window);
+
+            // textbox focused
+            if (focusedControl is TextBox textbox)
+            {
+                var coordinates = AnalyzeGPSText(clipboardText);
+
+                if (coordinates.Count == 1)
+                {
+                    textbox.Text = clipboardText;
+                }
+
+                else if (coordinates.Count == 2)
+                {
+                    // override in derived class
+                    CheckGPSPaste(textbox, coordinates);
+                }
+            }
+        }
+
         public virtual void RefreshAllObjectsFromDB(bool fullrefresh = true)
         {
             // base class might use parameter
@@ -304,6 +329,46 @@ namespace LocationScout
             newText = newText?.TrimEnd('\r', '\n');
 
             return newText;
+        }
+
+        protected virtual List<string> AnalyzeGPSText(string text)
+        {
+            var result = new List<string>();
+
+            if (text != null)
+            {
+                // split text by blanks
+                var split = text.Split(' ').ToList();
+
+                // clean strings (remove spaces, comma, semicolon at beginning and end)
+                for (var i = 0; i<split.Count; i++)
+                {
+                    split[i] = split[i].Trim(new char[] { ' ', ',', ';' });
+                }
+
+
+                // only valid if there are one or two text parts
+                if ((split.Count == 1) || (split.Count == 2))
+                {
+                    // loop through split text
+                    foreach (var coordinateAsText in split)
+                    {
+                        // check if it's a valid double value...
+                        if (IsDouble(coordinateAsText))
+                        {
+                            //.. if so add to results
+                            result.Add(coordinateAsText);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        protected bool IsDouble(string text)
+        {
+            return Double.TryParse(text, out double d);
         }
         #endregion
     }

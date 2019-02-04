@@ -136,8 +136,11 @@
                                         <ColumnDefinition Width="66*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Name="ShootingLocationLatitudeTextBox" Text="{Binding ShootingLocationLatitude}" VerticalAlignment="Center" Height="18" KeyboardNavigation.TabIndex="6" Grid.Column="0" Grid.Row="0" Margin="0,6,0,5"/>
-                                    <TextBox Name="ShootingLocationLongitudeTextBox" Text="{Binding ShootingLocationLongitude}" VerticalAlignment="Center" Height="18" KeyboardNavigation.TabIndex="7" Margin="5,6,0,5" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"/>
+                                    <!-- UpdateSourceTrigger set to PropertyChanged to handle some update issues when auto inserting clipboard text -->
+                                    <TextBox Name="ShootingLocationLatitudeTextBox" Text="{Binding ShootingLocationLatitude, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Height="18"
+                                             KeyboardNavigation.TabIndex="6" Grid.Column="0" Grid.Row="0" Margin="0,6,0,5"/>
+                                    <TextBox Name="ShootingLocationLongitudeTextBox" Text="{Binding ShootingLocationLongitude, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Height="18" 
+                                             KeyboardNavigation.TabIndex="7" Margin="5,6,0,5" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"/>
                                     <Button Name="ShootingGPSGoogleMapsButton"  Content="GM" Height="23" Width="25" HorizontalAlignment="Left" Margin="10,3,0,3" KeyboardNavigation.TabIndex="8" Grid.Column="3"/>
                                     <Label Name="PhotoCount1_1Label" VerticalAlignment="Center" HorizontalAlignment="Center" Content="" Grid.Column="4" Grid.Row="0" Margin="20,2,20,1"/>
                                     <Button Name="PhotoUploadButton" Content="Photos" Height="23" Width="50" VerticalAlignment="Center" Grid.Column="5" Grid.Row="0" KeyboardNavigation.TabIndex="8" Click="PhotoUploadButton_Click" Margin="8,3"/>
@@ -212,8 +215,11 @@
                                         <ColumnDefinition Width="40*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Name="ParkingLocationLatitudeTextBox" Text="{Binding ParkingLocationLatitude}" VerticalAlignment="Center" Height="18"  KeyboardNavigation.TabIndex="10" Grid.Column="0" Grid.Row="0"/>
-                                    <TextBox Name="ParkingLocationLongitudeTextBox" Text="{Binding ParkingLocationLongitude}" VerticalAlignment="Center" Height="18"  KeyboardNavigation.TabIndex="11" Margin="5,0,0,0" Grid.Column="1" Grid.Row="0"/>
+                                    <!-- UpdateSourceTrigger set to PropertyChanged to handle some update issues when auto inserting clipboard text -->
+                                    <TextBox Name="ParkingLocationLatitudeTextBox" Text="{Binding ParkingLocationLatitude, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Height="18"  
+                                             KeyboardNavigation.TabIndex="10" Grid.Column="0" Grid.Row="0"/>
+                                    <TextBox Name="ParkingLocationLongitudeTextBox" Text="{Binding ParkingLocationLongitude, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Height="18"  
+                                             KeyboardNavigation.TabIndex="11" Margin="5,0,0,0" Grid.Column="1" Grid.Row="0"/>
                                     <Button Name="ParkingGPSGoogleMapsButton"  Content="GM" Height="23" Width="25" HorizontalAlignment="Left" Margin="10,0,0,0" KeyboardNavigation.TabIndex="12" Grid.Row="1" Grid.Column="2"/>
                                 </Grid>
 
@@ -299,11 +305,12 @@
                                 <RichTextBox Name="Settings_SubjectLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch"
                                              Grid.ColumnSpan="2" Margin="10,3,15,0" Visibility="Hidden" LostFocus="SettingsSubjectLocationControlEdit_LostFocus"/>
 
+                                <!-- UpdateSourceTrigger set to PropertyChanged to handle some update issues when auto inserting clipboard text -->
                                 <Label Content="GPS Subject Location [Lat/Long]"  Margin="0,2,0,0" Grid.Column="0" Grid.Row="4"/>
-                                <TextBox Name="Settings_SubjectLocationLatituteTextBox" Text="{Binding SubjectLocationLatitude}" Height="18" Margin="10,0,5,2" KeyboardNavigation.TabIndex="4" 
-                                         Grid.Column="1" Grid.Row="4" GotFocus="SettingsSubjectLocationLatitute_GotFocus"/>
-                                <TextBox Name="Settings_SubjectLocationLongitudeTextBox" Text="{Binding SubjectLocationLongitude}" Height="18" Margin="5,0,15,2" KeyboardNavigation.TabIndex="5" 
-                                         Grid.Column="2" Grid.Row="4" GotFocus="SettingsSubjectLocationLongitude_GotFocus"/>
+                                <TextBox Name="Settings_SubjectLocationLatituteTextBox" Text="{Binding SubjectLocationLatitude, UpdateSourceTrigger=PropertyChanged}" Height="18" Margin="10,0,5,2" 
+                                         KeyboardNavigation.TabIndex="4" Grid.Column="1" Grid.Row="4" GotFocus="SettingsSubjectLocationLatitute_GotFocus"/>
+                                <TextBox Name="Settings_SubjectLocationLongitudeTextBox" Text="{Binding SubjectLocationLongitude, UpdateSourceTrigger=PropertyChanged}" Height="18" Margin="5,0,15,2" 
+                                         KeyboardNavigation.TabIndex="5" Grid.Column="2" Grid.Row="4" GotFocus="SettingsSubjectLocationLongitude_GotFocus"/>
 
                             </Grid>
                         </GroupBox>

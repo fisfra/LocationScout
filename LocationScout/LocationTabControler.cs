@@ -58,17 +58,19 @@ namespace LocationScout
         #endregion
 
         #region methods
-        public override void HandleClipboardChange(string clipboardText)
+        protected override void CheckGPSPaste(TextBox textbox, List<string> coordinates)
         {
-            // get focussed control (even if the whole window is not in focus)
-            IInputElement focusedControl = FocusManager.GetFocusedElement(Window);
-
-            // textbox focused
-            if (focusedControl is TextBox textbox)
+            if ( (textbox.Name == Window.ShootingLocationLatitudeTextBox.Name) || (textbox.Name == Window.ShootingLocationLongitudeTextBox.Name))
             {
-                textbox.Text = clipboardText;
+                Window.ShootingLocationLatitudeTextBox.Text = coordinates[0];
+                Window.ShootingLocationLongitudeTextBox.Text = coordinates[1];
             }
 
+            else if ((textbox.Name == Window.ParkingLocationLatitudeTextBox.Name) || (textbox.Name == Window.ParkingLocationLongitudeTextBox.Name))
+            {
+                Window.ParkingLocationLatitudeTextBox.Text = coordinates[0];
+                Window.ParkingLocationLongitudeTextBox.Text = coordinates[1];
+            }
         }
 
         public override void ReloadAndRefreshControls()
@@ -77,14 +79,14 @@ namespace LocationScout
             Window.Location_AreaControl.ClearText();
             Window.Location_SubAreaControl.ClearText();
             Window.Location_SubjectLocationControl.ClearText();
-            Window.Location_SubjectLocationLatituteTextBox.Text = string.Empty;
-            Window.Location_SubjectLocationLongitudeTextBox.Text = string.Empty;
+            Window.Location_SubjectLocationLatituteTextBox.Text = null;
+            Window.Location_SubjectLocationLongitudeTextBox.Text = null;
             Window.ShootingLocationControl.ClearText();
-            Window.ShootingLocationLatitudeTextBox.Text = string.Empty;
-            Window.ShootingLocationLongitudeTextBox.Text = string.Empty;
+            Window.ShootingLocationLatitudeTextBox.Text = null;
+            Window.ShootingLocationLongitudeTextBox.Text = null;
             Window.ParkingLocationControl.ClearText();
-            Window.ParkingLocationLatitudeTextBox.Text = string.Empty;
-            Window.ParkingLocationLongitudeTextBox.Text = string.Empty;
+            Window.ParkingLocationLatitudeTextBox.Text = null;
+            Window.ParkingLocationLongitudeTextBox.Text = null;
 
             RefreshShootLocationControl();
             RefreshParkingLocationControl();
