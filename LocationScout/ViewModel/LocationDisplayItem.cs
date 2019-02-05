@@ -126,6 +126,10 @@ namespace LocationScout.ViewModel
             ParkingLocationLatitude = null;
             ParkingLocationLongitude = null;
             ExistingShootingLocationsCount = 0;
+
+            Photo_1 = null;
+            Photo_2 = null;
+            Photo_3 = null;
         }
         #endregion
     }

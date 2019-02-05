@@ -64,7 +64,12 @@ namespace LocationScout
         {
             _locationControler.ShowLister();
         }
-        
+
+        internal void HandleLocationClear()
+        {
+            _locationControler.Clear();
+        }
+
         internal void SettingsEdit()
         {
             _settingControler.Edit();

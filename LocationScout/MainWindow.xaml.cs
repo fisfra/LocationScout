@@ -72,6 +72,11 @@ namespace LocationScout
             _controler.HandleLocationShow();
         }
 
+        private void LocationButtonClear_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleLocationClear();
+        }
+
         private void SettingsEditButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.SettingsEdit();

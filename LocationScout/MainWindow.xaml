@@ -234,6 +234,7 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
@@ -243,7 +244,7 @@
                         <Button Name="Location_EditButton" Content="Edit" Width="100" Margin="5,2,5,3" Grid.Row="1" Click="LocationButtonEdit_Click"/>
                         <Button Name="Location_DeleteButton" Content="Delete" Width="100" Margin="5,2,5,3" Grid.Row="2" Click="LocationButtonEdit_Click"/>
                         <Button Name="Location_ShowButton" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="4" Click="LocationButtonShow_Click"/>
-                        
+                        <Button Name="Location_ClearButton" Content="Clear" Width="100" Margin="5,2,5,3" Grid.Row="5" Click="LocationButtonClear_Click"/>
                         
                     </Grid>
                         

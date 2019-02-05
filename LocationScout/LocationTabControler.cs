@@ -40,6 +40,7 @@ namespace LocationScout
         public LocationDisplayItem DisplayItem { get; set; }
 
         private List<ShootingLocation> _allShootingLocations;
+
         private List<ParkingLocation> _allParkingLocations;
         #endregion
 
@@ -58,6 +59,24 @@ namespace LocationScout
         #endregion
 
         #region methods
+        internal void Clear()
+        {
+            ClearUI();
+            Window.Location_CountryControl.SetFocus(); 
+        }
+
+        private void ClearUI()
+        {
+            Window.Location_CountryControl.ClearText();
+            Window.Location_AreaControl.ClearText();
+            Window.Location_SubAreaControl.ClearText();
+            Window.Location_SubjectLocationControl.ClearText();
+            Window.ShootingLocationControl.ClearText();
+            Window.ParkingLocationControl.ClearText();
+            
+            DisplayItem.Reset();
+        }
+
         protected override void CheckGPSPaste(TextBox textbox, List<string> coordinates)
         {
             if ( (textbox.Name == Window.ShootingLocationLatitudeTextBox.Name) || (textbox.Name == Window.ShootingLocationLongitudeTextBox.Name))
@@ -75,6 +94,7 @@ namespace LocationScout
 
         public override void ReloadAndRefreshControls()
         {
+            /*
             Window.Location_CountryControl.ClearText();
             Window.Location_AreaControl.ClearText();
             Window.Location_SubAreaControl.ClearText();
@@ -86,7 +106,9 @@ namespace LocationScout
             Window.ShootingLocationLongitudeTextBox.Text = null;
             Window.ParkingLocationControl.ClearText();
             Window.ParkingLocationLatitudeTextBox.Text = null;
-            Window.ParkingLocationLongitudeTextBox.Text = null;
+            Window.ParkingLocationLongitudeTextBox.Text = null;*/
+
+            ClearUI();
 
             RefreshShootLocationControl();
             RefreshParkingLocationControl();
@@ -135,7 +157,7 @@ namespace LocationScout
 
         internal void Add()
         {
-            // 
+            // error message
             string errorMessage = string.Empty;
 
             // data from UI
@@ -187,11 +209,7 @@ namespace LocationScout
             Mouse.OverrideCursor = null;
 
             // clear the controls and refresh controls
-            Window.Location_CountryControl.ClearText();
-            Window.Location_AreaControl.ClearText();
-            Window.Location_SubAreaControl.ClearText();
-            Window.Location_SubjectLocationControl.ClearText();
-            DisplayItem.Reset();
+            ClearUI();
             RefreshShootingLocationsFromDB();
             RefreshParkingLocationsFromDB();
             RefreshShootLocationControl();
@@ -391,8 +409,8 @@ namespace LocationScout
             Window.Location_AreaControl.IsEnabled = true;
             Window.Location_SubAreaControl.IsEnabled = true;
             Window.Location_SubjectLocationControl.IsEnabled = true;
-            Window.Location_SubjectLocationLatituteTextBox.IsEnabled = true;
-            Window.Location_SubjectLocationLongitudeTextBox.IsEnabled = true;
+            Window.Location_SubjectLocationLatituteTextBox.IsEnabled = false;
+            Window.Location_SubjectLocationLongitudeTextBox.IsEnabled = false;
             Window.ShootingLocationControl.IsEnabled = true;
             Window.ShootingLocationLatitudeTextBox.IsEnabled = true;
             Window.ShootingLocationLongitudeTextBox.IsEnabled = true;
