@@ -39,6 +39,8 @@
                             <BitmapEffectGroup/>
                         </ContextMenu.BitmapEffect>
                         <MenuItem Header="Google Maps" Name="GoogleMaps" Click="GoogleMaps_Click"/>
+                        <Separator/>
+                        <MenuItem Header="Edit" Name="Edit" Click="Edit_Click"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
 

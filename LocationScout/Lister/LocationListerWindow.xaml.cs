@@ -24,11 +24,11 @@ namespace LocationScout.Lister
         #endregion
 
         #region constructors
-        public LocationListerWindow(MainWindow mainWindow)
+        internal LocationListerWindow(MainWindow mainWindow, LocationTabControler locationTabControler)
         {
             InitializeComponent();
 
-            _controler = new ListerControler(mainWindow, this);
+            _controler = new ListerControler(mainWindow, this, locationTabControler);
         }
         #endregion
 
@@ -41,6 +41,11 @@ namespace LocationScout.Lister
         private void GoogleMaps_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandleGoogleMaps();
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleEdit();
         }
 
         private void LocationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

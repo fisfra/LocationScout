@@ -94,20 +94,6 @@ namespace LocationScout
 
         public override void ReloadAndRefreshControls()
         {
-            /*
-            Window.Location_CountryControl.ClearText();
-            Window.Location_AreaControl.ClearText();
-            Window.Location_SubAreaControl.ClearText();
-            Window.Location_SubjectLocationControl.ClearText();
-            Window.Location_SubjectLocationLatituteTextBox.Text = null;
-            Window.Location_SubjectLocationLongitudeTextBox.Text = null;
-            Window.ShootingLocationControl.ClearText();
-            Window.ShootingLocationLatitudeTextBox.Text = null;
-            Window.ShootingLocationLongitudeTextBox.Text = null;
-            Window.ParkingLocationControl.ClearText();
-            Window.ParkingLocationLatitudeTextBox.Text = null;
-            Window.ParkingLocationLongitudeTextBox.Text = null;*/
-
             ClearUI();
 
             RefreshShootLocationControl();
@@ -134,7 +120,7 @@ namespace LocationScout
 
         internal void ShowLister()
         {
-            LocationListerWindow window = new LocationListerWindow(base.Window);
+            LocationListerWindow window = new LocationListerWindow(base.Window, this);
             window.Show();
         }
 

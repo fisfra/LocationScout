@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LocationScout
 {
-    public class ListerControler : ControlerBase
+    internal class ListerControler : ControlerBase
     {
         #region constants
         private string c_googleMapsUrl = "https://www.google.com/maps/place/";
@@ -22,20 +22,28 @@ namespace LocationScout
         public ObservableCollection<LocationListerDisplayItem> AllDisplayItems { get; set; }
         public LocationListerDisplayItem CurrentDisplayItem { get; set; }
         private LocationListerWindow _listerWindow;
+        private LocationTabControler _locationTabControler;
         #endregion
 
         #region constructor
-        public ListerControler(MainWindow mainWindow, LocationListerWindow listerWindow) : base(mainWindow)
+        public ListerControler(MainWindow mainWindow, LocationListerWindow listerWindow, LocationTabControler locationTabControler) : base(mainWindow)
         {
             AllDisplayItems = new ObservableCollection<LocationListerDisplayItem>();
             CurrentDisplayItem = new LocationListerDisplayItem();
 
+            _locationTabControler = locationTabControler;
             _listerWindow = listerWindow;
 
             _listerWindow.LocationListView.ItemsSource = AllDisplayItems;
             _listerWindow.PhotoPlaceGrid.DataContext = CurrentDisplayItem;
 
             ReadData();
+        }
+
+        internal void HandleEdit()
+        {
+            // testing
+            Console.WriteLine(Window.Location_CountryControl.SelectKey("Germany") ? "Germany" : "No Germany");
         }
 
         private void ReadData()
@@ -97,20 +105,23 @@ namespace LocationScout
 
         internal void HandleGoogleMaps()
         {
-            /*
             var selectedItem = _listerWindow.LocationListView.SelectedItem as LocationListerDisplayItem;
-            if (selectedItem?.Tag is PhotoPlace photoPlace)
+            if (selectedItem?.Tag is ShootingLocation shootingLocation)
             {
-                var latitude = photoPlace.PlaceSubjectLocation.Coordinates.Latitude;
-                var longitude = photoPlace.PlaceSubjectLocation.Coordinates.Longitude;
+                var latitude = shootingLocation.SubjectLocations.ElementAt(0)?.Coordinates?.Latitude;
+                var longitude = shootingLocation.SubjectLocations.ElementAt(0)?.Coordinates?.Longitude;
 
-                var cpLat = GPSCoordinatesHelper.GetPosition(latitude, E_CoordinateType.Latitude);
-                var cpLong = GPSCoordinatesHelper.GetPosition(longitude, E_CoordinateType.Longitude);
+                if ((latitude != null) && (longitude != null))
+                {
 
-                var url = c_googleMapsUrl + new GPSCoordinatesHelper(latitude, cpLat).ToGoogleMapsString() + "+" + new GPSCoordinatesHelper(longitude, cpLong).ToGoogleMapsString();
+                    var cpLat = GPSCoordinatesHelper.GetPosition(latitude, E_CoordinateType.Latitude);
+                    var cpLong = GPSCoordinatesHelper.GetPosition(longitude, E_CoordinateType.Longitude);
 
-                Process.Start(c_chrome_exe, url);
-            }*/
+                    var url = c_googleMapsUrl + new GPSCoordinatesHelper(latitude, cpLat).ToGoogleMapsString() + "+" + new GPSCoordinatesHelper(longitude, cpLong).ToGoogleMapsString();
+
+                    Process.Start(c_chrome_exe, url);
+                }
+            }
         }
 
         internal void HandleClose()
