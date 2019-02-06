@@ -42,8 +42,17 @@ namespace LocationScout
 
         internal void HandleEdit()
         {
-            // testing
-            Console.WriteLine(Window.Location_CountryControl.SelectKey("Germany") ? "Germany" : "No Germany");
+            // work in progress
+
+            Window.Location_CountryControl.SelectKey(CurrentDisplayItem.CountryName);
+            var country = Window.Location_CountryControl.GetCurrentObject() as Country;
+            RefreshControl(country?.Areas?.OfType<Location>().ToList(), Window.Location_AreaControl);
+
+            Window.Location_AreaControl.SelectKey(CurrentDisplayItem.AreaName);
+            var area = Window.Location_AreaControl.GetCurrentObject() as Area;
+            RefreshControl(area?.SubAreas?.OfType<Location>().ToList(), Window.Location_SubAreaControl);
+
+            Window.Location_SubAreaControl.SelectKey(CurrentDisplayItem.SubAreaName);
         }
 
         private void ReadData()
@@ -87,6 +96,10 @@ namespace LocationScout
             var selectedItem = _listerWindow.LocationListView.SelectedItem as LocationListerDisplayItem;
             if (selectedItem is LocationListerDisplayItem displayItem)
             {
+                CurrentDisplayItem.CountryName = displayItem.CountryName;
+                CurrentDisplayItem.AreaName = displayItem.AreaName;
+                CurrentDisplayItem.SubAreaName = displayItem.SubAreaName;
+
                 CurrentDisplayItem.SubjectLocationName = displayItem.SubjectLocationName;
                 CurrentDisplayItem.SubjectLocationLatitude = displayItem.SubjectLocationLatitude;
                 CurrentDisplayItem.SubjectLocationLongitude = displayItem.SubjectLocationLongitude;
