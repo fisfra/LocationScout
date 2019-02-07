@@ -122,6 +122,11 @@ namespace LocationScout
             _controler.HandleSettingsSubjectLocationControlEditLostFocus();
         }
 
+        private void Settings_SubjectLocationControl_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleSettingsSubjectLocationControlLostFocus();
+        }
+
         private void PhotoUploadButton_Click(object sender, RoutedEventArgs e)
         {
             _controler.HandlePhotoUpload();
@@ -155,8 +160,12 @@ namespace LocationScout
         private void ParkingLocationControl_LostFocus(object sender, RoutedEventArgs e)
         {
             _controler.HandleParkingLocationControlEditLostFocus();
-        } 
-        #endregion
+        }
 
+        private void GoogleSubjectLocationButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleSubjectLocationGoogleSearch();
+        }
+        #endregion
     }
 }

@@ -150,6 +150,11 @@ namespace LocationScout
             _settingControler.HandleSettingsSubjectLocationControlEditLostFocus();
         }
 
+        internal void HandleSettingsSubjectLocationControlLostFocus()
+        {
+            _settingControler.HandleSettingsSubjectLocationControlLostFocus();
+        }
+
         internal void HandleShootingLocationControlEditLostFocus()
         {
             _locationControler.HandleShootingLocationControlEditLostFocus();
@@ -158,6 +163,11 @@ namespace LocationScout
         internal void LocationEdit()
         {
             _locationControler.Edit();
+        }
+
+        internal void HandleSubjectLocationGoogleSearch()
+        {
+            _settingControler.SubjectLocationGoogleSearch();
         }
 
         internal void HandleParkingLocationControlEditLostFocus()

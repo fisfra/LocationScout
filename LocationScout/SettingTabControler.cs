@@ -112,9 +112,19 @@ namespace LocationScout
             DisplayItem.SubjectLocationName = GetTextFromRichEditControl(Window.Settings_SubjectLocationControlEdit);
         }
 
+        internal void HandleSettingsSubjectLocationControlLostFocus()
+        {
+            DisplayItem.SubjectLocationName = Window.Settings_SubjectLocationControl.GetCurrentText();
+        }
+
         internal void HandleSettingsSubAreaControlEditLostFocus()
         {
             DisplayItem.SubAreaName = GetTextFromRichEditControl(Window.Settings_SubAreaControlEdit);
+        }
+
+        internal void SubjectLocationGoogleSearch()
+        {
+            GoogleMapsHelper.Search(DisplayItem.SubjectLocationName);
         }
 
         internal void Delete()

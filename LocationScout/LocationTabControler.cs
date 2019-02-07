@@ -12,11 +12,7 @@ using System.Windows.Input;
 using static LocationScout.DataAccess.PersistenceManager;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
-using LocationScout.Lister;
-using System.Windows.Documents;
 using System.Windows;
-using System.Globalization;
-using System.Windows.Data;
 
 namespace LocationScout
 {
@@ -499,7 +495,7 @@ namespace LocationScout
         internal void HandleGoogleMapsSubjectLocation()
         {
             var gps = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
-            GoogleMapsHelper.GoGoogleMap(gps);
+            GoogleMapsHelper.Go(gps);
         }        
 
         protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)

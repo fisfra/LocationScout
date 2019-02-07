@@ -12,12 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace LocationScout.Lister
+namespace LocationScout
 {
     /// <summary>
     /// Interaction logic for LocationListerWindow.xaml
     /// </summary>
-    public partial class LocationListerWindow : Window
+    public partial class LocationListerWindow : ExtendedWindow
     {
         #region attributes
         private ListerControler _controler;
@@ -38,9 +38,9 @@ namespace LocationScout.Lister
             _controler.HandleClose();
         }
 
-        private void GoogleMaps_Click(object sender, RoutedEventArgs e)
+        private void ShootingLocationGoogleMaps_Click(object sender, RoutedEventArgs e)
         {
-            _controler.HandleGoogleMaps();
+            _controler.HandleShootingLocationGoogleMaps();
         }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
@@ -51,7 +51,17 @@ namespace LocationScout.Lister
         private void LocationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _controler.HandleSelectionChanged();
-        } 
+        }
+
+        private void SubjectLocationGoogleMapsButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleSubjectLocationGoogleMaps();
+        }
+
+        private void ParkingLocationGoogleMapsButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.HandleParkingLocationGoogleMaps();
+        }        
         #endregion
     }
 }
