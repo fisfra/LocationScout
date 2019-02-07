@@ -19,7 +19,7 @@ namespace LocationScout
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : ClipboardMonitorWindow
+    public partial class MainWindow : ExtendedWindow
     {
         #region attributes
         private MainWindowControler _controler;
