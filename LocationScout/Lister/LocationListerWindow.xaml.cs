@@ -20,7 +20,7 @@ namespace LocationScout
     public partial class LocationListerWindow : ExtendedWindow
     {
         #region attributes
-        private ListerControler _controler;
+        internal ListerControler Controler { get; private set; }
         #endregion
 
         #region constructors
@@ -28,39 +28,39 @@ namespace LocationScout
         {
             InitializeComponent();
 
-            _controler = new ListerControler(mainWindow, this, locationTabControler);
+            Controler = new ListerControler(mainWindow, this, locationTabControler);
         }
         #endregion
 
         #region methods
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            _controler.HandleClose();
+            Controler.HandleClose();
         }
 
         private void ShootingLocationGoogleMaps_Click(object sender, RoutedEventArgs e)
         {
-            _controler.HandleShootingLocationGoogleMaps();
+            Controler.HandleShootingLocationGoogleMaps();
         }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            _controler.HandleEdit();
+            Controler.HandleEdit();
         }
 
         private void LocationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _controler.HandleSelectionChanged();
+            Controler.HandleSelectionChanged();
         }
 
         private void SubjectLocationGoogleMapsButton_Click(object sender, RoutedEventArgs e)
         {
-            _controler.HandleSubjectLocationGoogleMaps();
+            Controler.HandleSubjectLocationGoogleMaps();
         }
 
         private void ParkingLocationGoogleMapsButton_Click(object sender, RoutedEventArgs e)
         {
-            _controler.HandleParkingLocationGoogleMaps();
+            Controler.HandleParkingLocationGoogleMaps();
         }        
         #endregion
     }

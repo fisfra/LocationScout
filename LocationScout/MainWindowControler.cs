@@ -150,11 +150,6 @@ namespace LocationScout
             _settingControler.HandleSettingsSubjectLocationControlEditLostFocus();
         }
 
-        internal void HandleSettingsSubjectLocationControlLostFocus()
-        {
-            _settingControler.HandleSettingsSubjectLocationControlLostFocus();
-        }
-
         internal void HandleShootingLocationControlEditLostFocus()
         {
             _locationControler.HandleShootingLocationControlEditLostFocus();

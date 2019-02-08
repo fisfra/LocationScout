@@ -1,0 +1,47 @@
+﻿<Window x:Class="LocationScout.EditSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LocationScout"
+        mc:Ignorable="d"
+        Title="Edit Selection" Height="150" Width="250" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Name="ObjectSelectionGroupBox" Header="Select objects to edit" Margin="5,5,5,5" Grid.Row="0">
+            <Grid Margin="10,10,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"/>
+                    <RowDefinition Height="10*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <RadioButton Name="ShootingLocationRadioButton" GroupName="ObjectSelection" VerticalAlignment="Center" IsChecked="True" Grid.Row="0" Grid.ColumnSpan="2">Shooting Location</RadioButton>
+                <RadioButton Name="ParkingLocationRadioButton" GroupName="ObjectSelection" VerticalAlignment="Center" IsChecked="False" Grid.Row="2" Grid.ColumnSpan="2">Parking Location</RadioButton>
+            </Grid>
+        </GroupBox>
+
+        <Grid Grid.Row="1" Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Name="EditButton" Content="Edit" HorizontalAlignment="Stretch" Margin="15,0,5,0" Grid.Column="0" Click="DeleteButton_Click"/>
+            <Button Name="CancelButton" Content="Cancel" IsCancel="True"  HorizontalAlignment="Stretch" Margin="15,0,5,0" Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</Window>

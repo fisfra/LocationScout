@@ -22,7 +22,6 @@ namespace LocationScout
 
         #region attributes
         private E_Mode _currentMode;
-        //private E_EditMode _currentEditMode;
 
         private List<Area> _allAreas;
         private List<SubArea> _allSubAreas;
@@ -44,7 +43,7 @@ namespace LocationScout
         protected abstract E_EditMode DoEdit();
         protected abstract void SaveEditChanges();
         protected abstract void CheckGPSPaste(TextBox textbox, List<string> coordinates);
-        public abstract void ReloadAndRefreshControls();
+        internal abstract void ReloadAndRefreshControls();
         #endregion
 
         #region constructors
@@ -52,6 +51,7 @@ namespace LocationScout
         {
             MainControler = mainControler;
 
+            // register events
             CountryControl.Leaving += CountryControl_Leaving;
             AreaControl.Leaving += AreaControl_Leaving;
             AreaControl.LeavingViaShift += AreaControl_Leaving_LeavingViaShift;
@@ -66,7 +66,8 @@ namespace LocationScout
 
         #region methods
 
-        public virtual void HandleClipboardChange(string clipboardText)
+        #region internal methods
+        internal virtual void HandleClipboardChange(string clipboardText)
         {
             // get focussed control (even if the whole window is not in focus)
             IInputElement focusedControl = FocusManager.GetFocusedElement(Window);
@@ -89,7 +90,7 @@ namespace LocationScout
             }
         }
 
-        public virtual void RefreshAllObjectsFromDB(bool fullrefresh = true)
+        internal virtual void RefreshAllObjectsFromDB(bool fullrefresh = true)
         {
             // base class might use parameter
             if (fullrefresh)
@@ -100,24 +101,46 @@ namespace LocationScout
             }
         }
 
-        private void RefreshAllAreasFromDB()
+        internal virtual void Edit()
         {
-            var success = DataAccessAdapter.ReadAllAreas(out _allAreas, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading areas" + errorMessage, E_MessageType.error);
-        }
+            // currently in "add" mode...
+            if (_currentMode == E_Mode.add)
+            {
+                // check if editing is possible and switch controls
+                CurrentEditMode = DoEdit();
 
-        private void RefreshAllSubAreasFromDB()
-        {
-            var success = DataAccessAdapter.ReadAllSubAreas(out _allSubAreas, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading subareas" + errorMessage, E_MessageType.error);
-        }
+                // edit is possible
+                if (CurrentEditMode != E_EditMode.no_edit)
+                {
+                    // change button label
+                    EditButton.Content = "Save";
+                    AddButton.IsEnabled = false;
+                    DeleteButton.IsEnabled = false;
 
-        private void RefreshAllSubjectLocationsFromDB()
-        {
-            var success = DataAccessAdapter.ReadAllSubjectLocations(out _allSubjectLocations, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading subject locations" + errorMessage, E_MessageType.error);
-        }
+                    // switch to edit mode
+                    _currentMode = E_Mode.edit;
+                }
+            }
+            else
+            {
+                // set control state
+                ResetControlState();
 
+                // save the changes to the database
+                SaveEditChanges();
+
+                // ask maincontroler to reload data from database and refresh all controls
+                // maincontroler needs to take care of this since it not only settings tab
+                MainControler.ReloadAndRefreshControls();
+
+                // reset the modes
+                _currentMode = E_Mode.add;
+                CurrentEditMode = E_EditMode.no_edit;
+            }
+        }
+        #endregion
+
+        #region protected methods
         protected virtual void CountryControl_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             // if area control is ready only, only area of the assigned country can be selected
@@ -227,11 +250,6 @@ namespace LocationScout
             SetSubjectLocationDisplayItem(e.Object is SubjectLocation subjectLocation ? subjectLocation.Name : SubjectLocationControl.GetCurrentText());
         }
 
-        private void SubjectLocationControl_LeavingViaShift(object sender, AutoCompleteTextBoxControlEventArgs e)
-        {
-            SubAreaControl.SetFocus();
-        }
-
         protected virtual void SetCountryDisplayItem(string countryName)
         {
             // overrride if want to set the view model attributes for databinding
@@ -249,53 +267,7 @@ namespace LocationScout
 
         protected virtual void SetSubjectLocationDisplayItem(string subjectLocationName)
         {
-            // overrride if want to set the view model attributes for databinding
-        }
-
-        private List<SubArea> GetCountrySubAreas(List<SubArea> subAreas1, List<SubArea> subAreas2)
-        {
-            // intersects the two list and return the result list containing intersecting areas of both lists
-            return subAreas1.Select(a => a)
-                            .Intersect(subAreas2.Select(b => new SubArea { Id = b.Id, Areas = b.Areas, Name = b.Name, Countries = b.Countries }))
-                            .ToList();
-        }
-
-        public virtual void Edit()
-        {
-            // currently in "add" mode...
-            if (_currentMode == E_Mode.add)
-            {
-                // check if editing is possible and switch controls
-                CurrentEditMode = DoEdit();
-
-                // edit is possible
-                if (CurrentEditMode != E_EditMode.no_edit)
-                {
-                    // change button label
-                    EditButton.Content = "Save";
-                    AddButton.IsEnabled = false;
-                    DeleteButton.IsEnabled = false;
-
-                    // switch to edit mode
-                    _currentMode = E_Mode.edit;
-                }
-            }
-            else
-            {
-                // set control state
-                ResetControlState();
-
-                // save the changes to the database
-                SaveEditChanges();
-
-                // ask maincontroler to reload data from database and refresh all controls
-                // maincontroler needs to take care of this since it not only settings tab
-                MainControler.ReloadAndRefreshControls();
-
-                // reset the modes
-                _currentMode = E_Mode.add;
-                CurrentEditMode = E_EditMode.no_edit;
-            }
+            // override if want to set the view model attributes for databinding
         }
 
         protected virtual void SwitchEditModeShootingLocation(AutoCompleteTextBox targetControl, RichTextBox targetEditControl, List<Control> otherControls)
@@ -370,6 +342,41 @@ namespace LocationScout
         {
             return Double.TryParse(text, out double d);
         }
+        #endregion
+
+        #region private methods
+        private List<SubArea> GetCountrySubAreas(List<SubArea> subAreas1, List<SubArea> subAreas2)
+        {
+            // intersects the two list and return the result list containing intersecting areas of both lists
+            return subAreas1.Select(a => a)
+                            .Intersect(subAreas2.Select(b => new SubArea { Id = b.Id, Areas = b.Areas, Name = b.Name, Countries = b.Countries }))
+                            .ToList();
+        }
+
+        private void SubjectLocationControl_LeavingViaShift(object sender, AutoCompleteTextBoxControlEventArgs e)
+        {
+            SubAreaControl.SetFocus();
+        }
+
+        private void RefreshAllAreasFromDB()
+        {
+            var success = DataAccessAdapter.ReadAllAreas(out _allAreas, out string errorMessage);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading areas" + errorMessage, E_MessageType.error);
+        }
+
+        private void RefreshAllSubAreasFromDB()
+        {
+            var success = DataAccessAdapter.ReadAllSubAreas(out _allSubAreas, out string errorMessage);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading subareas" + errorMessage, E_MessageType.error);
+        }
+
+        private void RefreshAllSubjectLocationsFromDB()
+        {
+            var success = DataAccessAdapter.ReadAllSubjectLocations(out _allSubjectLocations, out string errorMessage);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading subject locations" + errorMessage, E_MessageType.error);
+        }
+        #endregion
+
         #endregion
     }
 }

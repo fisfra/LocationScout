@@ -13,8 +13,6 @@ namespace LocationScout
     internal class ListerControler : ControlerBase
     {
         #region constants
-        //private string c_googleMapsUrl = "https://www.google.com/maps/place/";
-        //private string c_chrome_exe = "chrome.exe";
         #endregion
 
         #region attributes
@@ -80,12 +78,22 @@ namespace LocationScout
             _locationTabControler.DisplayItem.Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation?.Photos?.ElementAtOrDefault(2)?.ImageBytes);
 
             // parking location
-            RefreshControl(shootingLocation?.ParkingLocations?.OfType<Location>().ToList(), Window.ShootingLocationControl);
+            RefreshControl(shootingLocation?.ParkingLocations?.OfType<Location>().ToList(), Window.ParkingLocationControl);
             Window.ParkingLocationControl.SelectKey(CurrentDisplayItem.ParkingLocationName);
             _locationTabControler.DisplayItem.ParkingLocationName = CurrentDisplayItem.ParkingLocationName;
             var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
             _locationTabControler.DisplayItem.ParkingLocationLatitude = parkingLocation.Coordinates.Latitude;
             _locationTabControler.DisplayItem.ParkingLocationLongitude = parkingLocation.Coordinates.Longitude;
+
+
+            var shootingLocationId = shootingLocation.Id;
+
+            var di = AllDisplayItems.FirstOrDefault(d => (d.Tag as ShootingLocation).Id == shootingLocationId);
+            di.ShootingLocationName = shootingLocation.Name;
+
+            
+
+
         }
 
         private void ReadData()

@@ -45,16 +45,9 @@ namespace LocationScout
         }
         #endregion
 
-        #region methods      
-        protected override void CheckGPSPaste(TextBox textbox, List<string> coordinates)
-        {
-            if ((textbox.Name == Window.Settings_SubjectLocationLatituteTextBox.Name) || (textbox.Name == Window.Settings_SubjectLocationLongitudeTextBox.Name))
-            {
-                Window.Settings_SubjectLocationLatituteTextBox.Text = coordinates[0];
-                Window.Settings_SubjectLocationLongitudeTextBox.Text = coordinates[1];
-            }
-        }
-
+        #region methods          
+        
+        #region internal methods   
         internal void Add()
         {
             // if the autocomplete textboxes are not left via TAB but by clicking directly on a button,
@@ -79,15 +72,7 @@ namespace LocationScout
             Window.Settings_CountryControl.SetFocus();
         }
 
-        private void UpdateDisplayItem()
-        {
-            DisplayItem.CountryName = Window.Settings_CountryControl.GetCurrentText();
-            DisplayItem.AreaName = Window.Settings_AreaControl.GetCurrentText();
-            DisplayItem.SubAreaName = Window.Settings_SubAreaControl.GetCurrentText();
-            DisplayItem.SubjectLocationName = Window.Settings_SubjectLocationControl.GetCurrentText();
-        }
-
-        public override void ReloadAndRefreshControls()
+        internal override void ReloadAndRefreshControls()
         {
             Window.Settings_CountryControl.ClearText();
             Window.Settings_AreaControl.ClearText();
@@ -97,29 +82,24 @@ namespace LocationScout
             Window.Settings_SubjectLocationLongitudeTextBox.Text = null;
         }
 
-        internal void HandleSettingsAreaControlEditLostFocus()
-        {
-            DisplayItem.AreaName = GetTextFromRichEditControl(Window.Settings_AreaControlEdit);
-        }
-
         internal void HandleSettingsCountryControlEditLostFocus()
         {
             DisplayItem.CountryName = GetTextFromRichEditControl(Window.Settings_CountryControlEdit);
         }
 
-        internal void HandleSettingsSubjectLocationControlEditLostFocus()
+        internal void HandleSettingsAreaControlEditLostFocus()
         {
-            DisplayItem.SubjectLocationName = GetTextFromRichEditControl(Window.Settings_SubjectLocationControlEdit);
-        }
-
-        internal void HandleSettingsSubjectLocationControlLostFocus()
-        {
-            DisplayItem.SubjectLocationName = Window.Settings_SubjectLocationControl.GetCurrentText();
+            DisplayItem.AreaName = GetTextFromRichEditControl(Window.Settings_AreaControlEdit);
         }
 
         internal void HandleSettingsSubAreaControlEditLostFocus()
         {
             DisplayItem.SubAreaName = GetTextFromRichEditControl(Window.Settings_SubAreaControlEdit);
+        }
+
+        internal void HandleSettingsSubjectLocationControlEditLostFocus()
+        {
+            DisplayItem.SubjectLocationName = GetTextFromRichEditControl(Window.Settings_SubjectLocationControlEdit);
         }
 
         internal void SubjectLocationGoogleSearch()
@@ -132,26 +112,15 @@ namespace LocationScout
             SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow(Window);
             deletingWindow.ShowDialog();
         }
+        #endregion
 
-        private void EvaluateDatabaseMessages(PersistenceManager.E_DBReturnCode success, string errorMessage)
+        #region protected methods
+        protected override void CheckGPSPaste(TextBox textbox, List<string> coordinates)
         {
-            switch (success)
+            if ((textbox.Name == Window.Settings_SubjectLocationLatituteTextBox.Name) || (textbox.Name == Window.Settings_SubjectLocationLongitudeTextBox.Name))
             {
-                case PersistenceManager.E_DBReturnCode.no_error:
-                    break;                
-
-                case PersistenceManager.E_DBReturnCode.error:
-                    ShowMessage("Error writing data.\n" + errorMessage, E_MessageType.error);
-                    break;
-
-                case PersistenceManager.E_DBReturnCode.already_existing:
-                    ShowMessage("Already existing in database.\n" + errorMessage, E_MessageType.info);
-                    break;
-
-                default:
-                    // unknown enum
-                    System.Diagnostics.Debug.Assert(false);
-                    break;
+                Window.Settings_SubjectLocationLatituteTextBox.Text = coordinates[0];
+                Window.Settings_SubjectLocationLongitudeTextBox.Text = coordinates[1];
             }
         }
 
@@ -204,6 +173,152 @@ namespace LocationScout
                 default:
                     Debug.Assert(false);
                     throw new Exception("Unknown enum value in SettingTabControler::SaveEditChanges()");
+            }
+        }
+
+        protected override E_EditMode DoEdit()
+        {
+            // return the edit mode
+            E_EditMode editmode = E_EditMode.no_edit;
+
+            // check which controls have text and objects (are in DB)
+            var hasCountryText = !string.IsNullOrEmpty(Window.Settings_CountryControl.GetCurrentText());
+            var countryInDB = Window.Settings_CountryControl.GetCurrentObject() != null;
+
+            var hasAreaText = !string.IsNullOrEmpty(Window.Settings_AreaControl.GetCurrentText());
+            var areaInDB = Window.Settings_AreaControl.GetCurrentObject() != null;
+
+            var hasSubAreaText = !string.IsNullOrEmpty(Window.Settings_SubAreaControl.GetCurrentText());
+            var subAreaInDB = Window.Settings_SubAreaControl.GetCurrentObject() != null;
+
+            var hasSubjectLocationText = !string.IsNullOrEmpty(Window.Settings_SubjectLocationControl.GetCurrentText());
+            var subjectLocationInDB = Window.Settings_SubjectLocationControl.GetCurrentObject() != null;
+
+            // only country control has text, so edit country
+            if (hasCountryText && !hasAreaText && !hasSubAreaText && !hasSubjectLocationText)
+            {
+                // edit only saved values
+                if (countryInDB)
+                {
+                    SwitchEditModeCountry();
+
+                    editmode = E_EditMode.edit_country;
+                }
+            }
+
+            // country and area control have text, so edit area
+            else if (hasCountryText && hasAreaText && !hasSubAreaText & !hasSubjectLocationText)
+            {
+                // edit only saved values
+                if (countryInDB && areaInDB)
+                {
+                    SwitchEditModeArea();
+
+                    editmode = E_EditMode.edit_area;
+                }
+            }
+
+            // country, area and subarea control have text, so edit subarea
+            else if (hasSubAreaText && hasAreaText && hasSubAreaText && !hasSubjectLocationText)
+            {
+                // edit only saved values
+                if (countryInDB && areaInDB && subAreaInDB)
+                {
+                    SwitchEditModeSubArea();
+
+                    editmode = E_EditMode.edit_subarea;
+                }
+            }
+
+            // all controls have text, so edit subject location
+            else if (hasSubAreaText && hasAreaText && hasSubAreaText && hasSubjectLocationText)
+            {
+                // edit only saved values
+                if (countryInDB && areaInDB && subAreaInDB && subjectLocationInDB)
+                {
+                    SwitchEditModeSubjectLocation();
+
+                    editmode = E_EditMode.edit_subjectlocation;
+                }
+            }
+
+            // editing is not possible - probably user wants to edit values that are not added to DB yet
+            else
+            {
+                ShowMessage("Editing not possible (you might have entered new values)", E_MessageType.info);
+            }
+
+            return editmode;
+        }
+
+        protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
+        {
+            base.SubjectLocationControl_Leaving(sender, e);
+
+            DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
+            DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
+
+            Window.Settings_SubjectLocationLatituteTextBox.Focus();
+            Window.Settings_SubjectLocationLatituteTextBox.CaretIndex = Window.Settings_SubjectLocationLatituteTextBox.Text.Length;
+        }
+
+        protected override void SetCountryDisplayItem(string countryName)
+        {
+            DisplayItem.CountryName = countryName;
+        }
+
+        protected override void SetAreaDisplayItem(string areaName)
+        {
+            DisplayItem.AreaName = areaName;
+        }
+
+        protected override void SetSubAreaDisplayItem(string subAreaName)
+        {
+            DisplayItem.SubAreaName = subAreaName;
+        }
+
+        protected override void SetSubjectLocationDisplayItem(string subjectLocationName)
+        {
+            DisplayItem.SubjectLocationName = subjectLocationName;
+        }
+
+        protected override void SubAreaControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
+        {
+            base.SubAreaControl_Leaving(sender, e);
+            
+            //DisplayItem.SubjectLocationLatitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Latitude;
+            //DisplayItem.SubjectLocationLongitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Longitude;
+        }
+        #endregion
+
+        #region private methods
+        private void UpdateDisplayItem()
+        {
+            DisplayItem.CountryName = Window.Settings_CountryControl.GetCurrentText();
+            DisplayItem.AreaName = Window.Settings_AreaControl.GetCurrentText();
+            DisplayItem.SubAreaName = Window.Settings_SubAreaControl.GetCurrentText();
+            DisplayItem.SubjectLocationName = Window.Settings_SubjectLocationControl.GetCurrentText();
+        }
+
+        private void EvaluateDatabaseMessages(PersistenceManager.E_DBReturnCode success, string errorMessage)
+        {
+            switch (success)
+            {
+                case PersistenceManager.E_DBReturnCode.no_error:
+                    break;                
+
+                case PersistenceManager.E_DBReturnCode.error:
+                    ShowMessage("Error writing data.\n" + errorMessage, E_MessageType.error);
+                    break;
+
+                case PersistenceManager.E_DBReturnCode.already_existing:
+                    ShowMessage("Already existing in database.\n" + errorMessage, E_MessageType.info);
+                    break;
+
+                default:
+                    // unknown enum
+                    System.Diagnostics.Debug.Assert(false);
+                    break;
             }
         }
 
@@ -346,6 +461,8 @@ namespace LocationScout
                 if (DataAccessAdapter.EditCountryName(country.Id, newCountryName, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
                     ShowMessage("Country name successfully changed.", E_MessageType.info);
+
+                    
                 }
                 else
                 {
@@ -357,120 +474,8 @@ namespace LocationScout
                 ShowMessage("No change done.", E_MessageType.info);
             }
         }
+        #endregion
 
-        protected override E_EditMode DoEdit()
-        {
-            // return the edit mode
-            E_EditMode editmode = E_EditMode.no_edit;
-
-            // check which controls have text and objects (are in DB)
-            var hasCountryText = !string.IsNullOrEmpty(Window.Settings_CountryControl.GetCurrentText());
-            var countryInDB = Window.Settings_CountryControl.GetCurrentObject() != null;
-
-            var hasAreaText = !string.IsNullOrEmpty(Window.Settings_AreaControl.GetCurrentText());
-            var areaInDB = Window.Settings_AreaControl.GetCurrentObject() != null;
-
-            var hasSubAreaText = !string.IsNullOrEmpty(Window.Settings_SubAreaControl.GetCurrentText());
-            var subAreaInDB = Window.Settings_SubAreaControl.GetCurrentObject() != null;
-
-            var hasSubjectLocationText = !string.IsNullOrEmpty(Window.Settings_SubjectLocationControl.GetCurrentText());
-            var subjectLocationInDB = Window.Settings_SubjectLocationControl.GetCurrentObject() != null;
-
-            // only country control has text, so edit country
-            if (hasCountryText && !hasAreaText && !hasSubAreaText && !hasSubjectLocationText)
-            {
-                // edit only saved values
-                if (countryInDB)
-                {
-                    SwitchEditModeCountry();
-
-                    editmode = E_EditMode.edit_country;
-                }
-            }
-
-            // country and area control have text, so edit area
-            else if (hasCountryText && hasAreaText && !hasSubAreaText & !hasSubjectLocationText)
-            {
-                // edit only saved values
-                if (countryInDB && areaInDB)
-                {
-                    SwitchEditModeArea();
-
-                    editmode = E_EditMode.edit_area;
-                }
-            }
-
-            // country, area and subarea control have text, so edit subarea
-            else if (hasSubAreaText && hasAreaText && hasSubAreaText && !hasSubjectLocationText)
-            {
-                // edit only saved values
-                if (countryInDB && areaInDB && subAreaInDB)
-                {
-                    SwitchEditModeSubArea();
-
-                    editmode = E_EditMode.edit_subarea;
-                }
-            }
-
-            // all controls have text, so edit subject location
-            else if (hasSubAreaText && hasAreaText && hasSubAreaText && hasSubjectLocationText)
-            {
-                // edit only saved values
-                if (countryInDB && areaInDB && subAreaInDB && subjectLocationInDB)
-                {
-                    SwitchEditModeSubjectLocation();
-
-                    editmode = E_EditMode.edit_subjectlocation;
-                }
-            }
-
-            // editing is not possible - probably user wants to edit values that are not added to DB yet
-            else
-            {
-                ShowMessage("Editing not possible (you might have entered new values)", E_MessageType.info);
-            }
-
-            return editmode;
-        }
-
-        protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
-        {
-            base.SubjectLocationControl_Leaving(sender, e);
-
-            DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
-            DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
-
-            Window.Settings_SubjectLocationLatituteTextBox.Focus();
-            Window.Settings_SubjectLocationLatituteTextBox.CaretIndex = Window.Settings_SubjectLocationLatituteTextBox.Text.Length;
-        }
-
-        protected override void SetCountryDisplayItem(string countryName)
-        {
-            DisplayItem.CountryName = countryName;
-        }
-
-        protected override void SetAreaDisplayItem(string areaName)
-        {
-            DisplayItem.AreaName = areaName;
-        }
-
-        protected override void SetSubAreaDisplayItem(string subAreaName)
-        {
-            DisplayItem.SubAreaName = subAreaName;
-        }
-
-        protected override void SetSubjectLocationDisplayItem(string subjectLocationName)
-        {
-            DisplayItem.SubjectLocationName = subjectLocationName;
-        }
-
-        protected override void SubAreaControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
-        {
-            base.SubAreaControl_Leaving(sender, e);
-            
-            //DisplayItem.SubjectLocationLatitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Latitude;
-            //DisplayItem.SubjectLocationLongitude = (Window.SettingsSubjectLocationControl.GetCurrentObject() as SubjectLocation)?.Coordinates?.Longitude;
-        }
         #endregion
     }
 }

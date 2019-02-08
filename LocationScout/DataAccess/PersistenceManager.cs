@@ -33,7 +33,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).Include(c => c.SubjectLocations).ToList();
+                    allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas))
+                                               .Include(c => c.SubAreas.Select(sa => sa.SubjectLocation.Select(sl => sl.ShootLocations.Select(sh => sh.ParkingLocations))))
+                                               .Include(c => c.SubjectLocations.Select(sl => sl.ShootLocations.Select(sh => sh.ParkingLocations)))
+                                               .ToList();
                 }
             }
             catch (Exception e)

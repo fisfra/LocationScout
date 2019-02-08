@@ -38,6 +38,8 @@ namespace LocationScout
         private List<ShootingLocation> _allShootingLocations;
 
         private List<ParkingLocation> _allParkingLocations;
+
+        private LocationListerWindow _listerWindow;
         #endregion
 
         #region contructors
@@ -51,44 +53,21 @@ namespace LocationScout
 
             RefreshShootingLocationsFromDB();
             RefreshParkingLocationsFromDB();
+
+            _listerWindow = new LocationListerWindow(base.Window, this);
         }
         #endregion
 
         #region methods
+
+        #region internal methods
         internal void Clear()
         {
             ClearUI();
             Window.Location_CountryControl.SetFocus(); 
         }
 
-        private void ClearUI()
-        {
-            Window.Location_CountryControl.ClearText();
-            Window.Location_AreaControl.ClearText();
-            Window.Location_SubAreaControl.ClearText();
-            Window.Location_SubjectLocationControl.ClearText();
-            Window.ShootingLocationControl.ClearText();
-            Window.ParkingLocationControl.ClearText();
-            
-            DisplayItem.Reset();
-        }
-
-        protected override void CheckGPSPaste(TextBox textbox, List<string> coordinates)
-        {
-            if ( (textbox.Name == Window.ShootingLocationLatitudeTextBox.Name) || (textbox.Name == Window.ShootingLocationLongitudeTextBox.Name))
-            {
-                Window.ShootingLocationLatitudeTextBox.Text = coordinates[0];
-                Window.ShootingLocationLongitudeTextBox.Text = coordinates[1];
-            }
-
-            else if ((textbox.Name == Window.ParkingLocationLatitudeTextBox.Name) || (textbox.Name == Window.ParkingLocationLongitudeTextBox.Name))
-            {
-                Window.ParkingLocationLatitudeTextBox.Text = coordinates[0];
-                Window.ParkingLocationLongitudeTextBox.Text = coordinates[1];
-            }
-        }
-
-        public override void ReloadAndRefreshControls()
+        internal override void ReloadAndRefreshControls()
         {
             ClearUI();
 
@@ -96,7 +75,7 @@ namespace LocationScout
             RefreshParkingLocationControl();
         }
 
-        public override void RefreshAllObjectsFromDB(bool fullrefresh = true)
+        internal override void RefreshAllObjectsFromDB(bool fullrefresh = true)
         {
             base.RefreshAllObjectsFromDB();
 
@@ -104,38 +83,11 @@ namespace LocationScout
             RefreshParkingLocationsFromDB();
         }
 
-        private void RefreshAllParkingLocationsFromDB()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void RefreshAllShootingLocationsFromDB()
-        {
-            throw new NotImplementedException();
-        }
-
         internal void ShowLister()
         {
-            LocationListerWindow window = new LocationListerWindow(base.Window, this);
-            window.Show();
-        }
-
-        private void AreaControl_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
-        {
-            Window.Location_CountryControl.SetFocus();
-        }
-
-        private void RefreshShootingLocationsFromDB()
-        {
-            var success = DataAccessAdapter.ReadAllShootingLocations(out _allShootingLocations, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading shooting locations\n" + errorMessage, E_MessageType.error);
-        }
-
-        private void RefreshParkingLocationsFromDB()
-        {
-            var success = DataAccessAdapter.ReadAllParkingLocations(out _allParkingLocations, out string errorMessage);
-            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading parking locations\n" + errorMessage, E_MessageType.error);
-        }
+            //LocationListerWindow window = new LocationListerWindow(base.Window, this);
+            _listerWindow.Show();
+        }        
 
         internal void Add()
         {
@@ -203,16 +155,6 @@ namespace LocationScout
             Window.Location_CountryControl.SetFocus();
         }
 
-        private void RefreshShootLocationControl()
-        {
-            RefreshControl(_allShootingLocations?.OfType<Location>()?.ToList(), Window.ShootingLocationControl);
-        }
-
-        private void RefreshParkingLocationControl()
-        {
-            RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
-        }
-
         internal void HandleParkingLocationControlEditLostFocus()
         {
             DisplayItem.ParkingLocationName = GetTextFromRichEditControl(Window.ParkingLocationControlEdit);
@@ -221,194 +163,6 @@ namespace LocationScout
         internal void HandleShootingLocationControlEditLostFocus()
         {
             DisplayItem.ShootingLocationName = GetTextFromRichEditControl(Window.ShootingLocationControlEdit);
-        }
-
-        protected override E_EditMode DoEdit()
-        {
-            // return the edit mode
-            E_EditMode editmode = E_EditMode.no_edit;
-
-            // check which controls have text and objects (are in DB)
-            var hasShootingLocationText = !string.IsNullOrEmpty(Window.Location_SubjectLocationControl.GetCurrentText());
-            var shootingLocationInDB = Window.Location_SubjectLocationControl.GetCurrentObject() != null;
-
-            var hasParkingLocationText = !string.IsNullOrEmpty(Window.ParkingLocationControl.GetCurrentText());
-            var parkingLocationInDB = Window.ParkingLocationControl.GetCurrentObject() != null;
-
-            // only shooting location control has text, so edit shooting location
-            if (hasShootingLocationText && !hasParkingLocationText)
-            {
-                // edit only saved values
-                if (shootingLocationInDB)
-                {
-                    SwitchEditModeShootingLocation();
-
-                    editmode = E_EditMode.edit_shootinglocation;
-                }
-            }
-
-            // both shooting and parking locaton have text, so edit parking location
-            else if (hasShootingLocationText && hasParkingLocationText)
-            {
-                // edit only saved values
-                if (parkingLocationInDB)
-                {
-                    SwitchEditModeParkingLocation();
-
-                    editmode = E_EditMode.edit_parkinglocation;
-                }
-            }
-
-            // editing is not possible - probably user wants to edit values that are not added to DB yet
-            else
-            {
-                ShowMessage("Editing not possible (you might have entered new values)", E_MessageType.info);
-            }
-
-
-            return editmode;
-        }
-
-        private void SwitchEditModeParkingLocation()
-        {
-            var controlsToDisable = new List<Control>()
-            {
-                Window.Location_CountryControl,
-                Window.Location_AreaControl,
-                Window.Location_SubAreaControl,
-                Window.Location_SubjectLocationControl,
-                Window.Location_SubjectLocationLatituteTextBox,
-                Window.Location_SubjectLocationLongitudeTextBox,
-                Window.ShootingLocationControl,
-                Window.ShootingLocationLatitudeTextBox,
-                Window.ShootingLocationLongitudeTextBox
-            };
-
-            SwitchEditModeShootingLocation(Window.ParkingLocationControl, Window.ParkingLocationControlEdit, controlsToDisable);
-        }
-
-        private void SwitchEditModeShootingLocation()
-        {
-            var controlsToDisable = new List<Control>()
-            {
-                Window.Location_CountryControl,
-                Window.Location_AreaControl,
-                Window.Location_SubAreaControl,
-                Window.Location_SubjectLocationControl,
-                Window.Location_SubjectLocationLatituteTextBox,
-                Window.Location_SubjectLocationLongitudeTextBox,
-                Window.ParkingLocationControl,
-                Window.ParkingLocationLatitudeTextBox,
-                Window.ParkingLocationLongitudeTextBox
-            };
-
-            SwitchEditModeShootingLocation(Window.ShootingLocationControl, Window.ShootingLocationControlEdit, controlsToDisable);
-        }
-
-        protected override void SaveEditChanges()
-        {
-            switch (CurrentEditMode)
-            {
-                case E_EditMode.no_edit:
-                case E_EditMode.edit_country:
-                case E_EditMode.edit_area:
-                case E_EditMode.edit_subarea:
-                case E_EditMode.edit_subjectlocation:
-                    Debug.Assert(false);
-                    throw new Exception("Wrong enum value in LocationTabControler::SaveEditChanges()");
-
-                case E_EditMode.edit_shootinglocation:
-                    SaveEditedShootingLocation();
-                    break;
-                case E_EditMode.edit_parkinglocation:
-                    SaveEditedParkingLocation();
-                    break;
-                default:
-                    Debug.Assert(false);
-                    throw new Exception("Unknown enum value in SettingTabControler::SaveEditChanges()"); ;
-            }
-        }
-
-        private void SaveEditedParkingLocation()
-        {
-            // save the edits
-            var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
-            var newParkingLocationName = DisplayItem.ParkingLocationName;
-            var newParkingLocationGPS = new GPSCoordinates(DisplayItem.ParkingLocationLatitude, DisplayItem.ParkingLocationLongitude);
-
-            // write only to database if there was a change
-            if ((parkingLocation.Name != newParkingLocationName) || (parkingLocation.Coordinates.Latitude != newParkingLocationGPS.Latitude) || (parkingLocation.Coordinates.Longitude != newParkingLocationGPS.Longitude))
-            {
-                if (DataAccessAdapter.EditParkingLocationName_GPS(parkingLocation.Id, newParkingLocationName, newParkingLocationGPS, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
-                {
-                    ShowMessage("Parking location data successfully changed.", E_MessageType.info);
-                }
-                else
-                {
-                    ShowMessage("Error editing Parking location data." + errorMessage, E_MessageType.error);
-                }
-            }
-            else
-            {
-                ShowMessage("No change done.", E_MessageType.info);
-            }
-        }
-
-        private void SaveEditedShootingLocation()
-        {
-            // save the edits
-            var shootingLocation = Window.ShootingLocationControl.GetCurrentObject() as ShootingLocation;
-            var newShootingLocationName = DisplayItem.ShootingLocationName;
-            var newShootingLocationGPS = new GPSCoordinates(DisplayItem.ShootingLocationLatitude, DisplayItem.ShootingLocationLongitude);
-
-            // write only to database if there was a change
-            if ((shootingLocation.Name != newShootingLocationName) || (shootingLocation.Coordinates.Latitude != newShootingLocationGPS.Latitude) || (shootingLocation.Coordinates.Longitude != newShootingLocationGPS.Longitude))
-            {
-                if (DataAccessAdapter.EditShootingLocationName_GPS(shootingLocation.Id, newShootingLocationName, newShootingLocationGPS, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
-                {
-                    ShowMessage("Shooting location data successfully changed.", E_MessageType.info);
-                }
-                else
-                {
-                    ShowMessage("Error editing Shooting location data." + errorMessage, E_MessageType.error);
-                }
-            }
-            else
-            {
-                ShowMessage("No change done.", E_MessageType.info);
-            }
-        }
-
-        protected override void ResetControlState()
-        {
-            base.ResetControlState();
-
-            Window.ShootingLocationControl.Visibility = Visibility.Visible;
-            Window.ShootingLocationControlEdit.Visibility = Visibility.Hidden;            
-            Window.ParkingLocationControl.Visibility = Visibility.Visible;
-            Window.ParkingLocationControlEdit.Visibility = Visibility.Hidden;
-            Window.Location_CountryControl.IsEnabled = true;
-            Window.Location_AreaControl.IsEnabled = true;
-            Window.Location_SubAreaControl.IsEnabled = true;
-            Window.Location_SubjectLocationControl.IsEnabled = true;
-            Window.Location_SubjectLocationLatituteTextBox.IsEnabled = false;
-            Window.Location_SubjectLocationLongitudeTextBox.IsEnabled = false;
-            Window.ShootingLocationControl.IsEnabled = true;
-            Window.ShootingLocationLatitudeTextBox.IsEnabled = true;
-            Window.ShootingLocationLongitudeTextBox.IsEnabled = true;
-            Window.ParkingLocationControl.IsEnabled = true;
-            Window.ParkingLocationLatitudeTextBox.IsEnabled = true;
-            Window.ParkingLocationLongitudeTextBox.IsEnabled = true;
-        }
-
-        private long AddParkingLocation(string parkingLocationName, GPSCoordinates parkingLocationGPS, out string errorMessage)
-        {
-            long newId = -1;
-
-            // write to database (newId == -1 in case of error, so no additional error handling required)
-            DataAccessAdapter.AddParkingLocation(parkingLocationName, parkingLocationGPS, out newId, out errorMessage);
-
-            return newId;
         }
 
         internal void HandleRemove(E_PhotoNumber photoNumber)
@@ -451,6 +205,352 @@ namespace LocationScout
             }
         }
 
+        internal void HandleGoogleMapsSubjectLocation()
+        {
+            var gps = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
+            GoogleMapsHelper.Go(gps);
+        }        
+        #endregion
+
+        #region protected methods
+        protected override void CheckGPSPaste(TextBox textbox, List<string> coordinates)
+        {
+            if ( (textbox.Name == Window.ShootingLocationLatitudeTextBox.Name) || (textbox.Name == Window.ShootingLocationLongitudeTextBox.Name))
+            {
+                Window.ShootingLocationLatitudeTextBox.Text = coordinates[0];
+                Window.ShootingLocationLongitudeTextBox.Text = coordinates[1];
+            }
+
+            else if ((textbox.Name == Window.ParkingLocationLatitudeTextBox.Name) || (textbox.Name == Window.ParkingLocationLongitudeTextBox.Name))
+            {
+                Window.ParkingLocationLatitudeTextBox.Text = coordinates[0];
+                Window.ParkingLocationLongitudeTextBox.Text = coordinates[1];
+            }
+        }
+
+        protected override E_EditMode DoEdit()
+        {
+            // return the edit mode
+            E_EditMode editmode = E_EditMode.no_edit;
+
+            // check which controls have text and objects (are in DB)
+            var hasShootingLocationText = !string.IsNullOrEmpty(Window.Location_SubjectLocationControl.GetCurrentText());
+            var shootingLocationInDB = Window.Location_SubjectLocationControl.GetCurrentObject() != null;
+
+            var hasParkingLocationText = !string.IsNullOrEmpty(Window.ParkingLocationControl.GetCurrentText());
+            var parkingLocationInDB = Window.ParkingLocationControl.GetCurrentObject() != null;
+
+            // only shooting location control has text, so edit shooting location
+            if (hasShootingLocationText && !hasParkingLocationText)
+            {
+                // edit only saved values
+                if (shootingLocationInDB)
+                {
+                    SwitchEditModeShootingLocation();
+
+                    editmode = E_EditMode.edit_shootinglocation;
+                }
+            }
+
+            // only parking locaton have text, so edit parking location
+            else if (!hasShootingLocationText && hasParkingLocationText)
+            {
+                // edit only saved values
+                if (parkingLocationInDB)
+                {
+                    SwitchEditModeParkingLocation();
+
+                    editmode = E_EditMode.edit_parkinglocation;
+                }
+            }
+
+            // both have text, so check focus
+            else if (hasShootingLocationText && hasParkingLocationText)
+            {
+                if (shootingLocationInDB && !parkingLocationInDB) 
+                {
+                    SwitchEditModeShootingLocation();
+                    editmode = E_EditMode.edit_shootinglocation;
+                }
+
+                else if (!shootingLocationInDB && parkingLocationInDB)
+                {
+                    SwitchEditModeParkingLocation();
+                    editmode = E_EditMode.edit_parkinglocation;
+                }
+
+                else if (shootingLocationInDB && parkingLocationInDB)
+                {
+                    EditSelectionWindow window = new EditSelectionWindow();
+                    window.ShowDialog();
+
+                    if (window.DialogResult is true)
+                    {
+                        if (window.ShootingLocationRadioButton.IsChecked is true)
+                        {
+                            SwitchEditModeShootingLocation();
+                            editmode = E_EditMode.edit_shootinglocation;
+                        }
+                        else if (window.ParkingLocationRadioButton.IsChecked is true)
+                        {
+                            SwitchEditModeParkingLocation();
+                            editmode = E_EditMode.edit_parkinglocation;
+                        }
+                    }
+                }
+            }
+
+            // editing is not possible - probably user wants to edit values that are not added to DB yet
+            else
+            {
+                ShowMessage("Editing not possible (you might have entered new values)", E_MessageType.info);
+            }
+
+
+            return editmode;
+        }
+
+        protected override void SaveEditChanges()
+        {
+            switch (CurrentEditMode)
+            {
+                case E_EditMode.no_edit:
+                case E_EditMode.edit_country:
+                case E_EditMode.edit_area:
+                case E_EditMode.edit_subarea:
+                case E_EditMode.edit_subjectlocation:
+                    Debug.Assert(false);
+                    throw new Exception("Wrong enum value in LocationTabControler::SaveEditChanges()");
+
+                case E_EditMode.edit_shootinglocation:
+                    SaveEditedShootingLocation();
+                    break;
+                case E_EditMode.edit_parkinglocation:
+                    SaveEditedParkingLocation();
+                    break;
+                default:
+                    Debug.Assert(false);
+                    throw new Exception("Unknown enum value in SettingTabControler::SaveEditChanges()"); ;
+            }
+        }
+
+        protected override void ResetControlState()
+        {
+            base.ResetControlState();
+
+            Window.ShootingLocationControl.Visibility = Visibility.Visible;
+            Window.ShootingLocationControlEdit.Visibility = Visibility.Hidden;            
+            Window.ParkingLocationControl.Visibility = Visibility.Visible;
+            Window.ParkingLocationControlEdit.Visibility = Visibility.Hidden;
+            Window.Location_CountryControl.IsEnabled = true;
+            Window.Location_AreaControl.IsEnabled = true;
+            Window.Location_SubAreaControl.IsEnabled = true;
+            Window.Location_SubjectLocationControl.IsEnabled = true;
+            Window.Location_SubjectLocationLatituteTextBox.IsEnabled = false;
+            Window.Location_SubjectLocationLongitudeTextBox.IsEnabled = false;
+            Window.ShootingLocationControl.IsEnabled = true;
+            Window.ShootingLocationLatitudeTextBox.IsEnabled = true;
+            Window.ShootingLocationLongitudeTextBox.IsEnabled = true;
+            Window.ParkingLocationControl.IsEnabled = true;
+            Window.ParkingLocationLatitudeTextBox.IsEnabled = true;
+            Window.ParkingLocationLongitudeTextBox.IsEnabled = true;
+        }
+
+        protected override void SetCountryDisplayItem(string countryName)
+        {
+            DisplayItem.CountryName = countryName;
+        }
+
+        protected override void SetAreaDisplayItem(string areaName)
+        {
+            DisplayItem.AreaName = areaName;
+        }
+
+        protected override void SetSubAreaDisplayItem(string subAreaName)
+        {
+            DisplayItem.SubAreaName = subAreaName;
+        }
+
+        protected override void SetSubjectLocationDisplayItem(string subjectLocationName)
+        {
+            DisplayItem.SubjectLocationName = subjectLocationName;
+        }
+
+        protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
+        {
+            // base class call
+            base.SubjectLocationControl_Leaving(sender, e);
+
+            // set the view model of the coordinates
+            // DisplayItem.SubjectLocationName = (e.Object as SubjectLocation)?.Name;
+            DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
+            DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
+
+            //
+            RefreshShootLocationControl();
+
+            // 
+            Window.ShootingLocationControl.SetFocus();
+        }
+        #endregion
+
+        #region private methods
+        private void ClearUI()
+        {
+            Window.Location_CountryControl.ClearText();
+            Window.Location_AreaControl.ClearText();
+            Window.Location_SubAreaControl.ClearText();
+            Window.Location_SubjectLocationControl.ClearText();
+            Window.ShootingLocationControl.ClearText();
+            Window.ParkingLocationControl.ClearText();
+            
+            DisplayItem.Reset();
+        }
+
+        private void RefreshAllParkingLocationsFromDB()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RefreshAllShootingLocationsFromDB()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AreaControl_LeavingViaShift(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
+        {
+            Window.Location_CountryControl.SetFocus();
+        }
+
+        private void RefreshShootingLocationsFromDB()
+        {
+            var success = DataAccessAdapter.ReadAllShootingLocations(out _allShootingLocations, out string errorMessage);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading shooting locations\n" + errorMessage, E_MessageType.error);
+        }
+
+        private void RefreshParkingLocationsFromDB()
+        {
+            var success = DataAccessAdapter.ReadAllParkingLocations(out _allParkingLocations, out string errorMessage);
+            if (success == PersistenceManager.E_DBReturnCode.error) ShowMessage("Error reading parking locations\n" + errorMessage, E_MessageType.error);
+        }
+
+        private void RefreshShootLocationControl()
+        {
+            RefreshControl(_allShootingLocations?.OfType<Location>()?.ToList(), Window.ShootingLocationControl);
+        }
+
+        private void RefreshParkingLocationControl()
+        {
+            RefreshControl(_allParkingLocations?.OfType<Location>()?.ToList(), Window.ParkingLocationControl);
+        }
+
+        private void SwitchEditModeParkingLocation()
+        {
+            var controlsToDisable = new List<Control>()
+            {
+                Window.Location_CountryControl,
+                Window.Location_AreaControl,
+                Window.Location_SubAreaControl,
+                Window.Location_SubjectLocationControl,
+                Window.Location_SubjectLocationLatituteTextBox,
+                Window.Location_SubjectLocationLongitudeTextBox,
+                Window.ShootingLocationControl,
+                Window.ShootingLocationLatitudeTextBox,
+                Window.ShootingLocationLongitudeTextBox
+            };
+
+            SwitchEditModeShootingLocation(Window.ParkingLocationControl, Window.ParkingLocationControlEdit, controlsToDisable);
+        }
+
+        private void SwitchEditModeShootingLocation()
+        {
+            var controlsToDisable = new List<Control>()
+            {
+                Window.Location_CountryControl,
+                Window.Location_AreaControl,
+                Window.Location_SubAreaControl,
+                Window.Location_SubjectLocationControl,
+                Window.Location_SubjectLocationLatituteTextBox,
+                Window.Location_SubjectLocationLongitudeTextBox,
+                Window.ParkingLocationControl,
+                Window.ParkingLocationLatitudeTextBox,
+                Window.ParkingLocationLongitudeTextBox
+            };
+
+            SwitchEditModeShootingLocation(Window.ShootingLocationControl, Window.ShootingLocationControlEdit, controlsToDisable);
+        }
+
+        private void SaveEditedParkingLocation()
+        {
+            // save the edits
+            var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
+            var newParkingLocationName = DisplayItem.ParkingLocationName;
+            var newParkingLocationGPS = new GPSCoordinates(DisplayItem.ParkingLocationLatitude, DisplayItem.ParkingLocationLongitude);
+
+            // write only to database if there was a change
+            if ((parkingLocation.Name != newParkingLocationName) || (parkingLocation.Coordinates.Latitude != newParkingLocationGPS.Latitude) || (parkingLocation.Coordinates.Longitude != newParkingLocationGPS.Longitude))
+            {
+                if (DataAccessAdapter.EditParkingLocationName_GPS(parkingLocation.Id, newParkingLocationName, newParkingLocationGPS, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
+                {
+                    ShowMessage("Parking location data successfully changed.", E_MessageType.info);
+
+
+                    ViewModelManager.SynchronizeDisplayItems(DisplayItem, _listerWindow.Controler.CurrentDisplayItem);
+
+
+                }
+                else
+                {
+                    ShowMessage("Error editing Parking location data." + errorMessage, E_MessageType.error);
+                }
+            }
+            else
+            {
+                ShowMessage("No change done.", E_MessageType.info);
+            }
+        }
+
+        private void SaveEditedShootingLocation()
+        {
+            // save the edits
+            var shootingLocation = Window.ShootingLocationControl.GetCurrentObject() as ShootingLocation;
+            var newShootingLocationName = DisplayItem.ShootingLocationName;
+            var newShootingLocationGPS = new GPSCoordinates(DisplayItem.ShootingLocationLatitude, DisplayItem.ShootingLocationLongitude);
+
+            // write only to database if there was a change
+            if ((shootingLocation.Name != newShootingLocationName) || (shootingLocation.Coordinates.Latitude != newShootingLocationGPS.Latitude) || (shootingLocation.Coordinates.Longitude != newShootingLocationGPS.Longitude))
+            {
+                if (DataAccessAdapter.EditShootingLocationName_GPS(shootingLocation.Id, newShootingLocationName, newShootingLocationGPS, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
+                {
+                    ShowMessage("Shooting location data successfully changed.", E_MessageType.info);
+
+                    // synchronize the display items of the main window and the lister window
+                    // do this for the current item (detail view) and the concerned item in the list view (AllDisplayItems)
+                    ViewModelManager.SynchronizeDisplayItems(DisplayItem, _listerWindow.Controler.CurrentDisplayItem);
+                    var selectedDisplayItem = _listerWindow.Controler.AllDisplayItems.FirstOrDefault(d => (d.Tag as ShootingLocation).Id == shootingLocation.Id);
+                    ViewModelManager.SynchronizeDisplayItems(DisplayItem, selectedDisplayItem);
+                }
+                else
+                {
+                    ShowMessage("Error editing Shooting location data." + errorMessage, E_MessageType.error);
+                }
+            }
+            else
+            {
+                ShowMessage("No change done.", E_MessageType.info);
+            }
+        }
+
+        private long AddParkingLocation(string parkingLocationName, GPSCoordinates parkingLocationGPS, out string errorMessage)
+        {
+            long newId = -1;
+
+            // write to database (newId == -1 in case of error, so no additional error handling required)
+            DataAccessAdapter.AddParkingLocation(parkingLocationName, parkingLocationGPS, out newId, out errorMessage);
+
+            return newId;
+        }
+
         private void LoadPhoto(ObservableCollection<byte[]> photos)
         {
             var openFileDialog = new OpenFileDialog();
@@ -490,29 +590,6 @@ namespace LocationScout
             }
 
             return loadedPhoto;
-        }
-
-        internal void HandleGoogleMapsSubjectLocation()
-        {
-            var gps = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
-            GoogleMapsHelper.Go(gps);
-        }        
-
-        protected override void SubjectLocationControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
-        {
-            // base class call
-            base.SubjectLocationControl_Leaving(sender, e);
-
-            // set the view model
-            DisplayItem.SubjectLocationName = (e.Object as SubjectLocation)?.Name;
-            DisplayItem.SubjectLocationLatitude = (e.Object as SubjectLocation)?.Coordinates?.Latitude;
-            DisplayItem.SubjectLocationLongitude = (e.Object as SubjectLocation)?.Coordinates?.Longitude;
-
-            //
-            RefreshShootLocationControl();
-
-            // 
-            Window.ShootingLocationControl.SetFocus();
         }
 
         private void ShootingLocationNameControl_Leaving(object sender, AutoCompleteTextBoxControlEventArgs e)
@@ -566,26 +643,8 @@ namespace LocationScout
 
             Window.ParkingLocationLatitudeTextBox.Focus();
         }
+        #endregion
 
-        protected override void SetCountryDisplayItem(string countryName)
-        {
-            DisplayItem.CountryName = countryName;
-        }
-
-        protected override void SetAreaDisplayItem(string areaName)
-        {
-            DisplayItem.AreaName = areaName;
-        }
-
-        protected override void SetSubAreaDisplayItem(string subAreaName)
-        {
-            DisplayItem.SubAreaName = subAreaName;
-        }
-
-        protected override void SetSubjectLocationDisplayItem(string subjectLocationName)
-        {
-            DisplayItem.SubjectLocationName = subjectLocationName;
-        }
         #endregion
     }
 }

@@ -302,7 +302,7 @@
 
                                 <Label Content="Subject Location" Margin="0,2,0,0" Grid.Column="0" Grid.Row="3"/>
                                 <control:AutoCompleteTextBox x:Name="Settings_SubjectLocationControl" AutoCompleteTextBoxHeight="18" KeyboardNavigation.TabIndex="3" Grid.Column="1" Grid.Row="3"
-                                                                AutoCompleteWidth="370" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,8,0,0" LostFocus="Settings_SubjectLocationControl_LostFocus"/>
+                                                                AutoCompleteWidth="370" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,8,0,0"/>
                                 <RichTextBox Name="Settings_SubjectLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch"
                                              Grid.ColumnSpan="2" Margin="10,3,44,0" Visibility="Hidden" LostFocus="SettingsSubjectLocationControlEdit_LostFocus"/>
                                 <Button Name="GoogleSubjectLocationButton" Content="GO" Grid.Column="2" Grid.Row="3" Width="23" Height="25" Margin="170,5,0,0" Click="GoogleSubjectLocationButton_Click"/>
