@@ -96,7 +96,7 @@ namespace LocationScout.DataAccess
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
-            foundShootingLocation = new ShootingLocation();
+            foundShootingLocation = null;
 
             try
             {
@@ -399,28 +399,54 @@ namespace LocationScout.DataAccess
                     var parkingLocationFromDB = db.ParkingLocations.FirstOrDefault(o => o.Id == parkingLocationId);
                     if (parkingLocationFromDB == null) throw new Exception("Invalid Parking Location Id in PersistenceManager::SmartAddPhotoPlace");
 
+                    // check if a shooting location with the same name exists already
+                    success = ReadShootingLocationByName(shootingLocationName, out ShootingLocation shootingLocation, out errorMessage);
+                    bool newShootingLocation = false;
+                    if (success == E_DBReturnCode.no_error)
+                    {
+                        // not existing, so create a new
+                        if (shootingLocation == null)
+                        {
+                            newShootingLocation = true;
+                            shootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };
+                        }
+                    }
+                    
+                    else if (success == E_DBReturnCode.error)
+                    {
+                        throw new Exception(errorMessage);
+                    }
+
+                    else
+                    {
+                        Debug.Assert(false);
+                        throw new Exception("Invalid return code E_DBReturnCode in PersistenceManager::SmartAddPhotoPlace");
+                    }
+
+
                     // create the new shooting location
-                    ShootingLocation newShootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };
-                    newShootingLocation.ParkingLocations = new List<ParkingLocation>();
-                    newShootingLocation.ParkingLocations.Add(parkingLocationFromDB);
-                    newShootingLocation.SubjectLocations = new List<SubjectLocation>();
-                    newShootingLocation.SubjectLocations.Add(subjectLocationFromDB);
+                    // ShootingLocation newShootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };
+                    shootingLocation.ParkingLocations = new List<ParkingLocation>();
+                    shootingLocation.ParkingLocations.Add(parkingLocationFromDB);
+                    shootingLocation.SubjectLocations = new List<SubjectLocation>();
+                    shootingLocation.SubjectLocations.Add(subjectLocationFromDB);
 
                     // add photos to shooting location and set navigation property in photos
                     foreach (var ba in photosAsByteArray)
                     {
-                        if (newShootingLocation.Photos == null) newShootingLocation.Photos = new List<Photo>();
-                        newShootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = newShootingLocation });
+                        if (shootingLocation.Photos == null) shootingLocation.Photos = new List<Photo>();
+                        shootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation });
                     }
-                    db.ShootingLocations.Add(newShootingLocation);
+
+                    if (newShootingLocation) db.ShootingLocations.Add(shootingLocation);
 
                     // add shooting location to subject location
                     if (subjectLocationFromDB.ShootLocations == null) subjectLocationFromDB.ShootLocations = new List<ShootingLocation>();
-                    subjectLocationFromDB.ShootLocations.Add(newShootingLocation);
+                    subjectLocationFromDB.ShootLocations.Add(shootingLocation);
 
                     // add shootling location to parking location
                     if (parkingLocationFromDB.ShootingLocations == null) parkingLocationFromDB.ShootingLocations = new List<ShootingLocation>();
-                    parkingLocationFromDB.ShootingLocations.Add(newShootingLocation);
+                    parkingLocationFromDB.ShootingLocations.Add(shootingLocation);
 
                     db.SaveChanges();
                 }
