@@ -12,7 +12,7 @@ namespace LocationScout.ViewModel
         {
             listerDisplayItem.ParkingLocationName = locationDisplayItem.ParkingLocationName;
             listerDisplayItem.ParkingLocationLatitude = locationDisplayItem.ParkingLocationLatitude;
-            locationDisplayItem.ParkingLocationLongitude = locationDisplayItem.ParkingLocationLongitude;
+            listerDisplayItem.ParkingLocationLongitude = locationDisplayItem.ParkingLocationLongitude;
 
             listerDisplayItem.ShootingLocationName = locationDisplayItem.ShootingLocationName;
             listerDisplayItem.ShootingLocationLatitude = locationDisplayItem.ShootingLocationLatitude;

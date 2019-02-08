@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationScout"
         mc:Ignorable="d"
-        Title="Edit Selection" Height="150" Width="250" WindowStartupLocation="CenterScreen">
+        Title="Edit Selection" Height="150" Width="250" WindowStartupLocation="CenterScreen" Topmost="True">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
