@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace LocationScout
 {
@@ -20,6 +22,8 @@ namespace LocationScout
         public LocationListerDisplayItem CurrentDisplayItem { get; set; }
         private LocationListerWindow _listerWindow;
         private LocationTabControler _locationTabControler;
+
+        protected override Label StatusLabel { get { return _listerWindow.StatusLabel; } }
         #endregion
 
         #region constructor
@@ -90,45 +94,80 @@ namespace LocationScout
 
             var di = AllDisplayItems.FirstOrDefault(d => (d.Tag as ShootingLocation).Id == shootingLocationId);
             di.ShootingLocationName = shootingLocation.Name;
+        }
 
-            
+        internal void HandleDelete()
+        {
+            var selectedItem = _listerWindow.LocationListView.SelectedItem as LocationListerDisplayItem;
+            if (selectedItem is LocationListerDisplayItem displayItem)
+            {
+                if (DataAccess.DataAccessAdapter.DeleteShootingLocationById((displayItem.Tag as ShootingLocation).Id, out string errorMessagse) == DataAccess.PersistenceManager.E_DBReturnCode.error)
+                {
+                    ShowMessage(errorMessagse, E_MessageType.error);
+                }
+                else
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
 
+                    AllDisplayItems.Remove(displayItem);
+                    CurrentDisplayItem.Reset();
 
+                    _locationTabControler.RefreshAllObjectsFromDB();
+                    _locationTabControler.ReloadAndRefreshControls();
+
+                    Mouse.OverrideCursor = null;
+
+                    ShowMessage("Shooting location successfully deleted.", E_MessageType.success);
+                }
+            }
         }
 
         private void ReadData()
         {
-            var success = DataAccess.DataAccessAdapter.ReadAllShootingLocations(out List<ShootingLocation> shootingLocations, out string errorMessage);
-
-            foreach (var shootingLocation in shootingLocations)
+            // read all shooting locations
+            if (DataAccess.DataAccessAdapter.ReadAllShootingLocations(out List<ShootingLocation> shootingLocations, out string errorMessage) == DataAccess.PersistenceManager.E_DBReturnCode.no_error)
             {
-                var newDisplayItem = new LocationListerDisplayItem()
+                // loop throw dhoow locations
+                foreach (var shootingLocation in shootingLocations)
                 {
-                    ParkingLocationName = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Name,
-                    ParkingLocationLatitude = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Coordinates?.Latitude,
-                    ParkingLocationLongitude = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Coordinates?.Longitude,
-                    ShootingLocationName = shootingLocation.Name,
-                    ShootingLocationLatitude = shootingLocation.Coordinates.Latitude,
-                    ShootingLocationLongitude = shootingLocation.Coordinates.Longitude,
-                    Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(0)?.ImageBytes),
-                    Photo_2 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(1)?.ImageBytes),
-                    Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(2)?.ImageBytes),
-                    Tag = shootingLocation
-                };
+                    // create view model
+                    var newDisplayItem = new LocationListerDisplayItem()
+                    {
+                        ParkingLocationName = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Name,
+                        ParkingLocationLatitude = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Coordinates?.Latitude,
+                        ParkingLocationLongitude = shootingLocation.ParkingLocations.ElementAtOrDefault(0)?.Coordinates?.Longitude,
+                        ShootingLocationName = shootingLocation.Name,
+                        ShootingLocationLatitude = shootingLocation.Coordinates.Latitude,
+                        ShootingLocationLongitude = shootingLocation.Coordinates.Longitude,
+                        Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(0)?.ImageBytes),
+                        Photo_2 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(1)?.ImageBytes),
+                        Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(2)?.ImageBytes),
+                        Tag = shootingLocation
+                    };
 
-                foreach (var subjectLocation in shootingLocation.SubjectLocations)
-                {
-                    newDisplayItem.CountryName = subjectLocation.Country.Name;
-                    newDisplayItem.SubjectLocationName = subjectLocation.Name;
-                    newDisplayItem.AreaName = subjectLocation.Area.Name;
-                    newDisplayItem.SubAreaName = subjectLocation.SubArea.Name;
-                    newDisplayItem.SubjectLocationLatitude = subjectLocation.Coordinates.Latitude;
-                    newDisplayItem.SubjectLocationLongitude = subjectLocation.Coordinates.Longitude;
+                    foreach (var subjectLocation in shootingLocation.SubjectLocations)
+                    {
+                        newDisplayItem.CountryName = subjectLocation.Country.Name;
+                        newDisplayItem.SubjectLocationName = subjectLocation.Name;
+                        newDisplayItem.AreaName = subjectLocation.Area.Name;
+                        newDisplayItem.SubAreaName = subjectLocation.SubArea.Name;
+                        newDisplayItem.SubjectLocationLatitude = subjectLocation.Coordinates.Latitude;
+                        newDisplayItem.SubjectLocationLongitude = subjectLocation.Coordinates.Longitude;
+                    }
+
+                    newDisplayItem.Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(0)?.ImageBytes);
+                    newDisplayItem.Photo_2 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(1)?.ImageBytes);
+                    newDisplayItem.Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(2)?.ImageBytes);
+
+                    // add to list which is bound to list view
+                    AllDisplayItems.Add(newDisplayItem);
                 }
+            }
 
-                newDisplayItem.Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation.Photos?.ElementAtOrDefault(0)?.ImageBytes);
-
-                AllDisplayItems.Add(newDisplayItem);                
+            // error reading the data
+            else
+            {
+                ShowMessage(errorMessage, E_MessageType.error);
             }
         }
 

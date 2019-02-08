@@ -43,7 +43,7 @@ namespace LocationScout
             Controler.HandleShootingLocationGoogleMaps();
         }
 
-        private void Edit_Click(object sender, RoutedEventArgs e)
+        private void EditMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Controler.HandleEdit();
         }
@@ -61,7 +61,12 @@ namespace LocationScout
         private void ParkingLocationGoogleMapsButton_Click(object sender, RoutedEventArgs e)
         {
             Controler.HandleParkingLocationGoogleMaps();
-        }        
+        }
+     
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Controler.HandleDelete();
+        }  
         #endregion
     }
 }

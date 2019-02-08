@@ -2,7 +2,7 @@
 
 namespace LocationScout.ViewModel
 {
-    public class LocationDisplayItem : SettingsDisplayItem
+    public class LocationDisplayItem : DisplayItemBase
     {
         #region attributes
         private string _shootingLocationName;

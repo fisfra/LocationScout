@@ -40,7 +40,8 @@
                         </ContextMenu.BitmapEffect>
                         <MenuItem Header="Google Maps" Name="GoogleMapsMenuItem" Click="ShootingLocationGoogleMaps_Click"/>
                         <Separator/>
-                        <MenuItem Header="Edit" Name="Edit" Click="Edit_Click"/>
+                        <MenuItem Header="Edit" Name="EditMenuItem" Click="EditMenuItem_Click"/>
+                        <MenuItem Header="Delete" Name="DeleteMenuItem" Click="DeleteMenuItem_Click"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
 
@@ -168,7 +169,9 @@
                     </Border>
                 </Grid>
             </GroupBox>
-                      
+
+            <Label Name="StatusLabel" Height="Auto" Margin="10,0,10,0" Grid.Column="0" Grid.Row="2"/>
+
         </Grid>
 
         <Grid Name="ButtonsGrid" Grid.Column="1" Grid.Row="0" Margin="10,0,10,0">

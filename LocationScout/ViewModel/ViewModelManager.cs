@@ -46,5 +46,25 @@ namespace LocationScout.ViewModel
                 Tag = shootingLocation
             };
         }
+
+        internal static void SetLocationListerDisplayItem(LocationListerDisplayItem source, ref LocationListerDisplayItem target)
+        {
+            target.CountryName = source.CountryName;
+            target.AreaName = source.AreaName;
+            target.SubAreaName = source.SubAreaName;
+            target.SubjectLocationName = source.SubjectLocationName;
+            target.SubjectLocationLatitude = source.SubjectLocationLatitude;
+            target.SubjectLocationLongitude = source.ShootingLocationLongitude;
+            target.ShootingLocationName = source.ShootingLocationName;
+            target.ShootingLocationLatitude = source.ShootingLocationLatitude;
+            target.ShootingLocationLongitude = source.ShootingLocationLongitude;
+            target.Photo_1 = source.Photo_1;
+            target.Photo_2 = source.Photo_2;
+            target.Photo_3 = source.Photo_3;
+            target.ParkingLocationName = source.ParkingLocationName;
+            target.ParkingLocationLatitude = source.ParkingLocationLatitude;
+            target.ParkingLocationLongitude = source.ParkingLocationLongitude;
+            target.Tag = source.Tag;
+        }
     }
 }

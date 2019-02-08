@@ -32,6 +32,8 @@ namespace LocationScout
         protected override Button AddButton { get { return Window.Settings_AddButton; } }
         protected override Button DeleteButton { get { return Window.Settings_DeleteButton; } }
 
+        protected override Label StatusLabel { get { return Window.StatusLabel; } }
+
         public SettingsDisplayItem DisplayItem { get; set; }
         #endregion
 

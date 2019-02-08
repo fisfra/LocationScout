@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace LocationScout
 {
@@ -13,6 +14,8 @@ namespace LocationScout
     {
         #region attributes
         private SettingsDeleteWindow _deleteWindow;
+
+        protected override Label StatusLabel { get { return Window.StatusLabel; } }
         #endregion
 
         #region constructor

@@ -12,6 +12,7 @@ using LocationScout.ViewModel;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace LocationScout
 {
@@ -23,6 +24,8 @@ namespace LocationScout
         private List<Country> _allCountries;
 
         public List<Country> AllCountries { get { return _allCountries; } }
+
+        protected override Label StatusLabel { get { return Window.StatusLabel; } }
         #endregion
 
         #region contructors
@@ -39,6 +42,7 @@ namespace LocationScout
         #region methods             
         internal void HandleClose()
         {
+            _locationControler.CloseListerWindow();
             Window.Close();
         }
 

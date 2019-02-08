@@ -6,71 +6,12 @@ using System.Threading.Tasks;
 
 namespace LocationScout.ViewModel
 {
-    public class SettingsDisplayItem : BaseObservableObject
+    public class SettingsDisplayItem : DisplayItemBase
     {
         #region attributes
-        private string _countryName;
-        private string _areaName;
-        private string _subareaName;
-        private string _subjectLocationName;
-        private double? _subjectLocationLatitude;
-        private double? _subjectLocationLongitude;
+
         private bool _autoPasteFromClipboard = true;
 
-        public string CountryName
-        {
-            get => _countryName;
-            set
-            {
-                _countryName = value;
-                OnPropertyChanged();
-            }
-        }
-        public string AreaName
-        {
-            get => _areaName;
-            set
-            {
-                _areaName = value;
-                OnPropertyChanged();
-            }
-        }
-        public string SubAreaName
-        {
-            get => _subareaName;
-            set
-            {
-                _subareaName = value;
-                OnPropertyChanged();
-            }
-        }
-        public string SubjectLocationName
-        {
-            get => _subjectLocationName;
-            set
-            {
-                _subjectLocationName = value;
-                OnPropertyChanged();
-            }
-        }
-        public double? SubjectLocationLatitude
-        {
-            get => _subjectLocationLatitude;
-            set
-            {
-                _subjectLocationLatitude = value;
-                OnPropertyChanged();
-            }
-        }
-        public double? SubjectLocationLongitude
-        {
-            get => _subjectLocationLongitude;
-            set
-            {
-                _subjectLocationLongitude = value;
-                OnPropertyChanged();
-            }
-        }
         public bool AutoPasteFromClipboard
         {
             get => _autoPasteFromClipboard;
@@ -89,14 +30,11 @@ namespace LocationScout.ViewModel
         #endregion
 
         #region methods
-        public virtual void Reset()
+        public override void Reset()
         {
-            CountryName = string.Empty;
-            AreaName = string.Empty;
-            SubAreaName = string.Empty;
-            SubjectLocationName = string.Empty;
-            SubjectLocationLatitude = null;
-            SubjectLocationLongitude = null;
+            base.Reset();
+
+            AutoPasteFromClipboard = true;
         }
         #endregion
     }

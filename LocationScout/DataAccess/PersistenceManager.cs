@@ -104,7 +104,8 @@ namespace LocationScout.DataAccess
                 {
                     var found = db.ShootingLocations.Where(s => s.Name == name)
                                                     .Include(s => s.ParkingLocations)
-                                                    .Include(s => s.SubjectLocations)
+                                                    .Include(s => s.SubjectLocations.Select(sl => sl.ShootLocations.Select(sh => sh.ParkingLocations)))
+                                                    .Include(s => s.SubjectLocations.Select(sl => sl.ShootLocations.Select(sh => sh.Photos)))
                                                     .Include(s => s.Photos)
                                                     .ToList();
 
@@ -189,6 +190,31 @@ namespace LocationScout.DataAccess
                 using (var db = new LocationScoutContext())
                 {
                     allParkingLocations = db.ParkingLocations.Include(p => p.ShootingLocations).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode DeleteShootingLocationById(long id, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var shootingLocationFromDB = db.ShootingLocations.FirstOrDefault(o => o.Id == id);
+                    if (shootingLocationFromDB == null) throw new Exception("Inconsistent database values - Id of ShootingLocation.");
+
+                    db.Entry(shootingLocationFromDB).State = EntityState.Deleted;
+                    db.SaveChanges();
                 }
             }
             catch (Exception e)

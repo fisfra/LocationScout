@@ -29,9 +29,13 @@ namespace LocationScout
         public override AutoCompleteTextBox SubjectLocationControl { get { return Window.Location_SubjectLocationControl; } }
         public override TextBox SubjectLocationLatitudeControl { get { return Window.Location_SubjectLocationLatituteTextBox; } }
         public override TextBox SubjectLocationLongitudeControl { get { return Window.Location_SubjectLocationLongitudeTextBox; } }
+
+
+
         protected override Button EditButton { get { return Window.Location_EditButton; } }
         protected override Button AddButton { get { return Window.Location_AddButton; } }
         protected override Button DeleteButton { get { return Window.Location_DeleteButton; } }
+        protected override Label StatusLabel { get { return Window.StatusLabel; } }
 
         public LocationDisplayItem DisplayItem { get; set; }
 
@@ -61,6 +65,11 @@ namespace LocationScout
         #region methods
 
         #region internal methods
+        internal void CloseListerWindow()
+        {
+            _listerWindow?.Close();
+        }
+
         internal void Clear()
         {
             ClearUI();

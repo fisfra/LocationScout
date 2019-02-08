@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using WPFUserControl;
 
 namespace LocationScout
 {
-    public class ControlerBase
+    abstract public class ControlerBase
     {
         #region enum
         protected enum E_MessageType { success, info, error };
@@ -18,6 +19,8 @@ namespace LocationScout
 
         #region attributes
         protected MainWindow Window { get; private set; }
+
+        abstract protected Label StatusLabel { get; }
         #endregion
 
         #region
@@ -49,7 +52,8 @@ namespace LocationScout
 
         private void SetMessage(string text)
         {
-            Window.StatusLabel.Content = text;
+            //Window.StatusLabel.Content = text;
+            StatusLabel.Content = text;
 
             if (_dispatcherTimer == null)
             {
@@ -68,7 +72,8 @@ namespace LocationScout
         {
             _dispatcherTimer.Stop();
 
-            Window.StatusLabel.Content = string.Empty;
+            //Window.StatusLabel.Content = string.Empty;
+            StatusLabel.Content = string.Empty;
         }
 
         public void RefreshControl(List<Location> locations, AutoCompleteTextBox textBox)

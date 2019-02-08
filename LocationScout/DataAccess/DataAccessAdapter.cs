@@ -130,5 +130,10 @@ namespace LocationScout.DataAccess
         {
             return PersistenceManager.EditShootingLocationName_GPS(id, name, coordinates, out errorMessage);
         }
+
+        internal static E_DBReturnCode DeleteShootingLocationById(long id, out string errorMessage)
+        {
+            return PersistenceManager.DeleteShootingLocationById(id, out errorMessage);
+        }
     }
 }
