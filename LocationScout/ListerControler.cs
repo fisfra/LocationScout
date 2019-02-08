@@ -195,7 +195,8 @@ namespace LocationScout
 
         internal void HandleClose()
         {
-            _listerWindow.Close();
+            // just hide the window to be able to show it again
+            _listerWindow.Visibility = System.Windows.Visibility.Hidden;
         }
         #endregion
     }

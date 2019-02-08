@@ -92,6 +92,43 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        internal static E_DBReturnCode ReadShootingLocationByName(string name, out ShootingLocation foundShootingLocation, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+            foundShootingLocation = new ShootingLocation();
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var found = db.ShootingLocations.Where(s => s.Name == name)
+                                                    .Include(s => s.ParkingLocations)
+                                                    .Include(s => s.SubjectLocations)
+                                                    .Include(s => s.Photos)
+                                                    .ToList();
+
+                    if (found.Count == 1)
+                    {
+                        foundShootingLocation = found[0];
+                    }
+
+                    else if (found.Count > 0)
+                    {
+                        // should not find more than one country for an Id
+                        throw new Exception("Inconsistent data in database in PersistenceManager:ReadShootingLocationByName.");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
         internal static E_DBReturnCode ReadAllSubjectLocations(out List<SubjectLocation> allSubjectLocations, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
@@ -183,7 +220,7 @@ namespace LocationScout.DataAccess
                     else if (found.Count > 0)
                     {
                         // should not find more than one country for an Id
-                        throw new Exception("Inconsitent data in database in PersistenceManager:ReadCountry.");
+                        throw new Exception("Inconsistent data in database in PersistenceManager:ReadCountry.");
                     }
                 }
             }

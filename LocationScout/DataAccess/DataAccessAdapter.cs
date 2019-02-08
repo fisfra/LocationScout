@@ -56,6 +56,11 @@ namespace LocationScout.DataAccess
             return PersistenceManager.ReadSubAreaById(id, out foundSubArea, out errorMessage);
         }
 
+        internal static E_DBReturnCode ReadShootingLocationByName(string name, out ShootingLocation foundShootingLocation, out string errorMessage)
+        {
+            return PersistenceManager.ReadShootingLocationByName(name, out foundShootingLocation, out errorMessage);
+        }
+
         internal static E_DBReturnCode SmartAddCountry(SettingsDisplayItem displayItem, out string errorMessage)
         {
             var countryName = displayItem.CountryName;

@@ -126,6 +126,8 @@ namespace LocationScout
             switch (success)
             {
                 case E_DBReturnCode.no_error:
+                    // update the lister view
+                    AddListerDisplayItem(shootingLocationName);
                     ShowMessage("Photo Location successfully added", E_MessageType.success);
                     break;
                 case E_DBReturnCode.error:
@@ -494,10 +496,8 @@ namespace LocationScout
                 {
                     ShowMessage("Parking location data successfully changed.", E_MessageType.info);
 
-
+                    // synchronize the display items of the main window and the lister window
                     ViewModelManager.SynchronizeDisplayItems(DisplayItem, _listerWindow.Controler.CurrentDisplayItem);
-
-
                 }
                 else
                 {
@@ -642,6 +642,22 @@ namespace LocationScout
             DisplayItem.ParkingLocationName = e.Object is ParkingLocation pl ? pl.Name : Window.ParkingLocationControl.GetCurrentText();
 
             Window.ParkingLocationLatitudeTextBox.Focus();
+        }
+
+        private void AddListerDisplayItem(string shootingLocationName)
+        {
+            if (DataAccessAdapter.ReadShootingLocationByName(shootingLocationName, out ShootingLocation shootingLocation, out string errorMessage) == E_DBReturnCode.no_error)
+            {
+                // convert the location display item into an lister display Item
+                var listerDisplayItem = ViewModelManager.ConvertToListerDisplayItem(DisplayItem, shootingLocation);
+
+                // add the converted display item to the lister (so it is added in the list view of the window)
+                _listerWindow.Controler.AllDisplayItems.Add(listerDisplayItem);
+            }
+            else
+            {
+                ShowMessage(errorMessage, E_MessageType.error);
+            }
         }
         #endregion
 
