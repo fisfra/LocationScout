@@ -10,7 +10,8 @@ namespace LocationScout.Model
         {
             #region attributes
             // navigation properties
-            public List<ShootingLocation> ShootingLocations { get; set; }
+            //public List<ShootingLocation> ShootingLocations { get; set; }
+            public virtual ICollection<ShootingLocation> ShootingLocations { get; set; }
             #endregion
 
             public ParkingLocation()

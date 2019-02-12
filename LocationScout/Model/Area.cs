@@ -10,9 +10,15 @@ namespace LocationScout.Model
     public class Area : Location
     {
         #region attributes
-        public List<SubArea> SubAreas { get; set; }
-        public List<Country> Countries { get; set; }
-        public List<SubjectLocation> SubjectLocations { get; set; }
+        //public List<SubArea> SubAreas { get; set; }
+        public virtual ICollection<SubArea> SubAreas { get; set; }
+
+        //public List<Country> Countries { get; set; }
+        public virtual ICollection<Country> Countries { get; set; }
+
+        //public List<SubjectLocation> SubjectLocations { get; set; }
+        public virtual ICollection<SubjectLocation> SubjectLocations { get; set; }
         #endregion
     }
 }
+

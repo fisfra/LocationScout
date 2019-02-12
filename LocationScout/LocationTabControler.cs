@@ -30,8 +30,6 @@ namespace LocationScout
         public override TextBox SubjectLocationLatitudeControl { get { return Window.Location_SubjectLocationLatituteTextBox; } }
         public override TextBox SubjectLocationLongitudeControl { get { return Window.Location_SubjectLocationLongitudeTextBox; } }
 
-
-
         protected override Button EditButton { get { return Window.Location_EditButton; } }
         protected override Button AddButton { get { return Window.Location_AddButton; } }
         protected override Button DeleteButton { get { return Window.Location_DeleteButton; } }
@@ -94,8 +92,7 @@ namespace LocationScout
 
         internal void ShowLister()
         {
-            //LocationListerWindow window = new LocationListerWindow(base.Window, this);
-            _listerWindow.Show();
+            if (_listerWindow.Visibility != Visibility.Visible) _listerWindow.Show();
         }        
 
         internal void Add()
@@ -143,7 +140,7 @@ namespace LocationScout
                     ShowMessage("Error adding PhotoLocation to database\n" + errorMessage, E_MessageType.error);
                     break;
                 case E_DBReturnCode.already_existing:
-                    // to do
+                    ShowMessage("PhotoLocation already existing\n" + errorMessage, E_MessageType.info);
                     break;
                 default:
                     Debug.Assert(false);

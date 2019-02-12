@@ -14,9 +14,12 @@ namespace LocationScout.Model
         #region attributes
 
         // navigation properties
-        public List<ParkingLocation> ParkingLocations { get; set; }     
-        public List<SubjectLocation> SubjectLocations { get; set; }
-        public List<Photo> Photos { get; set; }
+        //public List<ParkingLocation> ParkingLocations { get; set; }     
+        public virtual ICollection<ParkingLocation> ParkingLocations { get; set; }
+        //public List<SubjectLocation> SubjectLocations { get; set; }
+        public virtual ICollection<SubjectLocation> SubjectLocations { get; set; }
+        //public List<Photo> Photos { get; set; }
+        public virtual ICollection<Photo> Photos { get; set; }
         #endregion
 
         #region constructors

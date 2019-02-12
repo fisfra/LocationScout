@@ -11,9 +11,12 @@ namespace LocationScout.Model
     {
         #region attributes
         // navigation properties
-        public List<Area> Areas { get; set; }
-        public List<Country> Countries { get; set; }
-        public List<SubjectLocation> SubjectLocation { get; set; }
+        //public List<Area> Areas { get; set; }
+        public virtual ICollection<Area> Areas { get; set; }
+        //public List<Country> Countries { get; set; }
+        public virtual ICollection<Country> Countries { get; set; }
+        //public List<SubjectLocation> SubjectLocation { get; set; }
+        public virtual ICollection<SubjectLocation> SubjectLocation { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -180,7 +180,7 @@ namespace LocationScout
                 if ((areaSubAreas != null) && (countrySubAreas != null))
                 {
                     // get the subareas belong to both selected area and selected country
-                    if (GetCountrySubAreas(areaSubAreas, countrySubAreas) is List<SubArea> matchingSubareas)
+                    if (GetCountrySubAreas(areaSubAreas.ToList(), countrySubAreas.ToList()) is List<SubArea> matchingSubareas)
                     {
                         // refresh control
                         RefreshControl(matchingSubareas.OfType<Location>().ToList(), SubAreaControl);

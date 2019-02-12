@@ -13,7 +13,8 @@ namespace LocationScout.Model
         public Country Country {get; set;}
         public Area Area {get; set;}
         public SubArea SubArea { get; set; }
-        public List<ShootingLocation> ShootLocations { get; set; }
+        //public List<ShootingLocation> ShootingLocations { get; set; }
+        public virtual ICollection<ShootingLocation> ShootingLocations { get; set; }
         #endregion
 
         #region constructors

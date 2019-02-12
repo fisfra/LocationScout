@@ -71,7 +71,7 @@ namespace LocationScout
             _locationTabControler.DisplayItem.SubjectLocationLongitude = subjectLocation.Coordinates.Longitude;
 
             // shooting location
-            RefreshControl(subjectLocation?.ShootLocations?.OfType<Location>().ToList(), Window.ShootingLocationControl);
+            RefreshControl(subjectLocation?.ShootingLocations?.OfType<Location>().ToList(), Window.ShootingLocationControl);
             Window.ShootingLocationControl.SelectKey(CurrentDisplayItem.ShootingLocationName);
             _locationTabControler.DisplayItem.ShootingLocationName = CurrentDisplayItem.ShootingLocationName;
             var shootingLocation = Window.ShootingLocationControl.GetCurrentObject() as ShootingLocation;

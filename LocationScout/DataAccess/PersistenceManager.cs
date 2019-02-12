@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using System.Diagnostics;
+using LocationScout.ViewModel;
 
 namespace LocationScout.DataAccess
 {
@@ -33,9 +34,11 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
+                    db.Configuration.LazyLoadingEnabled = false;
+
                     allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas))
-                                               .Include(c => c.SubAreas.Select(sa => sa.SubjectLocation.Select(sl => sl.ShootLocations.Select(sh => sh.ParkingLocations))))
-                                               .Include(c => c.SubjectLocations.Select(sl => sl.ShootLocations.Select(sh => sh.ParkingLocations)))
+                                               .Include(c => c.SubAreas.Select(sa => sa.SubjectLocation.Select(sl => sl.ShootingLocations.Select(sh => sh.ParkingLocations))))
+                                               .Include(c => c.SubjectLocations.Select(sl => sl.ShootingLocations.Select(sh => sh.ParkingLocations)))
                                                .ToList();
                 }
             }
@@ -58,7 +61,13 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allAreas = db.Areas.Include(a => a.Countries).Include(a => a.SubAreas).Include(a => a.SubjectLocations).ToList();
+                    db.Configuration.LazyLoadingEnabled = false;
+
+                    allAreas = db.Areas
+                                 .Include(a => a.Countries)
+                                 .Include(a => a.SubAreas)
+                                 .Include(a => a.SubjectLocations)
+                                 .ToList();
                 }
             }
             catch (Exception e)
@@ -80,7 +89,12 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allSubAreas = db.SubAreas.Include(sa => sa.Countries).Include(sa => sa.Areas).Include(sa => sa.SubjectLocation).ToList();
+                    db.Configuration.LazyLoadingEnabled = false;
+
+                    allSubAreas = db.SubAreas.Include(sa => sa.Countries)
+                                             .Include(sa => sa.Areas)
+                                             .Include(sa => sa.SubjectLocation)
+                                             .ToList();
                 }
             }
             catch (Exception e)
@@ -104,8 +118,8 @@ namespace LocationScout.DataAccess
                 {
                     var found = db.ShootingLocations.Where(s => s.Name == name)
                                                     .Include(s => s.ParkingLocations)
-                                                    .Include(s => s.SubjectLocations.Select(sl => sl.ShootLocations.Select(sh => sh.ParkingLocations)))
-                                                    .Include(s => s.SubjectLocations.Select(sl => sl.ShootLocations.Select(sh => sh.Photos)))
+                                                    .Include(s => s.SubjectLocations.Select(sl => sl.ShootingLocations.Select(sh => sh.ParkingLocations)))
+                                                    .Include(s => s.SubjectLocations.Select(sl => sl.ShootingLocations.Select(sh => sh.Photos)))
                                                     .Include(s => s.Photos)
                                                     .ToList();
 
@@ -381,6 +395,103 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+        private static ShootingLocation GetNewOrExisitingShootingLocation(string oldName, GPSCoordinates oldGPS, out bool isNewShootingLocation)
+        {
+            // falg showing if it is a new or old (= from database) shooting location
+            isNewShootingLocation = false;
+
+            // read from database by name
+            switch (ReadShootingLocationByName(oldName, out ShootingLocation shootingLocation, out string errorMessage))
+            {
+                // no error
+                case E_DBReturnCode.no_error:
+                    // not found in database
+                    if (shootingLocation == null)
+                    {
+                        // set flag and create a new one
+                        isNewShootingLocation = true;
+                        shootingLocation = new ShootingLocation() { Name = oldName, Coordinates = oldGPS };
+                    }
+                    break;
+
+                // error
+                case E_DBReturnCode.error:
+                    throw new Exception(errorMessage);
+
+                // invalid return code
+                default:
+                    Debug.Assert(false);
+                    throw new Exception("Invalid return code E_DBReturnCode in PersistenceManager::SmartAddPhotoPlace");
+            }
+
+            // consistency check - if existing shooting location with same name, GPS should be equal too
+            if (!isNewShootingLocation && shootingLocation.Coordinates != oldGPS)
+            {
+                throw new Exception("Inconsistent data in database - PersistenceManager::GetNewOrExisitingShootingLocation");
+            }
+
+            return shootingLocation;
+        }
+
+        private static bool HasParkingLocation(ShootingLocation shootingLocation, ParkingLocation parkingLocation)
+        {
+            if ( (shootingLocation == null) || (shootingLocation?.ParkingLocations == null) )
+            {
+                return false;
+            }
+
+            return shootingLocation.ParkingLocations.FirstOrDefault(p => p.Id == parkingLocation.Id) != null;
+        }
+
+        private static bool HasSubjectLocation(ShootingLocation shootingLocation, SubjectLocation subjectLocation)
+        {
+            if ((shootingLocation == null) || (shootingLocation?.SubjectLocations == null))
+            {
+                return false;
+            }
+
+            return shootingLocation.SubjectLocations.FirstOrDefault(s => s.Id == subjectLocation.Id) != null;
+        }
+
+        private static bool HasShootingLocation(SubjectLocation subjectLocation, ShootingLocation shootingLocation)
+        {
+            if ((subjectLocation == null) || (subjectLocation?.ShootingLocations == null))
+            {
+                return false;
+            }
+
+            return subjectLocation.ShootingLocations.FirstOrDefault(s => s.Id == shootingLocation.Id) != null;
+        }
+
+        private static bool HasShootingLocation(ParkingLocation parkingLocation, ShootingLocation shootingLocation)
+        {
+            if ((parkingLocation == null) || (parkingLocation?.ShootingLocations == null))
+            {
+                return false;
+            }
+
+            return parkingLocation.ShootingLocations.FirstOrDefault(p => p.Id == shootingLocation.Id) != null;
+        }
+
+        private static bool PhotoExists(ShootingLocation shootingLocation, byte[] photosAsByteArray)
+        {
+            bool exists = false;
+
+            if (shootingLocation?.Photos != null)
+            {
+                foreach (var photo in shootingLocation.Photos)
+                {
+                    if (photo.ImageBytes.SequenceEqual(photosAsByteArray))
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+            }
+
+            return exists;
+        }
+
         internal static E_DBReturnCode SmartAddPhotoPlace(long subjectLocationId, long parkingLocationId, List<byte[]> photosAsByteArray, string shootingLocationName, 
                                                           GPSCoordinates shootingLocationGPS, out string errorMessage)
         {
@@ -400,55 +511,58 @@ namespace LocationScout.DataAccess
                     if (parkingLocationFromDB == null) throw new Exception("Invalid Parking Location Id in PersistenceManager::SmartAddPhotoPlace");
 
                     // check if a shooting location with the same name exists already
-                    success = ReadShootingLocationByName(shootingLocationName, out ShootingLocation shootingLocation, out errorMessage);
-                    bool newShootingLocation = false;
-                    if (success == E_DBReturnCode.no_error)
+                    var shootingLocation = GetNewOrExisitingShootingLocation(shootingLocationName, shootingLocationGPS, out bool isNewShootingLocation);
+
+                    // add parking location if necessary
+                    if (!HasParkingLocation(shootingLocation, parkingLocationFromDB))
                     {
-                        // not existing, so create a new
-                        if (shootingLocation == null)
-                        {
-                            newShootingLocation = true;
-                            shootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };
-                        }
-                    }
-                    
-                    else if (success == E_DBReturnCode.error)
-                    {
-                        throw new Exception(errorMessage);
+                        if (shootingLocation.ParkingLocations == null) shootingLocation.ParkingLocations = new List<ParkingLocation>();
+                        shootingLocation.ParkingLocations.Add(parkingLocationFromDB);
                     }
 
-                    else
+                    // add subject location if necessary
+                    if (!HasSubjectLocation(shootingLocation, subjectLocationFromDB))
                     {
-                        Debug.Assert(false);
-                        throw new Exception("Invalid return code E_DBReturnCode in PersistenceManager::SmartAddPhotoPlace");
+                        if (shootingLocation.SubjectLocations == null) shootingLocation.SubjectLocations = new List<SubjectLocation>();
+                        shootingLocation.SubjectLocations.Add(subjectLocationFromDB);
                     }
-
-
-                    // create the new shooting location
-                    // ShootingLocation newShootingLocation = new ShootingLocation() { Name = shootingLocationName, Coordinates = shootingLocationGPS };
-                    shootingLocation.ParkingLocations = new List<ParkingLocation>();
-                    shootingLocation.ParkingLocations.Add(parkingLocationFromDB);
-                    shootingLocation.SubjectLocations = new List<SubjectLocation>();
-                    shootingLocation.SubjectLocations.Add(subjectLocationFromDB);
 
                     // add photos to shooting location and set navigation property in photos
                     foreach (var ba in photosAsByteArray)
                     {
-                        if (shootingLocation.Photos == null) shootingLocation.Photos = new List<Photo>();
-                        shootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation });
+                        if (isNewShootingLocation)
+                        {
+                            if (shootingLocation.Photos == null) shootingLocation.Photos = new List<Photo>();
+                            shootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation });
+                        }
+                        else
+                        {
+                            if (!PhotoExists(shootingLocation, ba))
+                            {
+                                shootingLocation.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocation });
+                            }
+                        }
                     }
 
-                    if (newShootingLocation) db.ShootingLocations.Add(shootingLocation);
+                    // only add if it is a new shooting location
+                    if (isNewShootingLocation) db.ShootingLocations.Add(shootingLocation);
 
                     // add shooting location to subject location
-                    if (subjectLocationFromDB.ShootLocations == null) subjectLocationFromDB.ShootLocations = new List<ShootingLocation>();
-                    subjectLocationFromDB.ShootLocations.Add(shootingLocation);
+                    if (!HasShootingLocation(subjectLocationFromDB, shootingLocation))
+                    {
+                        if (subjectLocationFromDB.ShootingLocations == null) subjectLocationFromDB.ShootingLocations = new List<ShootingLocation>();
+                        subjectLocationFromDB.ShootingLocations.Add(shootingLocation);
+                    }
 
                     // add shootling location to parking location
-                    if (parkingLocationFromDB.ShootingLocations == null) parkingLocationFromDB.ShootingLocations = new List<ShootingLocation>();
-                    parkingLocationFromDB.ShootingLocations.Add(shootingLocation);
+                    if (!HasShootingLocation(parkingLocationFromDB, shootingLocation))
+                    {
+                        if (parkingLocationFromDB.ShootingLocations == null) parkingLocationFromDB.ShootingLocations = new List<ShootingLocation>();
+                        parkingLocationFromDB.ShootingLocations.Add(shootingLocation);
+                    }
 
-                    db.SaveChanges();
+                    // apply changes check if change was done
+                    success = (db.SaveChanges() == 0) ? E_DBReturnCode.already_existing : E_DBReturnCode.no_error;
                 }
             }
             catch (Exception e)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace LocationScout.Model
 {
     [ComplexType]
-    public class GPSCoordinates
+    public class GPSCoordinates : IEquatable<GPSCoordinates>
     {
         #region attributes
         public double? Latitude { get; set; }
@@ -24,6 +24,36 @@ namespace LocationScout.Model
 
         public GPSCoordinates()
         {
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as GPSCoordinates);
+        }
+
+        public bool Equals(GPSCoordinates other)
+        {
+            return other != null &&
+                   EqualityComparer<double?>.Default.Equals(Latitude, other.Latitude) &&
+                   EqualityComparer<double?>.Default.Equals(Longitude, other.Longitude);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1416534245;
+            hashCode = hashCode * -1521134295 + EqualityComparer<double?>.Default.GetHashCode(Latitude);
+            hashCode = hashCode * -1521134295 + EqualityComparer<double?>.Default.GetHashCode(Longitude);
+            return hashCode;
+        }
+
+        public static bool operator ==(GPSCoordinates coordinates1, GPSCoordinates coordinates2)
+        {
+            return EqualityComparer<GPSCoordinates>.Default.Equals(coordinates1, coordinates2);
+        }
+
+        public static bool operator !=(GPSCoordinates coordinates1, GPSCoordinates coordinates2)
+        {
+            return !(coordinates1 == coordinates2);
         }
         #endregion
     }
