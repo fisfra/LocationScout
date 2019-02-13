@@ -106,37 +106,52 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode ReadShootingLocationByName(string name, out ShootingLocation foundShootingLocation, out string errorMessage)
+        internal static E_DBReturnCode ReadShootingLocationByName(string name, out ShootingLocation foundShootingLocation, out string errorMessage, LocationScoutContext db = null)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
             foundShootingLocation = null;
 
+            // databased contact that is used
+            // might be a new one or and existing one depending on the parameter
+            LocationScoutContext dbUsed = null;
+
             try
             {
-                using (var db = new LocationScoutContext())
-                {
-                    var found = db.ShootingLocations.Where(s => s.Name == name)
+                // cannot use "using" here since the context might be needed later
+                // take existing context or create new one
+                dbUsed = db ?? new LocationScoutContext();
+
+                // query
+                var found = dbUsed.ShootingLocations.Where(s => s.Name == name)
                                                     .Include(s => s.ParkingLocations)
                                                     .Include(s => s.SubjectLocations.Select(sl => sl.ShootingLocations.Select(sh => sh.ParkingLocations)))
                                                     .Include(s => s.SubjectLocations.Select(sl => sl.ShootingLocations.Select(sh => sh.Photos)))
                                                     .Include(s => s.Photos)
                                                     .ToList();
 
-                    if (found.Count == 1)
-                    {
-                        foundShootingLocation = found[0];
-                    }
-
-                    else if (found.Count > 0)
-                    {
-                        // should not find more than one country for an Id
-                        throw new Exception("Inconsistent data in database in PersistenceManager:ReadShootingLocationByName.");
-                    }
+                // should be exactly one result or no result (unique name)
+                if (found.Count == 1)
+                {
+                    foundShootingLocation = found[0];
                 }
+
+                // more then one result found
+                else if (found.Count > 1)
+                {
+                    // should not find more than one country 
+                    throw new Exception("Inconsistent data in database in PersistenceManager:ReadShootingLocationByName.");
+                }
+
+                // dispose only if it was newly created
+                if (db == null) dbUsed.Dispose();
+
             }
             catch (Exception e)
             {
+                // dispose only if it was newly created
+                if (db == null) dbUsed.Dispose();
+
                 errorMessage = BuildDBErrorMessages(e);
                 success = E_DBReturnCode.error;
             }
@@ -395,13 +410,13 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        private static ShootingLocation GetNewOrExisitingShootingLocation(string oldName, GPSCoordinates oldGPS, out bool isNewShootingLocation)
+        private static ShootingLocation GetNewOrExisitingShootingLocation(LocationScoutContext db, string oldName, GPSCoordinates oldGPS, out bool isNewShootingLocation)
         {
             // falg showing if it is a new or old (= from database) shooting location
             isNewShootingLocation = false;
 
             // read from database by name
-            switch (ReadShootingLocationByName(oldName, out ShootingLocation shootingLocation, out string errorMessage))
+            switch (ReadShootingLocationByName(oldName, out ShootingLocation shootingLocation, out string errorMessage, db))
             {
                 // no error
                 case E_DBReturnCode.no_error:
@@ -511,7 +526,7 @@ namespace LocationScout.DataAccess
                     if (parkingLocationFromDB == null) throw new Exception("Invalid Parking Location Id in PersistenceManager::SmartAddPhotoPlace");
 
                     // check if a shooting location with the same name exists already
-                    var shootingLocation = GetNewOrExisitingShootingLocation(shootingLocationName, shootingLocationGPS, out bool isNewShootingLocation);
+                    var shootingLocation = GetNewOrExisitingShootingLocation(db, shootingLocationName, shootingLocationGPS, out bool isNewShootingLocation);
 
                     // add parking location if necessary
                     if (!HasParkingLocation(shootingLocation, parkingLocationFromDB))
@@ -562,6 +577,7 @@ namespace LocationScout.DataAccess
                     }
 
                     // apply changes check if change was done
+                    //db.Entry(shootingLocation).State = isNewShootingLocation ? EntityState.Added : EntityState.Modified;
                     success = (db.SaveChanges() == 0) ? E_DBReturnCode.already_existing : E_DBReturnCode.no_error;
                 }
             }
