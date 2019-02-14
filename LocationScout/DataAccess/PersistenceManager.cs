@@ -39,6 +39,7 @@ namespace LocationScout.DataAccess
                     allCountries = db.Countries.Include(c => c.Areas.Select(a => a.SubAreas))
                                                .Include(c => c.SubAreas.Select(sa => sa.SubjectLocation.Select(sl => sl.ShootingLocations.Select(sh => sh.ParkingLocations))))
                                                .Include(c => c.SubjectLocations.Select(sl => sl.ShootingLocations.Select(sh => sh.ParkingLocations)))
+                                               .Include(c => c.SubjectLocations.Select(sl => sl.ShootingLocations.Select(sh => sh.Photos)))
                                                .ToList();
                 }
             }
@@ -169,7 +170,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allSubjectLocations = db.SubjectLocations.Include(s => s.Country).Include(s => s.SubArea).Include(s => s.Area).ToList();
+                    allSubjectLocations = db.SubjectLocations.Include(s => s.Country)
+                                                             .Include(s => s.SubArea)
+                                                             .Include(s => s.Area)
+                                                             .ToList();
                 }
             }
             catch (Exception e)
@@ -218,7 +222,8 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    allParkingLocations = db.ParkingLocations.Include(p => p.ShootingLocations).ToList();
+                    allParkingLocations = db.ParkingLocations.Include(p => p.ShootingLocations)
+                                                             .ToList();
                 }
             }
             catch (Exception e)
@@ -265,7 +270,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var found = db.Countries.Where(c => c.Id == id).Include(c => c.Areas.Select(a => a.SubAreas)).Include(c => c.SubAreas).Include(c=> c.SubjectLocations).ToList();
+                    var found = db.Countries.Where(c => c.Id == id).Include(c => c.Areas.Select(a => a.SubAreas))
+                                                                   .Include(c => c.SubAreas)
+                                                                   .Include(c=> c.SubjectLocations)
+                                                                   .ToList();
 
                     if (found.Count == 1)
                     {
@@ -354,7 +362,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var found = db.Areas.Where(a => a.Id == id).Include(a => a.Countries).Include(a => a.SubAreas).Include(a => a.SubjectLocations).ToList();
+                    var found = db.Areas.Where(a => a.Id == id).Include(a => a.Countries)
+                                                               .Include(a => a.SubAreas)
+                                                               .Include(a => a.SubjectLocations)
+                                                               .ToList();
 
                     if (found.Count == 1)
                     {
@@ -387,7 +398,10 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    var found = db.SubAreas.Where(s => s.Id == id).Include(s => s.Countries).Include(s => s.Areas).Include(s => s.SubjectLocation).ToList();
+                    var found = db.SubAreas.Where(s => s.Id == id).Include(s => s.Countries)
+                                                                  .Include(s => s.Areas)
+                                                                  .Include(s => s.SubjectLocation)
+                                                                  .ToList();
 
                     if (found.Count == 1)
                     {
