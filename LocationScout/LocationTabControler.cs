@@ -525,10 +525,29 @@ namespace LocationScout
             var newShootingLocationName = DisplayItem.ShootingLocationName;
             var newShootingLocationGPS = new GPSCoordinates(DisplayItem.ShootingLocationLatitude, DisplayItem.ShootingLocationLongitude);
 
+            var newPhoto1 = ImageTools.BitmapImageToByteArray(DisplayItem.Photo_1);
+            var newPhoto2 = ImageTools.BitmapImageToByteArray(DisplayItem.Photo_2);
+            var newPhoto3 = ImageTools.BitmapImageToByteArray(DisplayItem.Photo_3);
+
+            var oldPhoto1 = shootingLocation.Photos.ElementAtOrDefault(0)?.ImageBytes;
+            var oldPhoto2 = shootingLocation.Photos.ElementAtOrDefault(1)?.ImageBytes;
+            var oldPhoto3 = shootingLocation.Photos.ElementAtOrDefault(2)?.ImageBytes;
+
+
             // write only to database if there was a change
-            if ((shootingLocation.Name != newShootingLocationName) || (shootingLocation.Coordinates.Latitude != newShootingLocationGPS.Latitude) || (shootingLocation.Coordinates.Longitude != newShootingLocationGPS.Longitude))
+            if ((shootingLocation.Name != newShootingLocationName) || 
+                (shootingLocation.Coordinates.Latitude != newShootingLocationGPS.Latitude) || 
+                (shootingLocation.Coordinates.Longitude != newShootingLocationGPS.Longitude) ||
+                (!oldPhoto1.SequenceEqual(newPhoto1)) ||
+                (!oldPhoto2.SequenceEqual(newPhoto2)) ||
+                (!oldPhoto3.SequenceEqual(newPhoto3)))
             {
-                if (DataAccessAdapter.EditShootingLocationName_GPS(shootingLocation.Id, newShootingLocationName, newShootingLocationGPS, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
+                var newPhotosAsByteArray = new List<byte[]>();
+                if (newPhoto1 != null) newPhotosAsByteArray.Add(newPhoto1);
+                if (newPhoto2 != null) newPhotosAsByteArray.Add(newPhoto2);
+                if (newPhoto3 != null) newPhotosAsByteArray.Add(newPhoto3);
+
+                if (DataAccessAdapter.EditShootingLocation(shootingLocation.Id, newShootingLocationName, newShootingLocationGPS, newPhotosAsByteArray, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
                 {
                     ShowMessage("Shooting location data successfully changed.", E_MessageType.info);
 

@@ -40,14 +40,16 @@ namespace LocationScout.ViewModel
             return image;
         }
 
-        internal static byte[] BitmapImageToByteArray(BitmapImage impage)
+        internal static byte[] BitmapImageToByteArray(BitmapImage image)
         {
+            if (image == null) return null;
+
             byte[] data;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
 
             try
             {
-                encoder.Frames.Add(BitmapFrame.Create(impage));
+                encoder.Frames.Add(BitmapFrame.Create(image));
             }
             catch (NotSupportedException)
             {

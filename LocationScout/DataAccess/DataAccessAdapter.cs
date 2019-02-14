@@ -93,7 +93,7 @@ namespace LocationScout.DataAccess
             var shootingLocationName = displayItem.ShootingLocationName;
             var shootingLocationGPS = new GPSCoordinates(displayItem.ShootingLocationLatitude, displayItem.ShootingLocationLongitude);
 
-            return PersistenceManager.SmartAddShootingPlace(subjectLocationId, parkingLocationId, photosAsByteArray, shootingLocationName, shootingLocationGPS, out errorMessage);
+            return PersistenceManager.SmartAddShootingLocation(subjectLocationId, parkingLocationId, photosAsByteArray, shootingLocationName, shootingLocationGPS, out errorMessage);
         }
 
         internal static E_DBReturnCode EditCountryName(long id, string name, out string errorMessage)
@@ -126,9 +126,9 @@ namespace LocationScout.DataAccess
             return PersistenceManager.EditParkingLocationName_GPS(id, name, coordinates, out errorMessage);
         }
 
-        internal static E_DBReturnCode EditShootingLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
+        internal static E_DBReturnCode EditShootingLocation(long id, string name, GPSCoordinates coordinates, List<byte[]> photosAsByteArray, out string errorMessage)
         {
-            return PersistenceManager.EditShootingLocationName_GPS(id, name, coordinates, out errorMessage);
+            return PersistenceManager.EditShootingLocation(id, name, coordinates, photosAsByteArray, out errorMessage);
         }
 
         internal static E_DBReturnCode DeleteShootingLocationById(long id, out string errorMessage)

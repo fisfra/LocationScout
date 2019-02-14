@@ -296,7 +296,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode EditShootingLocationName_GPS(long id, string name, GPSCoordinates coordinates, out string errorMessage)
+        internal static E_DBReturnCode EditShootingLocation(long id, string name, GPSCoordinates coordinates, List<byte[]> photosAsByteArray, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -311,8 +311,46 @@ namespace LocationScout.DataAccess
                     shootingLocationFromDB.Name = name;
                     shootingLocationFromDB.Coordinates = coordinates;
 
+                    // this does not work yet
+                    /*
+                    DeletePhotos(shootingLocationFromDB, out errorMessage);
+
+                    foreach (var ba in photosAsByteArray)
+                    {
+                        if (!PhotoExists(shootingLocationFromDB, ba))
+                        {
+                            shootingLocationFromDB.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocationFromDB });
+                        }                        
+                    }
+                    */
+
                     db.Entry(shootingLocationFromDB).State = EntityState.Modified;
                     db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode DeleteAllPhotos(ShootingLocation shootingLocation, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    if (shootingLocation.Photos != null)
+                    {
+                        shootingLocation.Photos.Clear();
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception e)
@@ -521,8 +559,8 @@ namespace LocationScout.DataAccess
             return exists;
         }
 
-        internal static E_DBReturnCode SmartAddShootingPlace(long subjectLocationId, long parkingLocationId, List<byte[]> photosAsByteArray, string shootingLocationName, 
-                                                          GPSCoordinates shootingLocationGPS, out string errorMessage)
+        internal static E_DBReturnCode SmartAddShootingLocation(long subjectLocationId, long parkingLocationId, List<byte[]> photosAsByteArray, string shootingLocationName, 
+                                                                GPSCoordinates shootingLocationGPS, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
