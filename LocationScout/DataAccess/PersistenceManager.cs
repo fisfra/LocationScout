@@ -450,7 +450,7 @@ namespace LocationScout.DataAccess
 
         private static bool HasParkingLocation(ShootingLocation shootingLocation, ParkingLocation parkingLocation)
         {
-            if ( (shootingLocation == null) || (shootingLocation?.ParkingLocations == null) )
+            if ( (shootingLocation == null) || (parkingLocation == null)|| (shootingLocation?.ParkingLocations == null) )
             {
                 return false;
             }
@@ -460,7 +460,7 @@ namespace LocationScout.DataAccess
 
         private static bool HasSubjectLocation(ShootingLocation shootingLocation, SubjectLocation subjectLocation)
         {
-            if ((shootingLocation == null) || (shootingLocation?.SubjectLocations == null))
+            if ((shootingLocation == null) || (subjectLocation == null) || (shootingLocation?.SubjectLocations == null))
             {
                 return false;
             }
@@ -470,7 +470,7 @@ namespace LocationScout.DataAccess
 
         private static bool HasShootingLocation(SubjectLocation subjectLocation, ShootingLocation shootingLocation)
         {
-            if ((subjectLocation == null) || (subjectLocation?.ShootingLocations == null))
+            if ((subjectLocation == null) || (shootingLocation == null) || (subjectLocation?.ShootingLocations == null))
             {
                 return false;
             }
@@ -480,7 +480,7 @@ namespace LocationScout.DataAccess
 
         private static bool HasShootingLocation(ParkingLocation parkingLocation, ShootingLocation shootingLocation)
         {
-            if ((parkingLocation == null) || (parkingLocation?.ShootingLocations == null))
+            if ((parkingLocation == null) || (shootingLocation == null) || (parkingLocation?.ShootingLocations == null))
             {
                 return false;
             }
@@ -507,7 +507,7 @@ namespace LocationScout.DataAccess
             return exists;
         }
 
-        internal static E_DBReturnCode SmartAddPhotoPlace(long subjectLocationId, long parkingLocationId, List<byte[]> photosAsByteArray, string shootingLocationName, 
+        internal static E_DBReturnCode SmartAddShootingPlace(long subjectLocationId, long parkingLocationId, List<byte[]> photosAsByteArray, string shootingLocationName, 
                                                           GPSCoordinates shootingLocationGPS, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
@@ -521,15 +521,15 @@ namespace LocationScout.DataAccess
                     var subjectLocationFromDB = db.SubjectLocations.FirstOrDefault(o => o.Id == subjectLocationId);
                     if (subjectLocationFromDB == null) throw new Exception("Invalid Subject Location Id in PersistenceManager::SmartAddPhotoPlace");
 
-                    // get parking location from database
-                    var parkingLocationFromDB = db.ParkingLocations.FirstOrDefault(o => o.Id == parkingLocationId);
-                    if (parkingLocationFromDB == null) throw new Exception("Invalid Parking Location Id in PersistenceManager::SmartAddPhotoPlace");
+                    // get parking location from database if parkingLocationId != 1 (meaning there was a valid parking location entered in UI)
+                    var parkingLocationFromDB = (parkingLocationId != -1) ? db.ParkingLocations.FirstOrDefault(o => o.Id == parkingLocationId) : null;
+                    if ( (parkingLocationFromDB == null) && (parkingLocationId != -1))throw new Exception("Invalid Parking Location Id in PersistenceManager::SmartAddPhotoPlace");
 
                     // check if a shooting location with the same name exists already
                     var shootingLocation = GetNewOrExisitingShootingLocation(db, shootingLocationName, shootingLocationGPS, out bool isNewShootingLocation);
 
                     // add parking location if necessary
-                    if (!HasParkingLocation(shootingLocation, parkingLocationFromDB))
+                    if ((parkingLocationId != -1) && (!HasParkingLocation(shootingLocation, parkingLocationFromDB)))
                     {
                         if (shootingLocation.ParkingLocations == null) shootingLocation.ParkingLocations = new List<ParkingLocation>();
                         shootingLocation.ParkingLocations.Add(parkingLocationFromDB);
@@ -569,15 +569,15 @@ namespace LocationScout.DataAccess
                         subjectLocationFromDB.ShootingLocations.Add(shootingLocation);
                     }
 
-                    // add shootling location to parking location
-                    if (!HasShootingLocation(parkingLocationFromDB, shootingLocation))
+                    // add shooting location to parking location
+                    if ((parkingLocationId != -1) && !HasShootingLocation(parkingLocationFromDB, shootingLocation))
                     {
                         if (parkingLocationFromDB.ShootingLocations == null) parkingLocationFromDB.ShootingLocations = new List<ShootingLocation>();
                         parkingLocationFromDB.ShootingLocations.Add(shootingLocation);
                     }
 
                     // apply changes check if change was done
-                    //db.Entry(shootingLocation).State = isNewShootingLocation ? EntityState.Added : EntityState.Modified;
+                    db.Entry(shootingLocation).State = isNewShootingLocation ? EntityState.Added : EntityState.Modified;
                     success = (db.SaveChanges() == 0) ? E_DBReturnCode.already_existing : E_DBReturnCode.no_error;
                 }
             }

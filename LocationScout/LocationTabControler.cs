@@ -112,10 +112,12 @@ namespace LocationScout
             // set parking location (if new parking location, initial value is -1)
             long parkingLocationId = parkingLocation != null ? parkingLocation.Id :- 1;
 
-            // new parking location (object is null)
-            if (parkingLocation == null)
+            // create new parking location if necessary
+            if ( (parkingLocation == null) && (!string.IsNullOrEmpty(DisplayItem.ParkingLocationName)))
             {
+                // get name of parking location from UI
                 var parkingLocationName = DisplayItem.ParkingLocationName;
+
                 var parkingLocationGPS = new GPSCoordinates(DisplayItem.ParkingLocationLatitude, DisplayItem.ParkingLocationLongitude);
 
                 parkingLocationId = AddParkingLocation(parkingLocationName, parkingLocationGPS, out errorMessage);
@@ -127,7 +129,7 @@ namespace LocationScout
             }
 
             // add country to database
-            var success = DataAccessAdapter.SmartAddPhotoLocation(DisplayItem, subjectLocation.Id, parkingLocationId, out errorMessage);
+            var success = DataAccessAdapter.SmartAddShootingLocation(DisplayItem, subjectLocation.Id, parkingLocationId, out errorMessage);
 
             switch (success)
             {

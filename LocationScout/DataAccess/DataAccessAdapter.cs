@@ -83,7 +83,7 @@ namespace LocationScout.DataAccess
             return PersistenceManager.AddParkingLocation(parkingLocationName, parkingLocationCoordinates, out id, out errorMessage);
         }
 
-        internal static E_DBReturnCode SmartAddPhotoLocation(LocationDisplayItem displayItem, long subjectLocationId, long parkingLocationId, out string errorMessage)
+        internal static E_DBReturnCode SmartAddShootingLocation(LocationDisplayItem displayItem, long subjectLocationId, long parkingLocationId, out string errorMessage)
         {
             var photosAsByteArray = new List<byte[]>();
             if (displayItem.Photo_1 != null) photosAsByteArray.Add(ImageTools.BitmapImageToByteArray(displayItem.Photo_1));
@@ -93,7 +93,7 @@ namespace LocationScout.DataAccess
             var shootingLocationName = displayItem.ShootingLocationName;
             var shootingLocationGPS = new GPSCoordinates(displayItem.ShootingLocationLatitude, displayItem.ShootingLocationLongitude);
 
-            return PersistenceManager.SmartAddPhotoPlace(subjectLocationId, parkingLocationId, photosAsByteArray, shootingLocationName, shootingLocationGPS, out errorMessage);
+            return PersistenceManager.SmartAddShootingPlace(subjectLocationId, parkingLocationId, photosAsByteArray, shootingLocationName, shootingLocationGPS, out errorMessage);
         }
 
         internal static E_DBReturnCode EditCountryName(long id, string name, out string errorMessage)
