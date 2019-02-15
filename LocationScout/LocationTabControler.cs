@@ -534,13 +534,14 @@ namespace LocationScout
             var oldPhoto3 = shootingLocation.Photos.ElementAtOrDefault(2)?.ImageBytes;
 
 
+
             // write only to database if there was a change
             if ((shootingLocation.Name != newShootingLocationName) || 
                 (shootingLocation.Coordinates.Latitude != newShootingLocationGPS.Latitude) || 
                 (shootingLocation.Coordinates.Longitude != newShootingLocationGPS.Longitude) ||
-                (!oldPhoto1.SequenceEqual(newPhoto1)) ||
-                (!oldPhoto2.SequenceEqual(newPhoto2)) ||
-                (!oldPhoto3.SequenceEqual(newPhoto3)))
+                (!ImageTools.SamePhoto(oldPhoto1,newPhoto1)) ||
+                (!ImageTools.SamePhoto(oldPhoto2, newPhoto2)) ||
+                (!ImageTools.SamePhoto(oldPhoto3, newPhoto3)))
             {
                 var newPhotosAsByteArray = new List<byte[]>();
                 if (newPhoto1 != null) newPhotosAsByteArray.Add(newPhoto1);
@@ -567,6 +568,7 @@ namespace LocationScout
                 ShowMessage("No change done.", E_MessageType.info);
             }
         }
+
 
         private long AddParkingLocation(string parkingLocationName, GPSCoordinates parkingLocationGPS, out string errorMessage)
         {

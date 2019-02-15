@@ -64,5 +64,22 @@ namespace LocationScout.ViewModel
 
             return data;
         }
+
+        internal static bool SamePhoto(byte[] photo1, byte[] photo2)
+        {
+            // both are null, so return true
+            if (photo1 == null && photo2 == null) return true;
+
+            // one is null, the other not null, so return false;
+            if (((photo1 == null) && (photo2 != null)) || ((photo1 != null) && (photo2 == null))) return false;
+
+            // els do a real compare
+            return photo1.SequenceEqual(photo1);
+        }
+
+        internal static bool SamePhoto(BitmapImage photo1, BitmapImage photo2)
+        {
+            return SamePhoto(BitmapImageToByteArray(photo1), BitmapImageToByteArray(photo2));
+        }
     }
 }

@@ -301,28 +301,52 @@ namespace LocationScout.DataAccess
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
 
+            // only take the three first photo
+            if (photosAsByteArray?.Count > 3)
+            {
+                throw new Exception("Maximum number of photos is exceeded in PersistenceManager::EditShootingLocation");
+            }
+
             try
             {
                 using (var db = new LocationScoutContext())
                 {
+                    // get the shooting location from the database
                     var shootingLocationFromDB = db.ShootingLocations.FirstOrDefault(o => o.Id == id);
                     if (shootingLocationFromDB == null) throw new Exception("Inconsistent database values - Id of ShootingLocation.");
 
+                    // set name and coordinates
                     shootingLocationFromDB.Name = name;
                     shootingLocationFromDB.Coordinates = coordinates;
 
-                    // this does not work yet
-                    /*
-                    DeletePhotos(shootingLocationFromDB, out errorMessage);
-
-                    foreach (var ba in photosAsByteArray)
+                    // there are photos
+                    if (photosAsByteArray != null)
                     {
-                        if (!PhotoExists(shootingLocationFromDB, ba))
+                        // there are no photos
+                        if (photosAsByteArray?.Count == 0)
                         {
-                            shootingLocationFromDB.Photos.Add(new Photo() { ImageBytes = ba, ShootingLocation = shootingLocationFromDB });
-                        }                        
+                            // try to delete (do this with a different database context)
+                            if (DeleteAllPhotosOfShootingLocation(id, out errorMessage) != E_DBReturnCode.no_error)
+                            {
+                                throw new Exception(errorMessage);
+                            }
+                        }
+
+                        else if (photosAsByteArray.Count < shootingLocationFromDB?.Photos?.Count)
+                        {
+                            for (var i = photosAsByteArray.Count; i < shootingLocationFromDB.Photos.Count; i++)
+                            {
+                                var photoId = shootingLocationFromDB.Photos.ElementAt(i).Id;
+                                DeletePhoto(photoId, out errorMessage);
+                            }
+                        }
+
+                        // update the photos with the new photos
+                        for (var i = 0; i < photosAsByteArray.Count; i++)
+                        {
+                            shootingLocationFromDB.Photos.Add(new Photo() { ImageBytes = photosAsByteArray[i], ShootingLocation = shootingLocationFromDB });
+                        }
                     }
-                    */
 
                     db.Entry(shootingLocationFromDB).State = EntityState.Modified;
                     db.SaveChanges();
@@ -337,7 +361,7 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode DeleteAllPhotos(ShootingLocation shootingLocation, out string errorMessage)
+        internal static E_DBReturnCode DeletePhoto(long id, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
             errorMessage = string.Empty;
@@ -346,9 +370,39 @@ namespace LocationScout.DataAccess
             {
                 using (var db = new LocationScoutContext())
                 {
-                    if (shootingLocation.Photos != null)
+                    var photoToRemove = db.Photos.FirstOrDefault(p => p.Id == id);
+                    if (photoToRemove == null) throw new Exception("Photo not found in PersistenceManager::DeletePhoto - Id:" + id.ToString());
+
+                    db.Photos.Remove(photoToRemove);
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode DeleteAllPhotosOfShootingLocation(long shootingLocationId, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    // get the shooting location from the database
+                    var shootingLocationFromDB = db.ShootingLocations.FirstOrDefault(o => o.Id == shootingLocationId);
+                    if (shootingLocationFromDB == null) throw new Exception("Shooting Location not found in PersistenceManager::DeleteAllPhotosOfShootingLocation - Id:" + shootingLocationId.ToString());
+
+                    if (shootingLocationFromDB.Photos != null)
                     {
-                        shootingLocation.Photos.Clear();
+                        var photoToDelete = shootingLocationFromDB.Photos;
+                        db.Photos.RemoveRange(photoToDelete);
+
                         db.SaveChanges();
                     }
                 }

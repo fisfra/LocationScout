@@ -86,8 +86,8 @@ namespace LocationScout
             Window.ParkingLocationControl.SelectKey(CurrentDisplayItem.ParkingLocationName);
             _locationTabControler.DisplayItem.ParkingLocationName = CurrentDisplayItem.ParkingLocationName;
             var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
-            _locationTabControler.DisplayItem.ParkingLocationLatitude = parkingLocation.Coordinates.Latitude;
-            _locationTabControler.DisplayItem.ParkingLocationLongitude = parkingLocation.Coordinates.Longitude;
+            _locationTabControler.DisplayItem.ParkingLocationLatitude = parkingLocation?.Coordinates.Latitude;
+            _locationTabControler.DisplayItem.ParkingLocationLongitude = parkingLocation?.Coordinates.Longitude;
 
 
             var shootingLocationId = shootingLocation.Id;
