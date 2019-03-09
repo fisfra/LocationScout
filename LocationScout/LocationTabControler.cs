@@ -250,6 +250,7 @@ namespace LocationScout
             var hasParkingLocationText = !string.IsNullOrEmpty(Window.ParkingLocationControl.GetCurrentText());
             var parkingLocationInDB = Window.ParkingLocationControl.GetCurrentObject() != null;
 
+            /*
             // only shooting location control has text, so edit shooting location
             if (hasShootingLocationText && !hasParkingLocationText)
             {
@@ -276,7 +277,7 @@ namespace LocationScout
 
             // both have text, so check focus
             else if (hasShootingLocationText && hasParkingLocationText)
-            {
+            {*/
                 if (shootingLocationInDB && !parkingLocationInDB) 
                 {
                     SwitchEditModeShootingLocation();
@@ -308,7 +309,7 @@ namespace LocationScout
                         }
                     }
                 }
-            }
+            //}
 
             // editing is not possible - probably user wants to edit values that are not added to DB yet
             else

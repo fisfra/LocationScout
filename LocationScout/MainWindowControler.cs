@@ -83,7 +83,17 @@ namespace LocationScout
         {
             _settingControler.Delete();
         }
-        
+
+        internal void Restore()
+        {
+            _settingControler.Restore();
+        }
+
+        internal void Backup()
+        {
+            _settingControler.Backup();
+        }
+
         private void RefreshAllCountriesFromDB()
         {
             var success = DataAccessAdapter.ReadAllCountries(out _allCountries, out string errorMessage);

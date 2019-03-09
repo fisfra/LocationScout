@@ -341,6 +341,9 @@
                             <Button Name="Settings_AddButton" Content="Add" KeyboardNavigation.TabIndex="6" Grid.Row="0" Width="100" Height="25" Margin="5,5,5,5" Click="SettingAddButton_Click"/>
                             <Button Name="Settings_EditButton" Content="Edit" KeyboardNavigation.TabIndex="7" Grid.Row="1" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsEditButton_Click"/>
                             <Button Name="Settings_DeleteButton" Content="Delete"  KeyboardNavigation.TabIndex="7" Grid.Row="2" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsDeleteButton_Click"/>
+
+                            <Button Name="Settings_BackupButton" Content="Backup"  KeyboardNavigation.TabIndex="8" Grid.Row="4" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsBackupButton_Click"/>
+                            <Button Name="Settings_RestoreButton" Content="Restore"  KeyboardNavigation.TabIndex="8" Grid.Row="5" Width="100" Height="25" Margin="5,5,5,5" Click="SettingsRestoreButton_Click"/>
                         </Grid>
 
                     </Grid>

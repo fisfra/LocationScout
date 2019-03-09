@@ -135,5 +135,15 @@ namespace LocationScout.DataAccess
         {
             return PersistenceManager.DeleteShootingLocationById(id, out errorMessage);
         }
+
+        internal static E_DBReturnCode BackupDatabase(out string errorMessage)
+        {
+            return PersistenceManager.BackupDatabase(out errorMessage);
+        }
+
+        internal static E_DBReturnCode RestoreDatabase(out string errorMessage)
+        {
+            return PersistenceManager.RestoreDatabase(out errorMessage);
+        }
     }
 }

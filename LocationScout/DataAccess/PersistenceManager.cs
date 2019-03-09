@@ -5,6 +5,8 @@ using System.Linq;
 using System.Data.Entity;
 using System.Diagnostics;
 using LocationScout.ViewModel;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LocationScout.DataAccess
 {
@@ -202,6 +204,39 @@ namespace LocationScout.DataAccess
                                                                .Include(s => s.SubjectLocations.Select(sl => sl.Country))
                                                                .ToList();
                 }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode RestoreDatabase(out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static E_DBReturnCode BackupDatabase(out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["LocationScout"].ConnectionString;
+
+                SqlConnection connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand("BackupLocationScout", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                //cmd.Parameters.Add("@path", SqlDbType.NVarChar).Value = path;
+
+                cmd.ExecuteNonQuery();
             }
             catch (Exception e)
             {
@@ -857,12 +892,12 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, string subjectLocationName, GPSCoordinates subjectLocationCoordinates, out string errorMesssage)
+        internal static E_DBReturnCode SmartAddCountry(string countryName, string areaName, string subAreaName, string subjectLocationName, GPSCoordinates subjectLocationCoordinates, out string errorMessage)
         {
             Debug.Assert(!string.IsNullOrEmpty(countryName));
 
             E_DBReturnCode success = E_DBReturnCode.no_error;
-            errorMesssage = string.Empty;
+            errorMessage = string.Empty;
 
             try
             {
@@ -1075,7 +1110,28 @@ namespace LocationScout.DataAccess
             }
             catch (Exception e)
             {
-                errorMesssage = BuildDBErrorMessages(e);
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode Seriales(out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
                 success = E_DBReturnCode.error;
             }
 

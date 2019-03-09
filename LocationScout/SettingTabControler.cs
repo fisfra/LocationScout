@@ -114,6 +114,47 @@ namespace LocationScout
             SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow(Window);
             deletingWindow.ShowDialog();
         }
+
+        internal void Backup()
+        {
+            var returnCode = DataAccessAdapter.BackupDatabase(out string errorMessage);
+
+            switch (returnCode)
+            {
+                case PersistenceManager.E_DBReturnCode.error:
+                    ShowMessage(errorMessage, E_MessageType.error);
+                    break;
+                case PersistenceManager.E_DBReturnCode.no_error:
+                    ShowMessage("Database backup sucessfully completed", E_MessageType.info);
+                    break;
+                case PersistenceManager.E_DBReturnCode.already_existing:
+                    System.Diagnostics.Debug.Assert(false);
+                    throw new Exception("Unknown Returncode in SettingTabControler::Backup()");
+                default:
+                    break;
+            }
+        }
+
+        internal void Restore()
+        {
+            var returnCode = DataAccessAdapter.RestoreDatabase(out string errorMessage);
+
+            switch (returnCode)
+            {
+                case PersistenceManager.E_DBReturnCode.error:
+                    ShowMessage(errorMessage, E_MessageType.error);
+                    break;
+                case PersistenceManager.E_DBReturnCode.no_error:
+                    ShowMessage("Database restored sucessfully completed", E_MessageType.info);
+                    break;
+                case PersistenceManager.E_DBReturnCode.already_existing:
+                    System.Diagnostics.Debug.Assert(false);
+                    throw new Exception("Unknown Returncode in SettingTabControler::Restore()");
+                default:
+                    break;
+            }        
+        }
+
         #endregion
 
         #region protected methods

@@ -87,6 +87,16 @@ namespace LocationScout
             _controler.Delete();
         }
 
+        private void SettingsBackupButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.Backup();
+        }
+
+        private void SettingsRestoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.Restore();
+        }
+
         private void SettingsSubjectLocationLatitute_GotFocus(object sender, RoutedEventArgs e)
         {
             Settings_SubjectLocationLatituteTextBox.SelectAll();
