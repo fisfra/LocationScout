@@ -48,10 +48,18 @@ namespace LocationScout
 
         internal void HandleClipboardUpdate()
         {
-            string clipboardText = Clipboard.GetText();
+            try
+            {
+                string clipboardText = Clipboard.GetText();
 
-            _locationControler.HandleClipboardChange(clipboardText);
-            _settingControler.HandleClipboardChange(clipboardText);
+                _locationControler.HandleClipboardChange(clipboardText);
+                _settingControler.HandleClipboardChange(clipboardText);
+            }
+            catch (Exception e)
+            {
+                // just show an info if an error occurs here
+                ShowMessage(e.Message, E_MessageType.info);
+            }
         }
 
         internal void HandleSettingAdd()
