@@ -107,7 +107,8 @@ namespace LocationScout
 
         internal void SubjectLocationGoogleSearch()
         {
-            GoogleMapsHelper.Search(DisplayItem.SubjectLocationName);
+            var gps = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
+            GoogleMapsHelper.Go(gps);
         }
 
         internal void Delete()
