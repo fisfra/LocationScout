@@ -141,9 +141,9 @@ namespace LocationScout.DataAccess
             return PersistenceManager.BackupDatabase(out errorMessage);
         }
 
-        internal static E_DBReturnCode RestoreDatabase(out string errorMessage)
+        internal static E_DBReturnCode RestoreDatabase(out string errorMessage, string fullPathDatabaseToRestore)
         {
-            return PersistenceManager.RestoreDatabase(out errorMessage);
+            return PersistenceManager.RestoreDatabase(out errorMessage, fullPathDatabaseToRestore);
         }
     }
 }

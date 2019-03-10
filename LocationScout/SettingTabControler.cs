@@ -1,6 +1,7 @@
 ﻿using LocationScout.DataAccess;
 using LocationScout.Model;
 using LocationScout.ViewModel;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -117,6 +118,8 @@ namespace LocationScout
 
         internal void Backup()
         {
+            Mouse.OverrideCursor = Cursors.Wait;
+
             var returnCode = DataAccessAdapter.BackupDatabase(out string errorMessage);
 
             switch (returnCode)
@@ -129,30 +132,58 @@ namespace LocationScout
                     break;
                 case PersistenceManager.E_DBReturnCode.already_existing:
                     System.Diagnostics.Debug.Assert(false);
+                    Mouse.OverrideCursor = null;
                     throw new Exception("Unknown Returncode in SettingTabControler::Backup()");
                 default:
                     break;
             }
+
+            Mouse.OverrideCursor = null;
         }
 
         internal void Restore()
         {
-            var returnCode = DataAccessAdapter.RestoreDatabase(out string errorMessage);
-
-            switch (returnCode)
+            // dialog to choose the file to be restored
+            OpenFileDialog od = new OpenFileDialog
             {
-                case PersistenceManager.E_DBReturnCode.error:
-                    ShowMessage(errorMessage, E_MessageType.error);
-                    break;
-                case PersistenceManager.E_DBReturnCode.no_error:
-                    ShowMessage("Database restored sucessfully completed", E_MessageType.info);
-                    break;
-                case PersistenceManager.E_DBReturnCode.already_existing:
-                    System.Diagnostics.Debug.Assert(false);
-                    throw new Exception("Unknown Returncode in SettingTabControler::Restore()");
-                default:
-                    break;
-            }        
+                Filter = "SQL Server database Restore files|*.bak",
+                Title = "Restore Database Backup"
+            };
+
+            // user pressed ok
+            if (od.ShowDialog() == true)
+            {
+                // wait cursor
+                Mouse.OverrideCursor = Cursors.Wait;
+
+                // do restore
+                var returnCode = DataAccessAdapter.RestoreDatabase(out string errorMessage, od.FileName);
+
+                // check results
+                switch (returnCode)
+                {
+                    case PersistenceManager.E_DBReturnCode.error:
+                        ShowMessage(errorMessage, E_MessageType.error);
+                        break;
+                    case PersistenceManager.E_DBReturnCode.no_error:
+                        ShowMessage("Database restored sucessfully completed", E_MessageType.info);
+                        break;
+                    case PersistenceManager.E_DBReturnCode.already_existing:
+                        System.Diagnostics.Debug.Assert(false);
+                        Mouse.OverrideCursor = null;
+                        throw new Exception("Unknown Returncode in SettingTabControler::Restore()");
+                    default:
+                        break;
+                }
+
+                // reset cursor
+                Mouse.OverrideCursor = null;
+
+                // restart the applicatoin
+                MessageBox.Show("Location Scout will quite and restart after restoring a database.", "Restart after restore", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+            }
         }
 
         #endregion

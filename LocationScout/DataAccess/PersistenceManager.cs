@@ -7,11 +7,38 @@ using System.Diagnostics;
 using LocationScout.ViewModel;
 using System.Data.SqlClient;
 using System.Data;
+using Microsoft.Win32;
 
 namespace LocationScout.DataAccess
 {
     internal class PersistenceManager
     {
+        #region nested classes
+        internal class StoredProcedureParameter
+        {
+            public StoredProcedureParameter(string name, SqlDbType type, object value)
+            {
+                Name = name;
+                Type = type;
+                Value = value;
+            }
+
+            public string Name { set; get; }
+            public SqlDbType Type { set; get; }
+            public object Value { set; get; }
+        }
+        #endregion
+
+        #region constants
+        private const string c_backupStoredProcedureName = "BackupLocationScout";
+        private const string c_restoreStoredProcedureName = "RestoreLocationScout";
+        private const string c_connectionStringName = "LocationScout";
+        private const string c_backupPathParameterName = "@BackupPath";
+        private const string c_backupNameParameterName = "@BackupFileName";
+        private const string c_backupPathParameterValue = @"C:\Users\fisfra\OneDrive\Documents\SQL-Backup\";
+        private const string c_backupNameParameterValue = "LocationScout";
+        #endregion
+
         #region enums
         public enum E_DBReturnCode { no_error, error, already_existing};
         #endregion
@@ -214,9 +241,60 @@ namespace LocationScout.DataAccess
             return success;
         }
 
-        internal static E_DBReturnCode RestoreDatabase(out string errorMessage)
+        internal static E_DBReturnCode RestoreDatabase(out string errorMessage, string fullPathDatabaseToRestore)
         {
-            throw new NotImplementedException();
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Master"].ConnectionString))
+                {
+                    // open the connection
+                    connection.Open();
+
+                    // check if there are sessions that lock the database (works probably not if there are more than one session)
+                    string getSessionIdSQL = "SELECT request_session_id FROM sys.dm_tran_locks WHERE resource_database_id = DB_ID('" + c_connectionStringName + "')";
+                    SqlCommand getSessionIdCommand = new SqlCommand(getSessionIdSQL, connection);
+                    object o = getSessionIdCommand.ExecuteScalar();
+
+                    // if there are sessions, kill the session
+                    if (int.TryParse(o.ToString(), out int sessionId))
+                    {
+                        string killSessionSQL = "KILL " + sessionId.ToString();
+                        SqlCommand killSessionCommand = new SqlCommand(killSessionSQL, connection);
+                        killSessionCommand.ExecuteNonQuery();
+                    }
+
+                    // use the master database to start the restore
+                    string UseMaster = "USE master";
+                    SqlCommand UseMasterCommand = new SqlCommand(UseMaster, connection);
+                    UseMasterCommand.ExecuteNonQuery();
+
+                    // (not sure what this is for)
+                    string Alter1 = @"ALTER DATABASE [" + c_connectionStringName + "] SET Single_User WITH Rollback Immediate";
+                    SqlCommand Alter1Cmd = new SqlCommand(Alter1, connection);
+                    Alter1Cmd.ExecuteNonQuery();
+
+                    // do the restore
+                    string Restore = string.Format("RESTORE DATABASE [" + c_connectionStringName + "] FROM DISK='{0}' WITH REPLACE", fullPathDatabaseToRestore);
+                    SqlCommand RestoreCmd = new SqlCommand(Restore, connection);
+                    RestoreCmd.ExecuteNonQuery();
+
+                    // // (not sure what this is for)
+                    string Alter2 = @"ALTER DATABASE [" + c_connectionStringName + "] SET Multi_User";
+                    SqlCommand Alter2Cmd = new SqlCommand(Alter2, connection);
+                    Alter2Cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
         }
 
         internal static E_DBReturnCode BackupDatabase(out string errorMessage)
@@ -226,17 +304,25 @@ namespace LocationScout.DataAccess
 
             try
             {
-                var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["LocationScout"].ConnectionString;
+                // create a date-time string
+                var datetime = DateTime.Today.Year.ToString("D4");
+                datetime += "-" + DateTime.Today.Month.ToString("D2");
+                datetime += "-" + DateTime.Today.Day.ToString("D2");
+                datetime += "-" + DateTime.Now.ToLongTimeString();
+                datetime = datetime.Replace(':', '-');
 
-                SqlConnection connection = new SqlConnection(connectionString);
-                connection.Open();
+                // build the filename of the backup file
+                var filename = c_backupNameParameterValue + "-" + datetime;
 
-                SqlCommand cmd = new SqlCommand("BackupLocationScout", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
+                // file and pathname are parameter for the stored procedure
+                List<StoredProcedureParameter> parameters = new List<StoredProcedureParameter>()
+                {
+                    new StoredProcedureParameter(c_backupPathParameterName, SqlDbType.NVarChar, c_backupPathParameterValue),
+                    new StoredProcedureParameter(c_backupNameParameterName, SqlDbType.NVarChar, filename),
+                };
 
-                //cmd.Parameters.Add("@path", SqlDbType.NVarChar).Value = path;
-
-                cmd.ExecuteNonQuery();
+                // call the stored procedure
+                CallStoredProedure(c_backupStoredProcedureName, parameters);
             }
             catch (Exception e)
             {
@@ -245,6 +331,40 @@ namespace LocationScout.DataAccess
             }
 
             return success;
+        }
+
+        private static void CallStoredProedure(string storedProecedureName, List<StoredProcedureParameter> parameters = null)
+        {
+            // get the connection String
+            var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings[c_connectionStringName].ConnectionString;
+
+            // open a new connection
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // open the database connection
+                connection.Open();
+
+                // create the SQL command for the stored procedure
+                SqlCommand cmd = new SqlCommand(storedProecedureName, connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                // add parameters if there are any
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        cmd.Parameters.Add(parameter.Name, parameter.Type).Value = parameter.Value;
+                    }
+                }
+
+                // execute the stored procedure
+                cmd.ExecuteNonQuery();
+
+                // close the database connection
+                connection.Close();
+            }
         }
 
         internal static E_DBReturnCode ReadAllParkingLocations(out List<ParkingLocation> allParkingLocations, out string errorMessage)
