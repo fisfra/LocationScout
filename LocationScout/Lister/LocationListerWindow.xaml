@@ -41,6 +41,7 @@
                         <MenuItem Header="Google Maps" Name="GoogleMapsMenuItem" Click="ShootingLocationGoogleMaps_Click"/>
                         <Separator/>
                         <MenuItem Header="Edit" Name="EditMenuItem" Click="EditMenuItem_Click"/>
+                        <MenuItem Header="Change" Name="ChangeMenuItem" Click="ChangeMenuItem_Click"/>
                         <MenuItem Header="Delete" Name="DeleteMenuItem" Click="DeleteMenuItem_Click"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
@@ -56,7 +57,7 @@
 
                     <GridView>
 
-                        <GridViewColumn Header=" Shooting Location" Width ="200" DisplayMemberBinding="{Binding ShootingLocationName}">
+                        <GridViewColumn Header=" Shooting Location" Width ="350" DisplayMemberBinding="{Binding ShootingLocationName}">
                             <GridViewColumn.HeaderContainerStyle>
                                 <Style TargetType="{x:Type GridViewColumnHeader}">
                                     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -64,7 +65,7 @@
                             </GridViewColumn.HeaderContainerStyle>
                         </GridViewColumn>
 
-                        <GridViewColumn Header=" Country" Width ="150" DisplayMemberBinding="{Binding CountryName}">
+                        <GridViewColumn Header=" Country" Width ="135" DisplayMemberBinding="{Binding CountryName}">
                             <GridViewColumn.HeaderContainerStyle>
                                 <Style TargetType="{x:Type GridViewColumnHeader}">
                                     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -88,7 +89,7 @@
                             </GridViewColumn.HeaderContainerStyle>
                         </GridViewColumn>
 
-                        <GridViewColumn Header=" GPS-Latitude" Width ="150">
+                        <GridViewColumn Header=" GPS-Latitude" Width ="110">
                             
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -104,7 +105,7 @@
                             
                         </GridViewColumn>
 
-                        <GridViewColumn Header=" GPS-Longitude" Width ="150">
+                        <GridViewColumn Header=" GPS-Longitude" Width ="110">
                             
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>

@@ -43,6 +43,20 @@ namespace LocationScout
 
         internal void HandleEdit()
         {
+            FillLocationTab();
+
+            _locationTabControler.Edit();
+        }
+
+        internal void HandleChange()
+        {
+            FillLocationTab();
+
+            _locationTabControler.Change();
+        }
+
+        private void FillLocationTab()
+        {
             // country
             Window.Location_CountryControl.SelectKey(CurrentDisplayItem.CountryName);
             _locationTabControler.DisplayItem.CountryName = CurrentDisplayItem.CountryName;
@@ -59,7 +73,7 @@ namespace LocationScout
             Window.Location_SubAreaControl.SelectKey(CurrentDisplayItem.SubAreaName);
             _locationTabControler.DisplayItem.SubAreaName = CurrentDisplayItem.SubAreaName;
             var subArea = Window.Location_SubAreaControl.GetCurrentObject() as SubArea;
-            var subjectLocations = country.SubjectLocations.Where(c => c.Country.Name == CurrentDisplayItem.CountryName && 
+            var subjectLocations = country.SubjectLocations.Where(c => c.Country.Name == CurrentDisplayItem.CountryName &&
                                                                   c.Area.Name == CurrentDisplayItem.AreaName && c.SubArea.Name == CurrentDisplayItem.SubAreaName).ToList();
 
             // subject location

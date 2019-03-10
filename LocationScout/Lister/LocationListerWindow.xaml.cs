@@ -48,6 +48,11 @@ namespace LocationScout
             Controler.HandleEdit();
         }
 
+        private void ChangeMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Controler.HandleChange();
+        }
+
         private void LocationListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Controler.HandleSelectionChanged();

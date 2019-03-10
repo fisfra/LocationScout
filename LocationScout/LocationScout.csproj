@@ -219,8 +219,8 @@
     <Compile Include="ViewModel\SettingsDisplayItem.cs" />
     <Compile Include="ViewModel\SettingsDeleteDisplayItem.cs" />
     <Compile Include="ViewModel\ViewModelManager.cs" />
-    <Compile Include="EditSelectionWindow.xaml.cs">
-      <DependentUpon>EditSelectionWindow.xaml</DependentUpon>
+    <Compile Include="EditChangeSelectionWindow.xaml.cs">
+      <DependentUpon>EditChangeSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Lister\LocationListerWindow.xaml">
       <SubType>Designer</SubType>
@@ -242,7 +242,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditSelectionWindow.xaml">
+    <Page Include="EditChangeSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

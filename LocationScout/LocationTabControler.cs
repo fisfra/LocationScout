@@ -20,6 +20,7 @@ namespace LocationScout
     {
         #region enums
         public enum E_PhotoNumber { photo_1, photo_2, photo_3 };
+        public enum E_ChangeMode { no_change, change_shootingLocation, change_parkingLocation };
         #endregion
 
         #region attributes        
@@ -165,6 +166,57 @@ namespace LocationScout
             Window.Location_CountryControl.SetFocus();
         }
 
+        internal void Change()
+        {
+            // return the edit mode
+            E_ChangeMode changemode = E_ChangeMode.no_change;
+
+            // check which controls have text and objects (are in DB)
+            var hasShootingLocationText = !string.IsNullOrEmpty(Window.Location_SubjectLocationControl.GetCurrentText());
+            var shootingLocationInDB = Window.Location_SubjectLocationControl.GetCurrentObject() != null;
+
+            var hasParkingLocationText = !string.IsNullOrEmpty(Window.ParkingLocationControl.GetCurrentText());
+            var parkingLocationInDB = Window.ParkingLocationControl.GetCurrentObject() != null;
+
+            if (shootingLocationInDB && !parkingLocationInDB)
+            {
+                // SwitchEditModeShootingLocation();
+                changemode = E_ChangeMode.change_shootingLocation;
+            }
+
+            else if (!shootingLocationInDB && parkingLocationInDB)
+            {
+                // SwitchEditModeParkingLocation();
+                changemode = E_ChangeMode.change_parkingLocation;
+            }
+
+            else if (shootingLocationInDB && parkingLocationInDB)
+            {
+                EditChangeSelectionWindow window = new EditChangeSelectionWindow(EditChangeSelectionWindow.EMode.change);
+                window.ShowDialog();
+
+                if (window.DialogResult is true)
+                {
+                    if (window.ShootingLocationRadioButton.IsChecked is true)
+                    {
+                        //SwitchEditModeShootingLocation();
+                        changemode = E_ChangeMode.change_shootingLocation;
+                    }
+                    else if (window.ParkingLocationRadioButton.IsChecked is true)
+                    {
+                        //SwitchEditModeParkingLocation();
+                        changemode = E_ChangeMode.change_parkingLocation;
+                    }
+                }
+            }
+
+            // changing is not possible - probably user wants to edit values that are not added to DB yet
+            else
+            {
+                ShowMessage("Changing not possible (you might have entered new values)", E_MessageType.info);
+            }
+        }
+
         internal void HandleParkingLocationControlEditLostFocus()
         {
             DisplayItem.ParkingLocationName = GetTextFromRichEditControl(Window.ParkingLocationControlEdit);
@@ -250,73 +302,43 @@ namespace LocationScout
             var hasParkingLocationText = !string.IsNullOrEmpty(Window.ParkingLocationControl.GetCurrentText());
             var parkingLocationInDB = Window.ParkingLocationControl.GetCurrentObject() != null;
 
-            /*
-            // only shooting location control has text, so edit shooting location
-            if (hasShootingLocationText && !hasParkingLocationText)
+            if (shootingLocationInDB && !parkingLocationInDB) 
             {
-                // edit only saved values
-                if (shootingLocationInDB)
-                {
-                    SwitchEditModeShootingLocation();
-
-                    editmode = E_EditMode.edit_shootinglocation;
-                }
+                SwitchEditModeShootingLocation();
+                editmode = E_EditMode.edit_shootinglocation;
             }
 
-            // only parking locaton have text, so edit parking location
-            else if (!hasShootingLocationText && hasParkingLocationText)
+            else if (!shootingLocationInDB && parkingLocationInDB)
             {
-                // edit only saved values
-                if (parkingLocationInDB)
-                {
-                    SwitchEditModeParkingLocation();
-
-                    editmode = E_EditMode.edit_parkinglocation;
-                }
+                SwitchEditModeParkingLocation();
+                editmode = E_EditMode.edit_parkinglocation;
             }
 
-            // both have text, so check focus
-            else if (hasShootingLocationText && hasParkingLocationText)
-            {*/
-                if (shootingLocationInDB && !parkingLocationInDB) 
-                {
-                    SwitchEditModeShootingLocation();
-                    editmode = E_EditMode.edit_shootinglocation;
-                }
+            else if (shootingLocationInDB && parkingLocationInDB)
+            {
+                EditChangeSelectionWindow window = new EditChangeSelectionWindow(EditChangeSelectionWindow.EMode.edit);
+                window.ShowDialog();
 
-                else if (!shootingLocationInDB && parkingLocationInDB)
+                if (window.DialogResult is true)
                 {
-                    SwitchEditModeParkingLocation();
-                    editmode = E_EditMode.edit_parkinglocation;
-                }
-
-                else if (shootingLocationInDB && parkingLocationInDB)
-                {
-                    EditSelectionWindow window = new EditSelectionWindow();
-                    window.ShowDialog();
-
-                    if (window.DialogResult is true)
+                    if (window.ShootingLocationRadioButton.IsChecked is true)
                     {
-                        if (window.ShootingLocationRadioButton.IsChecked is true)
-                        {
-                            SwitchEditModeShootingLocation();
-                            editmode = E_EditMode.edit_shootinglocation;
-                        }
-                        else if (window.ParkingLocationRadioButton.IsChecked is true)
-                        {
-                            SwitchEditModeParkingLocation();
-                            editmode = E_EditMode.edit_parkinglocation;
-                        }
+                        SwitchEditModeShootingLocation();
+                        editmode = E_EditMode.edit_shootinglocation;
+                    }
+                    else if (window.ParkingLocationRadioButton.IsChecked is true)
+                    {
+                        SwitchEditModeParkingLocation();
+                        editmode = E_EditMode.edit_parkinglocation;
                     }
                 }
-            //}
+            }
 
             // editing is not possible - probably user wants to edit values that are not added to DB yet
             else
             {
                 ShowMessage("Editing not possible (you might have entered new values)", E_MessageType.info);
             }
-
 
             return editmode;
         }

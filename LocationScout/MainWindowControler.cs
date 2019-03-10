@@ -162,6 +162,11 @@ namespace LocationScout
             _locationControler.HandleRemove(LocationTabControler.E_PhotoNumber.photo_2);
         }
 
+        internal void LocationChange()
+        {
+            _locationControler.Change();
+        }
+
         internal void HandleRemovePhoto_3()
         {
             _locationControler.HandleRemove(LocationTabControler.E_PhotoNumber.photo_3);

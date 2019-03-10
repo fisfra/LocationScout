@@ -157,6 +157,16 @@ namespace LocationScout
             _controler.LocationEdit();
         }
 
+        private void LocationButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            // to do
+        }
+
+        private void LocationButtonChange_Click(object sender, RoutedEventArgs e)
+        {
+            _controler.LocationChange();
+        }
+
         private void ShootingLocationControlEdit_LostFocus(object sender, RoutedEventArgs e)
         {
             _controler.HandleShootingLocationControlEditLostFocus();
@@ -172,5 +182,7 @@ namespace LocationScout
             _controler.HandleSubjectLocationGoogleSearch();
         }
         #endregion
+
+
     }
 }

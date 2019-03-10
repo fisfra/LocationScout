@@ -235,6 +235,7 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
@@ -242,9 +243,10 @@
 
                         <Button Name="Location_AddButton" Content="Add" Width="100" Margin="5,2,5,3" Grid.Row="0" Click="LocationButtonAdd_Click"/>
                         <Button Name="Location_EditButton" Content="Edit" Width="100" Margin="5,2,5,3" Grid.Row="1" Click="LocationButtonEdit_Click"/>
-                        <Button Name="Location_DeleteButton" Content="Delete" Width="100" Margin="5,2,5,3" Grid.Row="2" Click="LocationButtonEdit_Click"/>
-                        <Button Name="Location_ShowButton" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="4" Click="LocationButtonShow_Click"/>
-                        <Button Name="Location_ClearButton" Content="Clear" Width="100" Margin="5,2,5,3" Grid.Row="5" Click="LocationButtonClear_Click"/>
+                        <Button Name="Location_ChangeButton" Content="Change" Width="100" Margin="5,2,5,3" Grid.Row="2" Click="LocationButtonChange_Click"/>
+                        <Button Name="Location_DeleteButton" Content="Delete" Width="100" Margin="5,2,5,3" Grid.Row="3" Click="LocationButtonDelete_Click"/>
+                        <Button Name="Location_ShowButton" Content="Show" Width="100" Margin="5,2,5,3" Grid.Row="5" Click="LocationButtonShow_Click"/>
+                        <Button Name="Location_ClearButton" Content="Clear" Width="100" Margin="5,2,5,3" Grid.Row="6" Click="LocationButtonClear_Click"/>
                         
                     </Grid>
                         
@@ -305,7 +307,7 @@
                                                                 AutoCompleteWidth="370" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="10,8,0,0"/>
                                 <RichTextBox Name="Settings_SubjectLocationControlEdit" Height="18" KeyboardNavigation.TabIndex="5" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch"
                                              Grid.ColumnSpan="2" Margin="10,3,44,0" Visibility="Hidden" LostFocus="SettingsSubjectLocationControlEdit_LostFocus"/>
-                                <Button Name="GoogleSubjectLocationButton" Content="GM" Grid.Column="2" Grid.Row="3" Width="22" Height="25" Margin="170,5,0,0" Click="GoogleSubjectLocationButton_Click"/>
+                                <Button Name="GoogleSubjectLocationButton" Content="GM" Grid.Column="2" Grid.Row="3" Width="25" Height="22" Margin="170,5,0,0" Click="GoogleSubjectLocationButton_Click"/>
 
                                 <!-- UpdateSourceTrigger set to PropertyChanged to handle some update issues when auto inserting clipboard text -->
                                 <Label Content="GPS Subject Location [Lat/Long]"  Margin="0,2,0,0" Grid.Column="0" Grid.Row="4"/>
