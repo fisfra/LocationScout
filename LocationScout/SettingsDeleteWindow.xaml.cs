@@ -20,7 +20,13 @@ namespace LocationScout
     /// </summary>
     public partial class SettingsDeleteWindow : Window
     {
+        #region enums
+        public enum EDeleteTarget { Country, Area, Subarea, None };
+        #endregion
+
         #region attributes
+        public EDeleteTarget DeleteTarget { get; set; }
+
         private SettingsDeleteWindowControler _controler;
 
         public SettingsDeleteDisplayItem DisplayItem { get; set; }
@@ -40,12 +46,12 @@ namespace LocationScout
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _controler.HandleDeleteButton();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            _controler.HandleCancelButton();
         }
     }
 }

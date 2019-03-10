@@ -31,8 +31,8 @@ namespace LocationScout.DataAccess
 
         #region constants
         private const string c_backupStoredProcedureName = "BackupLocationScout";
-        private const string c_restoreStoredProcedureName = "RestoreLocationScout";
         private const string c_connectionStringName = "LocationScout";
+        private const string c_connectionStringMasterName = "Master";
         private const string c_backupPathParameterName = "@BackupPath";
         private const string c_backupNameParameterName = "@BackupFileName";
         private const string c_backupPathParameterValue = @"C:\Users\fisfra\OneDrive\Documents\SQL-Backup\";
@@ -189,6 +189,8 @@ namespace LocationScout.DataAccess
             return success;
         }
 
+
+
         internal static E_DBReturnCode ReadAllSubjectLocations(out List<SubjectLocation> allSubjectLocations, out string errorMessage)
         {
             E_DBReturnCode success = E_DBReturnCode.no_error;
@@ -248,7 +250,8 @@ namespace LocationScout.DataAccess
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Master"].ConnectionString))
+                // use a different connection string for the restore operation (cannot use the restored database itself for this operation)
+                using (SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings[c_connectionStringMasterName].ConnectionString))
                 {
                     // open the connection
                     connection.Open();
@@ -529,6 +532,81 @@ namespace LocationScout.DataAccess
                     if (photoToRemove == null) throw new Exception("Photo not found in PersistenceManager::DeletePhoto - Id:" + id.ToString());
 
                     db.Photos.Remove(photoToRemove);
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode DeleteCountryById(long id, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var countryToRemove = db.Countries.FirstOrDefault(p => p.Id == id);
+                    if (countryToRemove == null) throw new Exception("Country not found in DeleteCountryById::DeletePhoto - Id:" + id.ToString());
+
+                    db.Countries.Remove(countryToRemove);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode DeleteAreaById(long id, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var areaToRemove = db.Areas.FirstOrDefault(p => p.Id == id);
+                    if (areaToRemove == null) throw new Exception("Area not found in DeleteCountryById::DeletePhoto - Id:" + id.ToString());
+
+                    db.Areas.Remove(areaToRemove);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = BuildDBErrorMessages(e);
+                success = E_DBReturnCode.error;
+            }
+
+            return success;
+        }
+
+        internal static E_DBReturnCode DeleteSubAreaById(long id, out string errorMessage)
+        {
+            E_DBReturnCode success = E_DBReturnCode.no_error;
+            errorMessage = string.Empty;
+
+            try
+            {
+                using (var db = new LocationScoutContext())
+                {
+                    var subAreaToRemove = db.SubAreas.FirstOrDefault(p => p.Id == id);
+                    if (subAreaToRemove == null) throw new Exception("Subarea not found in DeleteCountryById::DeletePhoto - Id:" + id.ToString());
+
+                    db.SubAreas.Remove(subAreaToRemove);
+                    db.SaveChanges();
                 }
             }
             catch (Exception e)

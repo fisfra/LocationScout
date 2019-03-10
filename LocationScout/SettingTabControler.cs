@@ -113,7 +113,68 @@ namespace LocationScout
         internal void Delete()
         {
             SettingsDeleteWindow deletingWindow = new SettingsDeleteWindow(Window);
-            deletingWindow.ShowDialog();
+            if (deletingWindow.ShowDialog() == true)
+            {
+                switch (deletingWindow.DeleteTarget)
+                {
+                    case SettingsDeleteWindow.EDeleteTarget.Country:
+                        var country = Window.Settings_CountryControl.GetCurrentObject() as Country;
+                        if (country != null)
+                        {
+                            if (DataAccessAdapter.DeleteCountryById(country.Id, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
+                            {
+                                MainControler.ReloadAndRefreshControls();
+                                ShowMessage("Country sucessfully deleted.", E_MessageType.info);
+                            }
+                            else
+                            {
+                                ShowMessage("Error deleting the country." + errorMessage, E_MessageType.error);
+                            }
+                        }
+                        RefreshAllObjectsFromDB();
+                        break;
+
+                    case SettingsDeleteWindow.EDeleteTarget.Area:
+                        var area = Window.Settings_AreaControl.GetCurrentObject() as Area;
+                        if (area != null)
+                        {
+                            if (DataAccessAdapter.DeleteAreaById(area.Id, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
+                            {
+                                MainControler.ReloadAndRefreshControls();
+                                ShowMessage("Area sucessfully deleted.", E_MessageType.info);
+                            }
+                            else
+                            {
+                                ShowMessage("Error deleting the area." + errorMessage, E_MessageType.error);
+                            }
+                        }
+                        break;
+
+                    case SettingsDeleteWindow.EDeleteTarget.Subarea:
+                        var subArea = Window.Settings_SubAreaControl.GetCurrentObject() as SubArea;
+                        if (subArea != null)
+                        {
+                            if (DataAccessAdapter.DeleteSubAreaById(subArea.Id, out string errorMessage) == PersistenceManager.E_DBReturnCode.no_error)
+                            {
+                                MainControler.ReloadAndRefreshControls();
+                                ShowMessage("Subarea sucessfully deleted.", E_MessageType.info);
+                            }
+                            else
+                            {
+                                ShowMessage("Error deleting the Subarea." + errorMessage, E_MessageType.error);
+                            }
+                        }
+                        break;
+
+                    case SettingsDeleteWindow.EDeleteTarget.None:
+                        // nothing to delete
+                        break;
+
+                    default:
+                        System.Diagnostics.Debug.Assert(false);
+                        throw new Exception("Unknonw enum value in SettingTabControler::Delete");
+                }
+            }
         }
 
         internal void Backup()
@@ -183,7 +244,7 @@ namespace LocationScout
                 MessageBox.Show("Location Scout will quite and restart after restoring a database.", "Restart after restore", MessageBoxButton.OK, MessageBoxImage.Information);
                 System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
                 Application.Current.Shutdown();
-            }
+            }        
         }
 
         #endregion

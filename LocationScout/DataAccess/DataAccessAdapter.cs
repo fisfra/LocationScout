@@ -96,6 +96,21 @@ namespace LocationScout.DataAccess
             return PersistenceManager.SmartAddShootingLocation(subjectLocationId, parkingLocationId, photosAsByteArray, shootingLocationName, shootingLocationGPS, out errorMessage);
         }
 
+        internal static E_DBReturnCode DeleteCountryById(long id, out string errorMessage)
+        {
+            return PersistenceManager.DeleteCountryById(id, out errorMessage);
+        }
+
+        internal static E_DBReturnCode DeleteAreaById(long id, out string errorMessage)
+        {
+            return PersistenceManager.DeleteAreaById(id, out errorMessage);
+        }
+
+        internal static E_DBReturnCode DeleteSubAreaById(long id, out string errorMessage)
+        {
+            return PersistenceManager.DeleteSubAreaById(id, out errorMessage);
+        }
+
         internal static E_DBReturnCode EditCountryName(long id, string name, out string errorMessage)
         {
             return PersistenceManager.EditCountryName(id, name, out errorMessage);

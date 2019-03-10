@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using static LocationScout.SettingsDeleteWindow;
 
 namespace LocationScout
 {
@@ -104,6 +105,37 @@ namespace LocationScout
                     SetDeleteDialogSubAreaInformation(_deleteWindow.DisplayItem);
                 }
             }
+        }
+
+        internal void HandleCancelButton()
+        {
+            _deleteWindow.DeleteTarget = EDeleteTarget.None;
+            _deleteWindow.DialogResult = false;
+
+            _deleteWindow.Close();
+        }
+
+        internal void HandleDeleteButton()
+        {
+            if (_deleteWindow.CountryRadioButton.IsChecked == true)
+            {
+                _deleteWindow.DeleteTarget = EDeleteTarget.Country;
+            }
+            else if (_deleteWindow.AreaRadioButton.IsChecked == true)
+            {
+                _deleteWindow.DeleteTarget = EDeleteTarget.Area;
+            }
+            else if (_deleteWindow.SubAreaTextRadioButton.IsChecked == true)
+            {
+                _deleteWindow.DeleteTarget = EDeleteTarget.Subarea;
+            }
+            else
+            {
+                _deleteWindow.DeleteTarget = EDeleteTarget.None;
+            }
+
+            _deleteWindow.DialogResult = true;
+            _deleteWindow.Close();
         }
 
         private void SetDeleteDialogCountryInformation(SettingsDeleteDisplayItem displayItem)
