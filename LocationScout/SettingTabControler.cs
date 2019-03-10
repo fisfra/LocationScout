@@ -271,7 +271,7 @@ namespace LocationScout
             Window.Settings_SubAreaControlEdit.Visibility = Visibility.Hidden;
             Window.Settings_SubAreaControl.Visibility = Visibility.Visible;
             Window.Settings_SubjectLocationControlEdit.Visibility = Visibility.Hidden;
-            Window.Settings_SubjectLocationControl.Visibility = Visibility.Visible;
+            Window.Settings_SubjectLocationControl.Visibility = Visibility.Visible;            
             Window.Settings_CountryControl.IsEnabled = true;
             Window.Settings_AreaControl.IsEnabled = true;
             Window.Settings_SubAreaControl.IsEnabled = true;

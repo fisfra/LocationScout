@@ -375,6 +375,7 @@ namespace LocationScout
             Window.ShootingLocationControlEdit.Visibility = Visibility.Hidden;            
             Window.ParkingLocationControl.Visibility = Visibility.Visible;
             Window.ParkingLocationControlEdit.Visibility = Visibility.Hidden;
+            Window.Location_ChangeButton.IsEnabled = true;
             Window.Location_CountryControl.IsEnabled = true;
             Window.Location_AreaControl.IsEnabled = true;
             Window.Location_SubAreaControl.IsEnabled = true;
@@ -387,6 +388,13 @@ namespace LocationScout
             Window.ParkingLocationControl.IsEnabled = true;
             Window.ParkingLocationLatitudeTextBox.IsEnabled = true;
             Window.ParkingLocationLongitudeTextBox.IsEnabled = true;
+        }
+
+        protected override void UpdateButtons()
+        {
+            base.UpdateButtons();
+
+            Window.Location_ChangeButton.IsEnabled = false;
         }
 
         protected override void SetCountryDisplayItem(string countryName)

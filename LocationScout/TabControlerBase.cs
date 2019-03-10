@@ -112,10 +112,8 @@ namespace LocationScout
                 // edit is possible
                 if (CurrentEditMode != E_EditMode.no_edit)
                 {
-                    // change button label
-                    EditButton.Content = "Save";
-                    AddButton.IsEnabled = false;
-                    DeleteButton.IsEnabled = false;
+                    // update button state / label
+                    UpdateButtons();
 
                     // switch to edit mode
                     _currentMode = E_Mode.edit;
@@ -141,6 +139,13 @@ namespace LocationScout
         #endregion
 
         #region protected methods
+        protected virtual void UpdateButtons()
+        {
+            EditButton.Content = "Save";
+            AddButton.IsEnabled = false;
+            DeleteButton.IsEnabled = false;
+        }
+
         protected virtual void CountryControl_Leaving(object sender, WPFUserControl.AutoCompleteTextBoxControlEventArgs e)
         {
             // if area control is ready only, only area of the assigned country can be selected
@@ -291,7 +296,7 @@ namespace LocationScout
         protected virtual void ResetControlState()
         {
             EditButton.Content = "Edit";
-            AddButton.IsEnabled = true;
+            AddButton.IsEnabled = true;            
             DeleteButton.IsEnabled = true;
         }
 
