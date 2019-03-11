@@ -175,7 +175,7 @@
 
         </Grid>
 
-        <Grid Name="ButtonsGrid" Grid.Column="1" Grid.Row="0" Margin="10,0,10,0">
+        <Grid Name="ButtonsGrid" Grid.Column="1" Grid.Row="0" Margin="10,10,10,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
@@ -183,13 +183,14 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="500"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+            <Button Name="RefreshButton" Content="Refresh" Grid.Column="0" Grid.Row="0" Height="22" Click="RefreshButton_Click"/>
             <Button Name="CloseButton" Content="Close" Grid.Column="0" Grid.Row="11" Height="22" Click="CloseButton_Click"/>
         </Grid>
     </Grid>

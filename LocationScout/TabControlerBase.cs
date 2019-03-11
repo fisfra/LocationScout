@@ -281,16 +281,22 @@ namespace LocationScout
             targetEditControl.Visibility = Visibility.Visible;
             targetControl.Visibility = Visibility.Hidden;
 
-            // disable controls that should not bed edited
-            foreach (var control in otherControls)
-            {
-                control.IsEnabled = false;
-            }
+            // disable the other controls
+            DisableControls(otherControls);
 
             // set text to edit control
             var editedText = targetControl.GetCurrentText();
             targetEditControl.Document.Blocks.Clear();
             targetEditControl.Document.Blocks.Add(new Paragraph(new Run(editedText)));
+        }
+
+        protected virtual void DisableControls(List<Control> controls)
+        {
+            // disable controls that should not be edited
+            foreach (var control in controls)
+            {
+                control.IsEnabled = false;
+            }
         }
 
         protected virtual void ResetControlState()

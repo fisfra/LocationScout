@@ -43,6 +43,8 @@ namespace LocationScout
         private List<ParkingLocation> _allParkingLocations;
 
         private LocationListerWindow _listerWindow;
+
+        private E_ChangeMode _currentChangeMode;
         #endregion
 
         #region contructors
@@ -58,6 +60,8 @@ namespace LocationScout
             RefreshParkingLocationsFromDB();
 
             _listerWindow = new LocationListerWindow(base.Window, this);
+
+            _currentChangeMode = E_ChangeMode.no_change;
         }
         #endregion
 
@@ -72,7 +76,7 @@ namespace LocationScout
         internal void Clear()
         {
             ClearUI();
-            Window.Location_CountryControl.SetFocus(); 
+            Window.Location_CountryControl.SetFocus();
         }
 
         internal override void ReloadAndRefreshControls()
@@ -94,7 +98,7 @@ namespace LocationScout
         internal void ShowLister()
         {
             if (_listerWindow.Visibility != Visibility.Visible) _listerWindow.Show();
-        }        
+        }
 
         internal void Add()
         {
@@ -104,17 +108,17 @@ namespace LocationScout
             // data from UI
             var subjectLocation = Window.Location_SubjectLocationControl.GetCurrentObject() as SubjectLocation;
             var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
-            
+
             var shootingLocationName = DisplayItem.ShootingLocationName;
 
             // db operations might take a while
             Mouse.OverrideCursor = Cursors.Wait;
 
             // set parking location (if new parking location, initial value is -1)
-            long parkingLocationId = parkingLocation != null ? parkingLocation.Id :- 1;
+            long parkingLocationId = parkingLocation != null ? parkingLocation.Id : -1;
 
             // create new parking location if necessary
-            if ( (parkingLocation == null) && (!string.IsNullOrEmpty(DisplayItem.ParkingLocationName)))
+            if ((parkingLocation == null) && (!string.IsNullOrEmpty(DisplayItem.ParkingLocationName)))
             {
                 // get name of parking location from UI
                 var parkingLocationName = DisplayItem.ParkingLocationName;
@@ -168,8 +172,43 @@ namespace LocationScout
 
         internal void Change()
         {
-            // return the edit mode
-            E_ChangeMode changemode = E_ChangeMode.no_change;
+            // in yet in change mode
+            if (_currentChangeMode == E_ChangeMode.no_change)
+            {
+                // check if changing is possible and switch controls
+                _currentChangeMode = DoChange();
+
+                // switch label if changing possible
+                if (_currentChangeMode != E_ChangeMode.no_change)
+                {
+                    Window.Location_ChangeButton.Content = "Save";
+                }
+            }
+            else
+            {
+                // re-enable controls again
+                ResetControlState();
+
+                // save the changes to the database
+                SaveChangeChanges();
+
+                // ask maincontroler to reload data from database and refresh all controls
+                // maincontroler needs to take care of this since it not only settings tab
+                MainControler.ReloadAndRefreshControls();
+
+                // reset the modes
+                _currentChangeMode = E_ChangeMode.no_change;
+            }
+        }
+
+        private void SaveChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal E_ChangeMode DoChange()
+        {
+            E_ChangeMode changeMode = E_ChangeMode.no_change;
 
             // check which controls have text and objects (are in DB)
             var hasShootingLocationText = !string.IsNullOrEmpty(Window.Location_SubjectLocationControl.GetCurrentText());
@@ -180,14 +219,14 @@ namespace LocationScout
 
             if (shootingLocationInDB && !parkingLocationInDB)
             {
-                // SwitchEditModeShootingLocation();
-                changemode = E_ChangeMode.change_shootingLocation;
+                SwitchChangeModeShootingLocation();
+                changeMode = E_ChangeMode.change_shootingLocation;
             }
 
             else if (!shootingLocationInDB && parkingLocationInDB)
             {
-                // SwitchEditModeParkingLocation();
-                changemode = E_ChangeMode.change_parkingLocation;
+                SwitchChangeModeParkingLocation();
+                changeMode = E_ChangeMode.change_parkingLocation;
             }
 
             else if (shootingLocationInDB && parkingLocationInDB)
@@ -199,13 +238,13 @@ namespace LocationScout
                 {
                     if (window.ShootingLocationRadioButton.IsChecked is true)
                     {
-                        //SwitchEditModeShootingLocation();
-                        changemode = E_ChangeMode.change_shootingLocation;
+                        SwitchChangeModeShootingLocation();
+                        changeMode = E_ChangeMode.change_shootingLocation;
                     }
                     else if (window.ParkingLocationRadioButton.IsChecked is true)
                     {
-                        //SwitchEditModeParkingLocation();
-                        changemode = E_ChangeMode.change_parkingLocation;
+                        SwitchChangeModeParkingLocation();
+                        changeMode = E_ChangeMode.change_parkingLocation;
                     }
                 }
             }
@@ -215,6 +254,8 @@ namespace LocationScout
             {
                 ShowMessage("Changing not possible (you might have entered new values)", E_MessageType.info);
             }
+
+            return changeMode;
         }
 
         internal void HandleParkingLocationControlEditLostFocus()
@@ -272,6 +313,16 @@ namespace LocationScout
             var gps = new GPSCoordinates(DisplayItem.SubjectLocationLatitude, DisplayItem.SubjectLocationLongitude);
             GoogleMapsHelper.Go(gps);
         }        
+
+        internal void ResetShootingLocationControl()
+        {
+            RefreshShootLocationControl();
+        }
+
+        internal void ResetParkingLocationControl()
+        {
+            RefreshParkingLocationControl();
+        }
         #endregion
 
         #region protected methods
@@ -372,7 +423,7 @@ namespace LocationScout
             base.ResetControlState();
 
             Window.ShootingLocationControl.Visibility = Visibility.Visible;
-            Window.ShootingLocationControlEdit.Visibility = Visibility.Hidden;            
+            Window.ShootingLocationControlEdit.Visibility = Visibility.Hidden;
             Window.ParkingLocationControl.Visibility = Visibility.Visible;
             Window.ParkingLocationControlEdit.Visibility = Visibility.Hidden;
             Window.Location_ChangeButton.IsEnabled = true;
@@ -388,6 +439,10 @@ namespace LocationScout
             Window.ParkingLocationControl.IsEnabled = true;
             Window.ParkingLocationLatitudeTextBox.IsEnabled = true;
             Window.ParkingLocationLongitudeTextBox.IsEnabled = true;
+            Window.Location_ShowButton.IsEnabled = true;
+            Window.Location_ClearButton.IsEnabled = true;
+            Window.Location_ChangeButton.IsEnabled = true;
+            Window.Location_EditButton.IsEnabled = true;
         }
 
         protected override void UpdateButtons()
@@ -436,6 +491,11 @@ namespace LocationScout
         #endregion
 
         #region private methods
+        private void SaveChangeChanges()
+        {
+            throw new NotImplementedException();
+        }
+
         private void ClearUI()
         {
             Window.Location_CountryControl.ClearText();
@@ -487,25 +547,38 @@ namespace LocationScout
 
         private void SwitchEditModeParkingLocation()
         {
-            var controlsToDisable = new List<Control>()
-            {
-                Window.Location_CountryControl,
-                Window.Location_AreaControl,
-                Window.Location_SubAreaControl,
-                Window.Location_SubjectLocationControl,
-                Window.Location_SubjectLocationLatituteTextBox,
-                Window.Location_SubjectLocationLongitudeTextBox,
-                Window.ShootingLocationControl,
-                Window.ShootingLocationLatitudeTextBox,
-                Window.ShootingLocationLongitudeTextBox
-            };
+            var controlsToDisable = GetControlsToDisable_ParkingLocation();
 
             SwitchEditModeShootingLocation(Window.ParkingLocationControl, Window.ParkingLocationControlEdit, controlsToDisable);
         }
 
         private void SwitchEditModeShootingLocation()
         {
-            var controlsToDisable = new List<Control>()
+            var controlsToDisable = GetControlsToDisable_ShootingLocation();
+            controlsToDisable.Add(Window.Location_ChangeButton);
+
+            SwitchEditModeShootingLocation(Window.ShootingLocationControl, Window.ShootingLocationControlEdit, controlsToDisable);
+        }
+
+        private void SwitchChangeModeShootingLocation()
+        {
+            var controlsToDisable = GetControlsToDisable_ShootingLocation();
+            controlsToDisable.Add(Window.Location_EditButton);
+
+            DisableControls(controlsToDisable);
+        }
+
+        private void SwitchChangeModeParkingLocation()
+        {
+            var controlsToDisable = GetControlsToDisable_ParkingLocation();
+            controlsToDisable.Add(Window.Location_EditButton);
+
+            DisableControls(controlsToDisable);
+        }
+
+        private List<Control> GetControlsToDisable_ShootingLocation()
+        {
+            return new List<Control>()
             {
                 Window.Location_CountryControl,
                 Window.Location_AreaControl,
@@ -515,12 +588,34 @@ namespace LocationScout
                 Window.Location_SubjectLocationLongitudeTextBox,
                 Window.ParkingLocationControl,
                 Window.ParkingLocationLatitudeTextBox,
-                Window.ParkingLocationLongitudeTextBox
+                Window.ParkingLocationLongitudeTextBox,
+                Window.Location_AddButton,
+                Window.Location_DeleteButton,
+                Window.Location_ShowButton,
+                Window.Location_ClearButton
             };
-
-            SwitchEditModeShootingLocation(Window.ShootingLocationControl, Window.ShootingLocationControlEdit, controlsToDisable);
         }
 
+        private List<Control> GetControlsToDisable_ParkingLocation()
+        {
+            return new List<Control>()
+            {
+                Window.Location_CountryControl,
+                Window.Location_AreaControl,
+                Window.Location_SubAreaControl,
+                Window.Location_SubjectLocationControl,
+                Window.Location_SubjectLocationLatituteTextBox,
+                Window.Location_SubjectLocationLongitudeTextBox,
+                Window.ShootingLocationControl,
+                Window.ShootingLocationLatitudeTextBox,
+                Window.ShootingLocationLongitudeTextBox,
+                Window.Location_AddButton,
+                Window.Location_DeleteButton,
+                Window.Location_ShowButton,
+                Window.Location_ClearButton
+            };
+        }
+    
         private void SaveEditedParkingLocation()
         {
             // save the edits

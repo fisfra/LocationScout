@@ -55,8 +55,108 @@ namespace LocationScout
             _locationTabControler.Change();
         }
 
+        private void FillCountry()
+        {
+            // just select the correct country in the control
+            Window.Location_CountryControl.SelectKey(CurrentDisplayItem.CountryName);
+
+            // update the display item
+            _locationTabControler.DisplayItem.CountryName = CurrentDisplayItem.CountryName;
+        }
+
+        private void FillArea()
+        {
+            // get the selected country
+            var country = Window.Location_CountryControl.GetCurrentObject() as Country;
+
+            // load all areas of country
+            RefreshControl(country?.Areas?.OfType<Location>().ToList(), Window.Location_AreaControl);
+
+            // select the correct area
+            Window.Location_AreaControl.SelectKey(CurrentDisplayItem.AreaName);
+
+            // update the display item
+            _locationTabControler.DisplayItem.AreaName = CurrentDisplayItem.AreaName;
+        }
+
+        private void FillSubArea()
+        {
+            // get the selected area
+            var area = Window.Location_AreaControl.GetCurrentObject() as Area;
+
+            // load all subareas of area
+            RefreshControl(area?.SubAreas?.OfType<Location>().ToList(), Window.Location_SubAreaControl);
+
+            // select correct subarea
+            Window.Location_SubAreaControl.SelectKey(CurrentDisplayItem.SubAreaName);
+
+            // update the display item
+            _locationTabControler.DisplayItem.SubAreaName = CurrentDisplayItem.SubAreaName;
+        }
+
+        private void FillSubjectLocation()
+        {
+            // get the country and search for the correct subject location
+            var country = Window.Location_CountryControl.GetCurrentObject() as Country;
+            var subjectLocations = country.SubjectLocations.Where(c => c.Country.Name == CurrentDisplayItem.CountryName &&
+                                                                       c.Area.Name == CurrentDisplayItem.AreaName && 
+                                                                       c.SubArea.Name == CurrentDisplayItem.SubAreaName).ToList();
+
+            // load the subject location to the control
+            RefreshControl(subjectLocations?.OfType<Location>().ToList(), Window.Location_SubjectLocationControl);
+
+            // select the subject location
+            Window.Location_SubjectLocationControl.SelectKey(CurrentDisplayItem.SubjectLocationName);
+
+            // update the display item
+            _locationTabControler.DisplayItem.SubjectLocationName = CurrentDisplayItem.SubjectLocationName;
+            var subjectLocation = Window.Location_SubjectLocationControl.GetCurrentObject() as SubjectLocation;
+            _locationTabControler.DisplayItem.SubjectLocationLatitude = subjectLocation.Coordinates.Latitude;
+            _locationTabControler.DisplayItem.SubjectLocationLongitude = subjectLocation.Coordinates.Longitude;
+        }
+
+        private void FillShootingLocation()
+        {
+            var subjectLocation = Window.Location_SubjectLocationControl.GetCurrentObject() as SubjectLocation;
+
+            //RefreshControl(subjectLocation?.ShootingLocations?.OfType<Location>().ToList(), Window.ShootingLocationControl);
+            _locationTabControler.ResetShootingLocationControl();
+
+            Window.ShootingLocationControl.SelectKey(CurrentDisplayItem.ShootingLocationName);
+            _locationTabControler.DisplayItem.ShootingLocationName = CurrentDisplayItem.ShootingLocationName;
+            var shootingLocation = Window.ShootingLocationControl.GetCurrentObject() as ShootingLocation;
+            _locationTabControler.DisplayItem.ShootingLocationLatitude = shootingLocation.Coordinates.Latitude;
+            _locationTabControler.DisplayItem.ShootingLocationLongitude = shootingLocation.Coordinates.Longitude;
+            _locationTabControler.DisplayItem.Photo_1 = ImageTools.ByteArrayToBitmapImage(shootingLocation?.Photos?.ElementAtOrDefault(0)?.ImageBytes);
+            _locationTabControler.DisplayItem.Photo_2 = ImageTools.ByteArrayToBitmapImage(shootingLocation?.Photos?.ElementAtOrDefault(1)?.ImageBytes);
+            _locationTabControler.DisplayItem.Photo_3 = ImageTools.ByteArrayToBitmapImage(shootingLocation?.Photos?.ElementAtOrDefault(2)?.ImageBytes);
+        }
+
+        private void FillParkingLocation()
+        {
+            var shootingLocation = Window.ShootingLocationControl.GetCurrentObject() as ShootingLocation;
+
+            //RefreshControl(shootingLocation?.ParkingLocations?.OfType<Location>().ToList(), Window.ParkingLocationControl);
+            _locationTabControler.ResetParkingLocationControl();
+
+            Window.ParkingLocationControl.SelectKey(CurrentDisplayItem.ParkingLocationName);
+            _locationTabControler.DisplayItem.ParkingLocationName = CurrentDisplayItem.ParkingLocationName;
+            var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
+            _locationTabControler.DisplayItem.ParkingLocationLatitude = parkingLocation?.Coordinates.Latitude;
+            _locationTabControler.DisplayItem.ParkingLocationLongitude = parkingLocation?.Coordinates.Longitude;
+        }
+
         private void FillLocationTab()
         {
+            FillCountry();
+            FillArea();
+            FillSubArea();
+            FillSubjectLocation();
+
+            FillShootingLocation();
+            FillParkingLocation();
+
+            /*
             // country
             Window.Location_CountryControl.SelectKey(CurrentDisplayItem.CountryName);
             _locationTabControler.DisplayItem.CountryName = CurrentDisplayItem.CountryName;
@@ -72,7 +172,7 @@ namespace LocationScout
             RefreshControl(area?.SubAreas?.OfType<Location>().ToList(), Window.Location_SubAreaControl);
             Window.Location_SubAreaControl.SelectKey(CurrentDisplayItem.SubAreaName);
             _locationTabControler.DisplayItem.SubAreaName = CurrentDisplayItem.SubAreaName;
-            var subArea = Window.Location_SubAreaControl.GetCurrentObject() as SubArea;
+            //var subArea = Window.Location_SubAreaControl.GetCurrentObject() as SubArea;
             var subjectLocations = country.SubjectLocations.Where(c => c.Country.Name == CurrentDisplayItem.CountryName &&
                                                                   c.Area.Name == CurrentDisplayItem.AreaName && c.SubArea.Name == CurrentDisplayItem.SubAreaName).ToList();
 
@@ -102,7 +202,9 @@ namespace LocationScout
             var parkingLocation = Window.ParkingLocationControl.GetCurrentObject() as ParkingLocation;
             _locationTabControler.DisplayItem.ParkingLocationLatitude = parkingLocation?.Coordinates.Latitude;
             _locationTabControler.DisplayItem.ParkingLocationLongitude = parkingLocation?.Coordinates.Longitude;
+            */
 
+            var shootingLocation = Window.ShootingLocationControl.GetCurrentObject() as ShootingLocation; // added from comment above
 
             var shootingLocationId = shootingLocation.Id;
 
@@ -183,6 +285,12 @@ namespace LocationScout
             {
                 ShowMessage(errorMessage, E_MessageType.error);
             }
+        }
+
+        internal void Refresh()
+        {
+            AllDisplayItems.Clear();
+            ReadData();
         }
 
         internal void HandleSelectionChanged()

@@ -71,7 +71,14 @@ namespace LocationScout
         private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Controler.HandleDelete();
-        }  
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            Controler.Refresh();
+        }
         #endregion
+
+
     }
 }
